@@ -15,10 +15,14 @@ class Block:
         self.posY = None
         self.COLOR = None
 
-    def create(self, posX, posY):
+    def create(self,posX, posY, COLOR):
         self.posX = posX
         self.posY = posY
-        self.COLOR = COLOR(random.randint(COLOR.YELLOW,COLOR.BLACK))
+        self.COLOR = COLOR
+
+    def create(self, posX, posY):
+        self.create(posX,posY,COLOR(random.randint(COLOR.YELLOW,COLOR.BLACK)))
+   
     def update(self):
         pass
     def render(self):
