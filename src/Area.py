@@ -1,30 +1,36 @@
-from Block import *
+from .Block import *
 
 class AREA_COLOR(Enum):
+    """Used to define areas color"""
     YELLOW = 1
     BLUE = 2
     RED = 3
 
 class Area:
-    def __init__(self) -> None:
-        self.blocks = []
-        self.AREA_COLOR = None
-        pass
+    """ Used to create a game area with its owns blocks and defined color."""
 
-    def create(self, sizeX, sizeY):
+    def __init__(self) -> None:
         """
-        This function creates a list of blocks that will be the columns and rows for the 
+        Default constructor, define the data for this class..
+
+        """
+        self.blocks = []
+        self.color = None
+
+    def create(self, sizeX: int, sizeY: int) -> None:
+        """
+        Creates a list of blocks that will be the columns and rows for the 
         resulting area.
 
         Args:
-            sizeX: define X size of the area.
-            sizeY: define Y size of the area.
+            :param sizeX: define X size of the area.
+            :param sizeY: define Y size of the area.
         """
-        for x in range(1, sizeX + 1):
+        for x in range(0, sizeX ):
             columns = []
-            for y in range(1, sizeY + 1):
+            for y in range(0, sizeY ):
                 tempColor = None
-                if y == 0 or x == 0 or y == sizeY or x == sizeX:
+                if y == 0 or x == 0 or y == sizeY-1 or x == sizeX-1:
                     tempColor = COLOR.GRAY
                 else:
                     tempColor = COLOR.BLACK
@@ -32,10 +38,17 @@ class Area:
                 newBlock = Block()
                 newBlock.create(x, y, tempColor)
                 columns.append(newBlock)
-                self.blocks.append(columns)
+            self.blocks.append(columns)
     
-    def setColor(self):
-        self.AREA_COLOR = AREA_COLOR(random.randint(AREA_COLOR.YELLOW,AREA_COLOR.RED))
-    
-    def setColor(self, AREA_COLOR):
-        self.AREA_COLOR = AREA_COLOR
+    def setColor(self, color: AREA_COLOR = None) -> None:
+        """
+        Set area color by parameter, if not define area color will be 
+        set it randomly.
+
+        Args:
+            :param color: Area color given as parameter.
+        """
+        if color is None:
+            self.color = random.choice(list(AREA_COLOR))
+        else:
+            self.color = color
