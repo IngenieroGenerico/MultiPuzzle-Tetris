@@ -15,12 +15,11 @@ class Block:
 
     def __init__(self) -> None:
         """
-        Default constructor, define the data for this class..
+        Default constructor, define the data for this class.
 
         """
-        self.posX = None
-        self.posY = None
-        self.Color = None
+        self.__position = ()
+        self.__color = None
 
     def create(self, posX: int, posY: int, color: COLOR = None) -> None:
         """
@@ -33,15 +32,29 @@ class Block:
             :param color: set the color this block.
         """
         if COLOR is None:
-            self.Color = random.choice(list(COLOR))
+            self.__color = random.choice(list(COLOR))
         else:
-            self.Color = color
-        self.posX = posX
-        self.posY = posY
+            self.__color = color
+        self.__position = (posX, posY)
         
+    def getColor(self) -> COLOR:
+        """
+        Get block color.
 
-       
-       
+        Returns:
+            COLOR: actual color of the block.
+        """
+        return self.__color
+    
+    def getPosition(self) -> tuple:
+        """
+        Get position as tuple.
+
+        Returns:
+            tuple: actual position.
+        """
+        return self.__position
+    
     def update(self) -> None:
         pass
     def render(self) -> None:
