@@ -1,23 +1,35 @@
 from .Piece import *
 
 class I_Form(Piece):
-    """_summary_
+    """
+    Create a I piece 
+    
 
-    Args:
-        Piece (_type_): _description_
     """
     def __init__(self) -> None:
-        """_summary_
+        """
+
+        Initialize and create data for this piece.
         """
         super().__init__()
-        
-    def create(self) -> None:
+        b1 = Block(-1,-1)
+        b2 = Block(-1,-2)
+        b3 = Block(-1,-3)
+        b4 = Block(-1,-4)
+        self._blocks.append(b1)
+        self._blocks.append(b2)
+        self._blocks.append(b3)
+        self._blocks.append(b4)
+
+    def setColor(self, color: GAME_COLORS) -> None:
         """
+        Asign actual color to this piece.
+
+        Args:
+            color (GAME_COLORS): Color to be set it.
         """
-        newBlock = Block()
-        newBlock.create(0,0)
-        
-        
+        super().setColor(color)
+       
     def update(self) -> None:
         """_summary_
         """

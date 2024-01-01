@@ -8,12 +8,21 @@ class Piece:
         """
         Constructor where all variables and data types are create it.
         """
-        self.color = None
-        self.Blocks = []
+        self._color = None
+        self._blocks = []
 
-    def create(self) -> None:
-        """_summary_
+    def setColor(self, color: GAME_COLORS) -> None:
         """
+        Set color to all blocks in this piece
+
+        Args:
+            color (GAME_COLORS): Color to set it.
+        """
+        self._color = color
+        for i in self._blocks:
+            i.setColor(color)
+            
+    def rotate(self) -> None:
         pass
     def update(self) -> None:
         """_summary_

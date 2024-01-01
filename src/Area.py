@@ -1,11 +1,5 @@
 from .Block import *
 
-class AREA_COLOR(Enum):
-    """Used to define areas color"""
-    YELLOW = 1
-    BLUE = 2
-    RED = 3
-
 class Area:
     """ Used to create a game area with its own blocks and defined color."""
 
@@ -36,8 +30,7 @@ class Area:
                 else:
                     tempColor = COLOR.BLACK
 
-                newBlock = Block()
-                newBlock.create(x, y, tempColor)
+                newBlock = Block(x, y, tempColor)
                 columns.append(newBlock)
             self.__blocks.append(columns)
     
@@ -50,7 +43,7 @@ class Area:
         """
         return self.__blocks
     
-    def setColor(self, color: AREA_COLOR = None) -> None:
+    def setColor(self, color: GAME_COLORS = None) -> None:
         """
         Set area color by parameter, if not define area color will be 
         set it randomly.
@@ -59,11 +52,11 @@ class Area:
             :param color: Area color given as parameter.
         """
         if color is None:
-            self.__color = random.choice(list(AREA_COLOR))
+            self.__color = random.choice(list(GAME_COLORS))
         else:
             self.__color = color
     
-    def getColor(self) -> AREA_COLOR:
+    def getColor(self) -> GAME_COLORS:
         """
         Get the Area color.
 
