@@ -1,5 +1,4 @@
 from enum import Enum
-import random
 
 class GAME_COLORS(Enum):
     """Used to define game color"""
@@ -23,12 +22,12 @@ class Block:
     def __init__(self, posX: int = None, posY: int = None, color = None) -> None:
         """
         Create a simple block defined by its position and color, if the color is not passed as
-        parameter the color will be assigned randomly.
+        parameter the color will be assigned as Neutral.
 
         Args:
-            :param posX: define x position.
-            :param posY: define Y position.
-            :param color: set the color this block.
+            posX (int, optional): _description_. Defaults to None.
+            posY (int, optional): _description_. Defaults to None.
+            color (_type_, optional): _description_. Defaults to None.
         """
         if color is None:
             self.__color = COLOR.NEUTRAL
@@ -66,6 +65,7 @@ class Block:
         return self.__position
     
     def update(self) -> None:
-        pass
+        print(self.__position)
+        
     def render(self) -> None:
         pass
