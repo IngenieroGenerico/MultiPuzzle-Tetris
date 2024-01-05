@@ -1,31 +1,30 @@
 from .Block import *
+import random
 
 class Area:
     """ Used to create a game area with its own blocks and defined color."""
 
-    def __init__(self) -> None:
-        """
-        Default constructor, define the data for this class.
-        
-        """
-        self.__blocks = []
-        self.__color = None
-        self.__ID = None
-
-    def create(self, sizeX: int, sizeY: int) -> None:
+    def __init__(self, sizeX: int = 10, sizeY: int = 20) -> None:
         """
         Creates a list of blocks that will be the columns and rows for the 
         resulting area.
-
+                
         Args:
             :param sizeX: define X size of the area.
             :param sizeY: define Y size of the area.
+        
         """
-        for x in range(0, sizeX ):
+        self.__sizeX = sizeX
+        self.__sizeY = sizeY
+        self.__blocks = []
+        self.__color = None
+        self.__ID = None
+        
+        for x in range(0, self.__sizeX ):
             columns = []
-            for y in range(0, sizeY ):
+            for y in range(0, self.__sizeY ):
                 tempColor = None
-                if y == 0 or x == 0 or y == sizeY-1 or x == sizeX-1:
+                if y == 0 or x == 0 or y == self.__sizeY-1 or x == self.__sizeX-1:
                     tempColor = COLOR.GRAY
                 else:
                     tempColor = COLOR.BLACK
@@ -33,6 +32,22 @@ class Area:
                 newBlock = Block(x, y, tempColor)
                 columns.append(newBlock)
             self.__blocks.append(columns)
+            
+    def getSizeX(self) -> int:
+        """_summary_
+
+        Returns:
+            int: _description_
+        """
+        return self.__sizeX
+    
+    def getSizeY(self) -> int:
+        """_summary_
+
+        Returns:
+            int: _description_
+        """
+        return self.__sizeY
     
     def getBlocks(self) -> list:
         """
@@ -82,3 +97,11 @@ class Area:
             int: Identifier
         """
         return self.__ID
+    
+    def update(self):
+        """_summary_
+        """
+        for rows in self.__blocks:
+            for columns in rows:
+                columns.update()
+            rows.update()

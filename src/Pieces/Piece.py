@@ -1,5 +1,13 @@
 from ..Block import *
-
+class PIECE_TYPE(Enum):
+    I = 1
+    J = 2
+    L = 3
+    O = 4
+    S = 5
+    T = 6
+    Z = 7
+    
 class Piece:
     """
     Used as base class from all pieces will inheritance
@@ -8,6 +16,7 @@ class Piece:
         """
         Constructor where all variables and data types are create it.
         """
+        self.__type = None
         self._color = None
         self._blocks = []
 
@@ -22,6 +31,12 @@ class Piece:
         for i in self._blocks:
             i.setColor(color)
             
+    def setType(self, type: PIECE_TYPE = None) -> None:
+        self.__type = type
+    
+    def getType(self) -> PIECE_TYPE:
+        return self.__type
+    
     def rotate(self) -> None:
         pass
     def update(self) -> None:
