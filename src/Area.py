@@ -1,4 +1,4 @@
-from .Block import *
+from .Block import Block, COLOR, GAME_COLORS
 import random
 
 class Area:

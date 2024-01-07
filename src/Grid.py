@@ -1,5 +1,6 @@
-from .Area import *
-from .Pieces.ImportsData import *
+import random
+from src.Area import Area, COLOR
+from src.Pieces.Piece import PIECE_TYPE, Piece
 
 class Grid:
     """Creates' game area."""
@@ -61,19 +62,19 @@ class Grid:
             Piece: _description_
         """
         if value == PIECE_TYPE.I:
-            return I_Form() 
+            return Piece.I_Form() 
         elif value == PIECE_TYPE.J:
-            return J_Form()
+            return Piece.J_Form()
         elif value == PIECE_TYPE.L:
-            return L_Form()
+            return Piece.L_Form()
         elif value == PIECE_TYPE.O:
-            return O_Form()
+            return Piece.O_Form()
         elif value == PIECE_TYPE.S:
-            return S_Form()
+            return Piece.S_Form()
         elif value == PIECE_TYPE.T:
-            return T_Form()
+            return Piece.T_Form()
         elif value == PIECE_TYPE.Z:
-            return Z_Form()
+            return Piece.Z_Form()
         else:
             return None
         
