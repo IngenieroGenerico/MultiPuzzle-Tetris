@@ -1,4 +1,5 @@
-from .Piece import *
+from ..Block import Block, GAME_COLORS
+from .Piece import Piece
 
 class O_Form(Piece):
     """

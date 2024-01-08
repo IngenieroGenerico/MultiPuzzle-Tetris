@@ -15,7 +15,6 @@ class COLOR(Enum):
     BLACK = 5
     NEUTRAL = 6
 
-
 class Block:
     """ Used to create a block."""
 
