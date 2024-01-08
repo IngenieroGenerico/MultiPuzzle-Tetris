@@ -18,17 +18,10 @@ class O_Form(Piece):
         b4 = Block(-2,-2)
         self._blocks.append(b1)
         self._blocks.append(b2)
+        self._pivot = self._blocks[1]
         self._blocks.append(b3)
         self._blocks.append(b4)
-
-    def setColor(self, color: GAME_COLORS) -> None:
-        """
-        Asign actual color to this piece.
-
-        Args:
-            color (GAME_COLORS): Color to be set it.
-        """
-        super().setColor(color)
+        self.setType(PIECE_TYPE.O)
        
     def update(self) -> None:
         """_summary_

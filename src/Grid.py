@@ -21,9 +21,17 @@ class Grid:
             sizeX (int, optional): _description_. Defaults to 10.
             sizeY (int, optional): _description_. Defaults to 20.
         """
-        self.createAreas(areasAmount,sizeX,sizeY)
+        self.createAreas(areasAmount, sizeX, sizeY)
+        tempColor = self.__grid[random.randint(0, areasAmount -1)].getColor()
         self.__nextPiece = self.createPiece()
+        self.__nextPiece.setColor(tempColor)
+        tempColor = self.__grid[random.randint(0, areasAmount -1)].getColor()
         self.__actualPiece = self.createPiece()
+        self.__actualPiece.setColor(tempColor)
+
+    def spawnPieceInArea(self) -> None:
+        tempAreaId = random.choice(self.__grid).getID()
+        
         
     def createAreas(self, amount: int = 3, sizeX: int = 10, sizeY: int = 20) -> None:
         """
@@ -35,9 +43,8 @@ class Grid:
             sizeY (int, optional): _description_. Defaults to 20.
         """
         for i in range(1, amount + 1):
-            newArea = Area(sizeX, sizeY)
+            newArea = Area(sizeX, sizeY, i)
             newArea.setColor()
-            newArea.setID(i)
             self.__grid.append(newArea)
 
     def createPiece(self, piece: PIECE_TYPE = None) -> Piece:

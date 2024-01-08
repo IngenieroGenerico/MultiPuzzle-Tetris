@@ -18,6 +18,7 @@ class Piece:
         """
         self.__type = None
         self._color = None
+        self._pivot = Block()
         self._blocks = []
 
     def setColor(self, color: GAME_COLORS) -> None:

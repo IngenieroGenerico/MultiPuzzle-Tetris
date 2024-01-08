@@ -64,6 +64,15 @@ class Block:
         """
         return self.__position
     
+    def setPosition(self, posX: int, posY: int) -> None:
+        """_summary_
+
+        Args:
+            posX (int): _description_
+            posY (int): _description_
+        """
+        self.__position = (posX, posY)
+    
     def update(self) -> None:
         print(self.__position)
         

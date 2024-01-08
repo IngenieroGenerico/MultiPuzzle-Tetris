@@ -19,17 +19,10 @@ class L_Form(Piece):
         self._blocks.append(b1)
         self._blocks.append(b2)
         self._blocks.append(b3)
+        self._pivot = self._blocks[2]
         self._blocks.append(b4)
+        self.setType(PIECE_TYPE.L)
 
-    def setColor(self, color: GAME_COLORS) -> None:
-        """
-        Asign actual color to this piece.
-
-        Args:
-            color (GAME_COLORS): Color to be set it.
-        """
-        super().setColor(color)
-       
     def update(self) -> None:
         """_summary_
         """
