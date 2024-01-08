@@ -56,7 +56,7 @@ class Grid:
         Returns:
             Piece: _description_
         """
-        return self.switch(piece if piece is None else random.choice(PIECE_TYPE))
+        return self.switch(random.choice(list(PIECE_TYPE)) if piece is None else piece )
          
     def switch(self, value: PIECE_TYPE) -> Piece:
         """_summary_

@@ -34,7 +34,7 @@ class Block:
         else:
             self.__color = color
         if posX is None or posY is None:
-            self.__position(None, None)
+            self.__position = (None, None)
         self.__position = (posX, posY)
     
     def setColor(self, color: COLOR) -> None:
