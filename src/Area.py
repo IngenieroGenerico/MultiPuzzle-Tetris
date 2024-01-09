@@ -4,7 +4,7 @@ import random
 class Area:
     """ Used to create a game area with its own blocks and defined color."""
 
-    def __init__(self, sizeX: int = 10, sizeY: int = 20, id: int = 1) -> None:
+    def __init__(self, sizeX: int = 10, sizeY: int = 20, id: int = 0) -> None:
         """
         Creates a list of blocks that will be the columns and rows for the 
         resulting area.
@@ -12,7 +12,7 @@ class Area:
         Args:
             sizeX (int, optional): _description_. Defaults to 10.
             sizeY (int, optional): _description_. Defaults to 20.
-            id (int, optional): _description_. Defaults to 1.
+            id (int, optional): _description_. Defaults to 0.
         """
         self.__sizeX = sizeX
         self.__sizeY = sizeY
@@ -29,7 +29,7 @@ class Area:
                 else:
                     tempColor = COLOR.BLACK
 
-                newBlock = Block(x * id, y * id, tempColor)
+                newBlock = Block(id * sizeX + x, y, tempColor)
                 columns.append(newBlock)
             self.__blocks.append(columns)
             
