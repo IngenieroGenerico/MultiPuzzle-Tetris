@@ -15,7 +15,6 @@ class COLOR(Enum):
     BLACK = 5
     NEUTRAL = 6
 
-
 class Block:
     """ Used to create a block."""
 
@@ -34,7 +33,7 @@ class Block:
         else:
             self.__color = color
         if posX is None or posY is None:
-            self.__position(None, None)
+            self.__position = (None, None)
         self.__position = (posX, posY)
     
     def setColor(self, color: COLOR) -> None:
@@ -63,6 +62,15 @@ class Block:
             tuple: actual position.
         """
         return self.__position
+    
+    def setPosition(self, posX: int, posY: int) -> None:
+        """_summary_
+
+        Args:
+            posX (int): _description_
+            posY (int): _description_
+        """
+        self.__position = (posX, posY)
     
     def update(self) -> None:
         print(self.__position)

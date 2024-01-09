@@ -1,11 +1,6 @@
-from src.Grid import *
-from src.Pieces.ImportsData import *
+from src.Grid import Grid
 
 if __name__ == "__main__":
     newGrid = Grid()
-    newGrid.createAreas()
+    newGrid.createLevel()
     newGrid.printGrid()
-    
-    
-    
-    

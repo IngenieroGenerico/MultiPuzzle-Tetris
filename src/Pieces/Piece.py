@@ -1,4 +1,6 @@
-from ..Block import *
+from ..Block import Block, GAME_COLORS
+from enum import Enum
+
 class PIECE_TYPE(Enum):
     I = 1
     J = 2
@@ -12,12 +14,13 @@ class Piece:
     """
     Used as base class from all pieces will inheritance
     """
-    def __init__(self)->None:
+    def __init__(self) -> None:
         """
         Constructor where all variables and data types are create it.
         """
         self.__type = None
         self._color = None
+        self._pivot = Block()
         self._blocks = []
 
     def setColor(self, color: GAME_COLORS) -> None:
