@@ -45,7 +45,7 @@ class Grid:
             sizeX (int, optional): _description_. Defaults to 10.
             sizeY (int, optional): _description_. Defaults to 20.
         """
-        for i in range(1, amount + 1):
+        for i in range(0, amount):
             newArea = Area(sizeX, sizeY, i)
             newArea.setColor()
             self.__grid.append(newArea)
@@ -116,8 +116,8 @@ class Grid:
             for rows in area.getBlocks():
                 for columns in rows:
                     if columns.getColor() == COLOR.BLACK:
-                        print(0, end = "")
+                        print(" ", end = "")
                     else:
-                        print(1, end = "")
+                        print("❑", end = "")
                 print()
             
