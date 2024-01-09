@@ -1,4 +1,4 @@
-from ..Block import GAME_COLORS
+from ..Block import Block, GAME_COLORS
 from enum import Enum
 
 class PIECE_TYPE(Enum):

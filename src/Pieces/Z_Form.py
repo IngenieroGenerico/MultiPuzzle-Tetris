@@ -1,5 +1,5 @@
-from ..Block import Block, GAME_COLORS
-from .Piece import Piece
+from ..Block import Block
+from .Piece import Piece, PIECE_TYPE
 
 class Z_Form(Piece):
     """
