@@ -24,7 +24,7 @@ class Area:
             columns = []
             for y in range(0, self.__sizeY ):
                 tempColor = None
-                if y == 0 or x == 0 or y == self.__sizeY-1 or x == self.__sizeX-1:
+                if y == 0 or x == 0 or x == self.__sizeX-1:
                     tempColor = COLOR.GRAY
                 else:
                     tempColor = COLOR.BLACK
