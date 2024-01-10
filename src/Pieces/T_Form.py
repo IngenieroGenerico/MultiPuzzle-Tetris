@@ -24,6 +24,12 @@ class T_Form(Piece):
         self._blocks.append(b4)
         self.setType(PIECE_TYPE.T)
 
+    def setInitialPosition(self, x: int, y: int) -> None:
+        super().setInitialPosition(x, y)
+        self._blocks[0].setPosition(self._pivot.getPosition().getX() + 2, self._pivot.getPosition().getY())
+        self._blocks[1].setPosition(self._pivot.getPosition().getX() + 1, self._pivot.getPosition().getY())
+        self._blocks[3].setPosition(self._pivot.getPosition().getX() + 1, self._pivot.getPosition().getY() - 1)
+
     def update(self) -> None:
         """_summary_
         """

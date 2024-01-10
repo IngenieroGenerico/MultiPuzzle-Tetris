@@ -24,6 +24,12 @@ class O_Form(Piece):
         self._blocks.append(b4)
         self.setType(PIECE_TYPE.O)
        
+    def setInitialPosition(self, x: int, y: int) -> None:
+        super().setInitialPosition(x, y)
+        self._blocks[0].setPosition(self._pivot.getPosition().getX(), self._pivot.getPosition().getY() + 1)
+        self._blocks[2].setPosition(self._pivot.getPosition().getX() - 1, self._pivot.getPosition().getY() + 1)
+        self._blocks[3].setPosition(self._pivot.getPosition().getX() - 1, self._pivot.getPosition().getY())
+
     def update(self) -> None:
         """_summary_
         """

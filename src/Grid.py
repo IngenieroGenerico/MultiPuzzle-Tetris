@@ -12,6 +12,7 @@ class Grid:
         Default constructor, define the data for this class..
 
         """
+        self.__areasAmount = None
         self.__nextPiece = None
         self.__actualPiece = None
         self.__grid = []
@@ -24,6 +25,7 @@ class Grid:
             sizeX (int, optional): _description_. Defaults to 10.
             sizeY (int, optional): _description_. Defaults to 20.
         """
+        self.__areasAmount = areasAmount
         self.createAreas(areasAmount, sizeX, sizeY)
         tempColor = self.__grid[random.randint(0, areasAmount -1)].getColor()
         self.__nextPiece = self.createPiece()
@@ -31,9 +33,13 @@ class Grid:
         tempColor = self.__grid[random.randint(0, areasAmount -1)].getColor()
         self.__actualPiece = self.createPiece()
         self.__actualPiece.setColor(tempColor)
+        self.spawnPieceInArea(self.__actualPiece)
 
-    def spawnPieceInArea(self) -> None:
-        tempAreaId = random.choice(self.__grid).getID()
+
+    def spawnPieceInArea(self, piece: Piece) -> None:
+        randomArea = random.randint(0,self.__areasAmount -1)
+        piece.setInitialPosition(self.__grid[randomArea].getCenter(),  
+                                              self.__grid[randomArea].getSizeY())
         
         
     def createAreas(self, amount: int = 3, sizeX: int = 10, sizeY: int = 20) -> None:
@@ -120,4 +126,6 @@ class Grid:
                     else:
                         print("❑", end = "")
                 print()
+        print(self.__actualPiece)
+        print(self.__actualPiece.printPiece())
             

@@ -40,6 +40,24 @@ class Piece:
     def getType(self) -> PIECE_TYPE:
         return self.__type
     
+    def setInitialPosition(self, x: int, y: int) -> None:
+        self.movePivot(x,y)
+
+    def moveDown(self) -> None:
+        for block in self._blocks:
+            block.moveDown()
+
+    def moveLeft(self) -> None:
+        for block in self._blocks:
+            block.moveLeft()
+      
+    def moveRight(self) -> None:
+        for block in self._blocks:
+            block.moveRight()
+
+    def movePivot(self, x: int, y: int) -> None:
+        self._pivot.setPosition(x, y)
+
     def rotate(self) -> None:
         pass
     def update(self) -> None:
@@ -54,3 +72,9 @@ class Piece:
         """_summary_
         """
         pass
+
+    def printPiece(self) -> None:
+        print(self.__type)
+        print(self._color)
+        for block in self._blocks:
+            block.printBlock()
