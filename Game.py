@@ -1,6 +1,6 @@
 from src.Grid import Grid
 
 if __name__ == "__main__":
-    newGrid = Grid()
-    newGrid.createLevel()
-    newGrid.printGrid()
+    new_grid = Grid()
+    new_grid.create_level()
+    new_grid.print_grid()

@@ -1,13 +1,13 @@
 from enum import Enum
 
-class GAME_COLORS(Enum):
+class GameColors(Enum):
     """Used to define game color"""
     YELLOW = 1
     BLUE = 2
     RED = 3
 
-class COLOR(Enum):
-    """ Used to define blocks color."""
+class Color(Enum):
+    """Used to define blocks color."""
     YELLOW = 1
     BLUE = 2
     RED = 3
@@ -16,62 +16,61 @@ class COLOR(Enum):
     NEUTRAL = 6
 
 class Vector:
-    """_summary_
-    """
+    """Summary."""
     def __init__(self, x: int = None, y: int = None) -> None:
-        """_summary_
+        """Summary.
 
         Args:
-            x (int, optional): _description_. Defaults to None.
-            y (int, optional): _description_. Defaults to None.
+            x (int, optional): Description. Defaults to None.
+            y (int, optional): Description. Defaults to None.
         """
         self.__x = x
         self.__y = y
 
-    def setPosition(self, x: int, y: int) -> None:
-        """_summary_
+    def set_position(self, x: int, y: int) -> None:
+        """Summary.
 
         Args:
-            x (int): _description_
-            y (int): _description_
+            x (int): Description.
+            y (int): Description.
         """
-        self.setX(x)
-        self.setY(y)
+        self.set_x(x)
+        self.set_y(y)
     
-    def getX(self) -> int:
-        """_summary_
+    def get_x(self) -> int:
+        """Summary.
 
         Returns:
-            int: _description_
+            int: Description.
         """
         return self.__x
     
-    def getY(self) -> int:
-        """_summary_
+    def get_y(self) -> int:
+        """Summary.
 
         Returns:
-            int: _description_
+            int: Description.
         """
         return self.__y
     
-    def setX(self, x: int) -> None:
-        """_summary_
+    def set_x(self, x: int) -> None:
+        """Summary.
 
         Args:
-            x (int): _description_
+            x (int): Description.
         """
         self.__x = x
 
-    def setY(self, y: int) -> None:
-        """_summary_
+    def set_y(self, y: int) -> None:
+        """Summary.
 
         Args:
-            y (int): _description_
+            y (int): Description.
         """
         self.__y = y
 
 class Block:
-    """ Used to create a block."""
+    """Used to create a block."""
 
     def __init__(self, x: int = None, y: int = None, color = None) -> None:
         """
@@ -79,37 +78,37 @@ class Block:
         parameter the color will be assigned as Neutral.
 
         Args:
-            x (int, optional): _description_. Defaults to None.
-            y (int, optional): _description_. Defaults to None.
-            color (_type_, optional): _description_. Defaults to None.
+            x (int, optional): Description. Defaults to None.
+            y (int, optional): Description. Defaults to None.
+            color (_type_, optional): Description. Defaults to None.
         """
         if color is None:
-            self.__color = COLOR.NEUTRAL
+            self.__color = Color.NEUTRAL
         else:
             self.__color = color
         if x is None or y is None:
             self.__position = Vector()
-        self.__position = Vector(x,y)
+        self.__position = Vector(x, y)
     
-    def setColor(self, color: COLOR) -> None:
+    def set_color(self, color: Color) -> None:
         """
         Set block color.
 
         Args:
-            color (COLOR): Number that define the color based on Enum COLOR.
+            color (Color): Number that defines the color based on Enum Color.
         """
         self.__color = color
         
-    def getColor(self) -> COLOR:
+    def get_color(self) -> Color:
         """
         Get block color.
 
         Returns:
-            COLOR: actual color of the block.
+            Color: actual color of the block.
         """
         return self.__color
     
-    def getPosition(self) -> Vector:
+    def get_position(self) -> Vector:
         """
         Get position as tuple.
 
@@ -118,31 +117,31 @@ class Block:
         """
         return self.__position
     
-    def setPosition(self, x: int, y: int) -> None:
-        """_summary_
+    def set_position(self, x: int, y: int) -> None:
+        """Summary.
 
         Args:
-            x (int): _description_
-            y (int): _description_
+            x (int): Description.
+            y (int): Description.
         """
-        if self.__position.getX() == None or self.__position.getY() == None:
-            self.__position = Vector(x,y)
+        if self.__position.get_x() is None or self.__position.get_y() is None:
+            self.__position = Vector(x, y)
         else:
-            self.setX(x)
-            self.setY(y)
+            self.set_x(x)
+            self.set_y(y)
     
-    def setX(self, x: int) -> None:
-        self.__position.setX(x) 
+    def set_x(self, x: int) -> None:
+        self.__position.set_x(x) 
     
-    def setY(self, y: int) -> None:
-        self.__position.setY(y) 
+    def set_y(self, y: int) -> None:
+        self.__position.set_y(y) 
     
-    def moveLeft(self) -> None:
-        self.__position.setX(self.__position.getX() - 1)
-    def moveRight(self) -> None:
-        self.__position.setX(self.__position.getX() + 1)
-    def moveDown(self) -> None:
-        self.__position.setY(self.__position.getY() - 1)
+    def move_left(self) -> None:
+        self.__position.set_x(self.__position.get_x() - 1)
+    def move_right(self) -> None:
+        self.__position.set_x(self.__position.get_x() + 1)
+    def move_down(self) -> None:
+        self.__position.set_y(self.__position.get_y() - 1)
 
     def update(self) -> None:
         print(self.__position)
@@ -150,5 +149,5 @@ class Block:
     def render(self) -> None:
         pass
 
-    def printBlock(self) -> None:
-        print(self.getPosition())
+    def print_block(self) -> None:
+        print(self.get_position())

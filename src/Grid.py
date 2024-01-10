@@ -1,131 +1,131 @@
-
-from src.Block import COLOR
+from src.Block import Color
 from src.Area import Area, random
 from src.Pieces.ImportsData import *
 
 
 class Grid:
-    """Creates' game area."""
+    """Creates a game area."""
 
     def __init__(self) -> None:
         """
-        Default constructor, define the data for this class..
-
+        Default constructor, define the data for this class.
         """
-        self.__areasAmount = None
-        self.__nextPiece = None
-        self.__actualPiece = None
+        self.__areas_amount = None
+        self.__next_piece = None
+        self.__actual_piece = None
         self.__grid = []
 
-    def createLevel(self, areasAmount: int = 3, sizeX: int = 10, sizeY: int = 20) -> None:
-        """_summary_
+    def create_level(self, areas_amount: int = 3, size_x: int = 10, size_y: int = 20) -> None:
+        """
+        Summary.
 
         Args:
-            areasAmount (int, optional): _description_. Defaults to 3.
-            sizeX (int, optional): _description_. Defaults to 10.
-            sizeY (int, optional): _description_. Defaults to 20.
+            areas_amount (int, optional): Description. Defaults to 3.
+            size_x (int, optional): Description. Defaults to 10.
+            size_y (int, optional): Description. Defaults to 20.
         """
-        self.__areasAmount = areasAmount
-        self.createAreas(areasAmount, sizeX, sizeY)
-        tempColor = self.__grid[random.randint(0, areasAmount -1)].getColor()
-        self.__nextPiece = self.createPiece()
-        self.__nextPiece.setColor(tempColor)
-        tempColor = self.__grid[random.randint(0, areasAmount -1)].getColor()
-        self.__actualPiece = self.createPiece()
-        self.__actualPiece.setColor(tempColor)
-        self.spawnPieceInArea(self.__actualPiece)
+        self.__areas_amount = areas_amount
+        self.create_areas(areas_amount, size_x, size_y)
+        temp_color = self.__grid[random.randint(0, areas_amount - 1)].get_color()
+        self.__next_piece = self.create_piece()
+        self.__next_piece.set_color(temp_color)
+        temp_color = self.__grid[random.randint(0, areas_amount - 1)].get_color()
+        self.__actual_piece = self.create_piece()
+        self.__actual_piece.set_color(temp_color)
+        self.spawn_piece_in_area(self.__actual_piece)
 
-
-    def spawnPieceInArea(self, piece: Piece) -> None:
-        randomArea = random.randint(0,self.__areasAmount -1)
-        piece.setInitialPosition(self.__grid[randomArea].getCenter(),  
-                                              self.__grid[randomArea].getSizeY())
+    def spawn_piece_in_area(self, piece: Piece) -> None:
+        random_area = random.randint(0, self.__areas_amount - 1)
+        piece.set_initial_position(self.__grid[random_area].get_center(),  
+                                              self.__grid[random_area].get_size_y())
         
-        
-    def createAreas(self, amount: int = 3, sizeX: int = 10, sizeY: int = 20) -> None:
+    def create_areas(self, amount: int = 3, size_x: int = 10, size_y: int = 20) -> None:
         """
-        Create a list of areas defined by amount given as parameter.
+        Create a list of areas defined by the amount given as a parameter.
 
         Args:
-            amount (int, optional): _description_. Defaults to 3.
-            sizeX (int, optional): _description_. Defaults to 10.
-            sizeY (int, optional): _description_. Defaults to 20.
+            amount (int, optional): Description. Defaults to 3.
+            size_x (int, optional): Description. Defaults to 10.
+            size_y (int, optional): Description. Defaults to 20.
         """
         for i in range(0, amount):
-            newArea = Area(sizeX, sizeY, i)
-            newArea.setColor()
-            self.__grid.append(newArea)
+            new_area = Area(size_x, size_y, i)
+            new_area.set_color()
+            self.__grid.append(new_area)
 
-    def createPiece(self, piece: PIECE_TYPE = None) -> Piece:
-        """_summary_
+    def create_piece(self, piece: PieceType = None) -> Piece:
+        """
+        Summary.
 
         Args:
-            piece (PIECE_TYPE, optional): _description_. Defaults to None.
+            piece (PIECE_TYPE, optional): Description. Defaults to None.
 
         Returns:
-            Piece: _description_
+            Piece: Description.
         """
-        return self.switch(random.choice(list(PIECE_TYPE)) if piece is None else piece )
+        return self.switch(random.choice(list(PieceType)) if piece is None else piece)
          
-    def switch(self, value: PIECE_TYPE) -> Piece:
-        """_summary_
+    def switch(self, value: PieceType) -> Piece:
+        """
+        Summary.
 
         Args:
-            value (PIECE_TYPE): _description_
+            value (PIECE_TYPE): Description.
 
         Returns:
-            Piece: _description_
+            Piece: Description.
         """
-        if value == PIECE_TYPE.I:
-            return I_Form() 
-        elif value == PIECE_TYPE.J:
-            return J_Form()
-        elif value == PIECE_TYPE.L:
-            return L_Form()
-        elif value == PIECE_TYPE.O:
-            return O_Form()
-        elif value == PIECE_TYPE.S:
-            return S_Form()
-        elif value == PIECE_TYPE.T:
-            return T_Form()
-        elif value == PIECE_TYPE.Z:
-            return Z_Form()
+        if value == PieceType.I:
+            return IForm() 
+        elif value == PieceType.J:
+            return JForm()
+        elif value == PieceType.L:
+            return LForm()
+        elif value == PieceType.O:
+            return OForm()
+        elif value == PieceType.S:
+            return SForm()
+        elif value == PieceType.T:
+            return TForm()
+        elif value == PieceType.Z:
+            return ZForm()
         else:
             return None
         
-    def getActualPiece(self) -> Piece:
-        """_summary_
+    def get_actual_piece(self) -> Piece:
+        """
+        Summary.
 
         Returns:
-            Piece: _description_
+            Piece: Description.
         """
-        return self.__actualPiece
+        return self.__actual_piece
     
-    def getNextPiece(self) -> Piece:
-        """_summary_
+    def get_next_piece(self) -> Piece:
+        """
+        Summary.
 
         Returns:
-            Piece: _description_
+            Piece: Description.
         """
-        return self.__nextPiece
+        return self.__next_piece
     
     def update(self) -> None:
         for area in self.__grid:
             area.update()   
     
     
-    def printGrid(self) -> None:
+    def print_grid(self) -> None:
         """ 
         Only for testing purposes
         """
         for area in self.__grid:
-            for rows in area.getBlocks():
+            for rows in area.get_blocks():
                 for columns in rows:
-                    if columns.getColor() == COLOR.BLACK:
-                        print(" ", end = "")
+                    if columns.get_color() == Color.BLACK:
+                        print("", end="")
                     else:
-                        print("❑", end = "")
+                        print("❑", end="")
                 print()
-        print(self.__actualPiece)
-        print(self.__actualPiece.printPiece())
-            
+        print(self.__actual_piece)
+        print(self.__actual_piece.print_piece())
