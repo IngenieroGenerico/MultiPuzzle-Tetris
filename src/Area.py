@@ -19,6 +19,7 @@ class Area:
         self.__blocks = []
         self.__color = None
         self.__ID = id
+        self.__center = sizeX / 2 + sizeX * id
         
         for x in range(0, self.__sizeX ):
             columns = []
@@ -48,6 +49,9 @@ class Area:
             int: _description_
         """
         return self.__sizeY
+    
+    def getCenter(self) -> int:
+        return self.__center
     
     def getBlocks(self) -> list:
         """
