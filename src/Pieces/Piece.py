@@ -1,7 +1,7 @@
-from ..Block import Block, GAME_COLORS
+from ..Block import Block, GameColors
 from enum import Enum
 
-class PIECE_TYPE(Enum):
+class PieceType(Enum):
     I = 1
     J = 2
     L = 3
@@ -12,18 +12,18 @@ class PIECE_TYPE(Enum):
     
 class Piece:
     """
-    Used as base class from all pieces will inheritance
+    Used as a base class from all pieces will inherit
     """
     def __init__(self) -> None:
         """
-        Constructor where all variables and data types are create it.
+        Constructor where all variables and data types are created.
         """
         self.__type = None
         self._color = None
         self._pivot = Block()
         self._blocks = []
 
-    def setColor(self, color: GAME_COLORS) -> None:
+    def set_color(self, color: GameColors) -> None:
         """
         Set color to all blocks in this piece
 
@@ -32,25 +32,46 @@ class Piece:
         """
         self._color = color
         for i in self._blocks:
-            i.setColor(color)
+            i.set_color(color)
             
-    def setType(self, type: PIECE_TYPE = None) -> None:
-        self.__type = type
+    def set_type(self, piece_type: PieceType = None) -> None:
+        self.__type = piece_type
     
-    def getType(self) -> PIECE_TYPE:
+    def get_type(self) -> PieceType:
         return self.__type
     
+    def set_initial_position(self, x: int, y: int) -> None:
+        self.move_pivot(x, y)
+
+    def move_down(self) -> None:
+        for block in self._blocks:
+            block.move_down()
+
+    def move_left(self) -> None:
+        for block in self._blocks:
+            block.move_left()
+      
+    def move_right(self) -> None:
+        for block in self._blocks:
+            block.move_right()
+
+    def move_pivot(self, x: int, y: int) -> None:
+        self._pivot.set_position(x, y)
+
     def rotate(self) -> None:
         pass
     def update(self) -> None:
-        """_summary_
-        """
+        """Summary"""
         pass
     def render(self) -> None:
-        """_summary_
-        """
+        """Summary"""
         pass
     def destroy(self) -> None:
-        """_summary_
-        """
+        """Summary"""
         pass
+
+    def print_piece(self) -> None:
+        print(self.__type)
+        print(self._color)
+        for block in self._blocks:
+            block.print_block()
