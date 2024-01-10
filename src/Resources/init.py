@@ -1,98 +1,54 @@
 import pygame
+from .input_manager import InputManager
 
-class InputManager:
-    def __init__(self) -> None:
-        """
-        Diccionario para almacenar el estado de todas las teclas 
-        """
-        self.keys = {}
+class CreateWindow:
+    "__privada, _Protected"
+    def __init__(self, width: int, height: int, window_name: str = "My Game") -> None:
+        pygame.init()
+        self.__width = width
+        self.__height = height
+        self.screen = pygame.display.set_mode((self.__width, self.__height))
+        pygame.display.set_caption(window_name)
+        self.__running = True
+        self.__clock = pygame.time.Clock()
+        self.input_manager = InputManager()
 
     def update(self) -> None:
         """
-        Actualiza el estado de todas las teclas
-        """
-        self.keys = pygame.key.get_pressed()
-    
-    def is_key_pressed(self, key: int) -> bool:
-        """
-        Verifica si una tecla esta siendo presionada
-
-        Args:
-            key (int): Tecla de verificacion
-
-        Returns:
-            bool: True si la tecla esta siendo presionada,
-                  False de lo contrario
-        """
-        return self.keys[key]
-    
-    def any_key_pressed(self) -> None:
-        """
-        Verifica si almenos una tecla esta siendo presionada.
-
-        Returns:
-            int: _description_
-        """
-        for key, is_pressed in enumerate(self.keys):
-            if is_pressed:
-                return key
-        return None
-    
-class AudioManager:
-    def __init__(self) -> None:
-        pass
-
-class ResourceManager:
-    def __init__(self) -> None:
-        pass
-
-class Render:
-    def __init__(self) -> None:
-        pass
-
-class Game:
-    "__privada, _Protected"
-    def __init__(self) -> None:
-        pygame.init()
-        self.screen = None
-        self.clock = pygame.time.Clock()
-        self.running = False
-        self.input_manager = InputManager()
-
-    def initializer(self, width: int, height: int, window_name: str = "My Game") -> None:
-        """
-        Initializes the game with screen configuration.
-
-        Args:
-            width (int): Width of the screen in pixels.
-            height (int): Height of the screen in pixels.
-            window_name (str, optional): Name of the game window. Defaults to "My Game".
-        """
-        self.width = width
-        self.height = height
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption(window_name)
-        self.running = True
-
-    def run(self) -> None:
-        """
         Starts the main game loop
         """
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.__running = False
             
             self.input_manager.update()
+            
+            if self.input_manager.key_pressed("W"):
+                print("W Pressed...")
+            if self.input_manager.key_pressed("A"):
+                print("A Pressed...")
+            if self.input_manager.key_pressed("S"):
+                print("S Pressed...")
+            if self.input_manager.key_pressed("D"):
+                print("D Pressed...")
+            if self.input_manager.key_pressed("UP"):
+                print("UP Pressed...")
+            if self.input_manager.key_pressed("DOWN"):
+                print("DOWN Pressed...")
+            if self.input_manager.key_pressed("LEFT"):
+                print("LEFT Pressed...")
+            if self.input_manager.key_pressed("RIGHT"):
+                print("RIGHT Pressed...")
+            if self.input_manager.key_pressed("TAB"):
+                print("TAB Pressed...")
+            if self.input_manager.key_pressed("ESC"):
+                print("ESC Pressed...")
 
-            pressed_key = self.input_manager.any_key_pressed()
-            if pressed_key:
-                print("Key pressed")
 
-            if self.input_manager.is_key_pressed(pygame.K_SPACE):
-                print("Space key pressed")
+            self.__clock.tick(60)   
+    
+    def is_running(self) -> bool:
+        return self.__running
 
-            self.clock.tick(60)
-        
+    def destroy(self) -> None:
         pygame.quit()
-
