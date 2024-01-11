@@ -1,7 +1,7 @@
 import pygame
 from .input_manager import InputManager
 
-class CreateWindow:
+class EventManager:
     "__privada, _Protected"
     def __init__(self, width: int, height: int, window_name: str = "My Game") -> None:
         pygame.init()

@@ -1,5 +1,7 @@
 import pygame
-from ..Block import vec
+from ..Block import Block
+from ..Math.Vector2 import Vector2
+from ..Math.Vector3 import Vector3
 
 class RenderManager:
     def __init__(self, display_surface: pygame.Surface) -> None:
@@ -16,18 +18,18 @@ class RenderManager:
     def create_rectangle(self, x: int, y: int, width: int, height: int) -> pygame.Rect:
         return pygame.Rect(x, y, width, height)
 
-    def draw_rectangle(self, color: tuple, rect: pygame.Rect) -> None:
-        pygame.draw.rect(self.__screen, color, rect)
+    def draw_rectangle(self, color: Vector3, rect: Block) -> None:
+        pygame.draw.rect(self.__screen, (color.get_x(),color.get_y(), color.get_z()), rect.get_rect())
     
-    def draw_line(self, color: tuple, start_point: tuple, end_point: tuple, width: int = 1) -> None:
+    def draw_line(self, color: Vector3, start_point: Vector2, end_point: Vector2, width: int = 1) -> None:
         pygame.draw.line(self.__screen, color, start_point, end_point, width)
     
-    def draw_circle(self, color: tuple, center: tuple, radius: int) -> None:
+    def draw_circle(self, color: Vector3, center: Vector2, radius: int) -> None:
         pygame.draw.circle(self.__screen, color, center, radius)
-
-    def draw_txt(self, text: str, font: mi_font, color: tuple, position: tuple) -> None:
+"""
+    def draw_txt(self, text: str, font: , color: Vector3, position: Vector) -> None:
         renderer_text = font.render(text, True, color)
         self.__screen.blit(renderer_text, position)
 
-    def draw_img(self, image: mi_surface, position: vec) -> None:
-        self.__screen.blit(image, position)
+    def draw_img(self, image: mi_surface, position: Vector2) -> None:
+        self.__screen.blit(image, position)"""

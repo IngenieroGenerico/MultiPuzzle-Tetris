@@ -1,55 +1,59 @@
-from .Block import Block, COLOR, GAME_COLORS
+from .Block import Block, Color, GameColors
 import random
 
 class Area:
-    """ Used to create a game area with its own blocks and defined color."""
+    """Used to create a game area with its own blocks and defined color."""
 
-    def __init__(self, sizeX: int = 10, sizeY: int = 20, id: int = 1) -> None:
+    def __init__(self, size_x: int = 10, size_y: int = 20, id: int = 0) -> None:
         """
         Creates a list of blocks that will be the columns and rows for the 
         resulting area.
 
         Args:
-            sizeX (int, optional): _description_. Defaults to 10.
-            sizeY (int, optional): _description_. Defaults to 20.
-            id (int, optional): _description_. Defaults to 1.
+            size_x (int, optional): _description_. Defaults to 10.
+            size_y (int, optional): _description_. Defaults to 20.
+            id (int, optional): _description_. Defaults to 0.
         """
-        self.__sizeX = sizeX
-        self.__sizeY = sizeY
+        self.__size_x = size_x
+        self.__size_y = size_y
         self.__blocks = []
         self.__color = None
-        self.__ID = id
+        self.__id = id
+        self.__center = size_x / 2 + size_x * id
         
-        for x in range(0, self.__sizeX ):
+        for x in range(0, self.__size_x):
             columns = []
-            for y in range(0, self.__sizeY ):
-                tempColor = None
-                if y == 0 or x == 0 or y == self.__sizeY-1 or x == self.__sizeX-1:
-                    tempColor = COLOR.GRAY
+            for y in range(0, self.__size_y):
+                temp_color = None
+                if y == 0 or x == 0 or x == self.__size_x - 1:
+                    temp_color = Color.GRAY
                 else:
-                    tempColor = COLOR.BLACK
+                    temp_color = Color.BLACK
 
-                newBlock = Block(x * id, y * id, tempColor)
-                columns.append(newBlock)
+                new_block = Block(id * size_x + x, y, temp_color)
+                columns.append(new_block)
             self.__blocks.append(columns)
             
-    def getSizeX(self) -> int:
+    def get_size_x(self) -> int:
         """_summary_
 
         Returns:
             int: _description_
         """
-        return self.__sizeX
+        return self.__size_x
     
-    def getSizeY(self) -> int:
+    def get_size_y(self) -> int:
         """_summary_
 
         Returns:
             int: _description_
         """
-        return self.__sizeY
+        return self.__size_y
     
-    def getBlocks(self) -> list:
+    def get_center(self) -> int:
+        return self.__center
+    
+    def get_blocks(self) -> list:
         """
         Gets list of blocks for this area.
 
@@ -58,7 +62,7 @@ class Area:
         """
         return self.__blocks
     
-    def setColor(self, color: GAME_COLORS = None) -> None:
+    def set_color(self, color: GameColors = None) -> None:
         """
         Set area color by parameter, if not define area color will be 
         set it randomly.
@@ -67,11 +71,11 @@ class Area:
             :param color: Area color given as parameter.
         """
         if color is None:
-            self.__color = random.choice(list(GAME_COLORS))
+            self.__color = random.choice(list(GameColors))
         else:
             self.__color = color
     
-    def getColor(self) -> GAME_COLORS:
+    def get_color(self) -> GameColors:
         """
         Get the Area color.
 
@@ -80,23 +84,23 @@ class Area:
         """
         return self.__color
 
-    def setID(self, id: int) -> None:
+    def set_id(self, id: int) -> None:
         """
         Set Area Identifier
 
         Args:
             :param id: Identifier given. 
         """
-        self.__ID = id
+        self.__id = id
     
-    def getID(self) -> int:
+    def get_id(self) -> int:
         """
-        Get Are idenfier
+        Get Area identifier
 
         Returns:
             int: Identifier
         """
-        return self.__ID
+        return self.__id
     
     def update(self):
         """_summary_

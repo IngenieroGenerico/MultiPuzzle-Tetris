@@ -1,13 +1,16 @@
 from enum import Enum
+from pygame import Rect
+from .Math.Vector2 import Vector2
+from .Math.Vector3 import Vector3
 
-class GAME_COLORS(Enum):
+class GameColors(Enum):
     """Used to define game color"""
     YELLOW = 1
     BLUE = 2
     RED = 3
 
-class COLOR(Enum):
-    """ Used to define blocks color."""
+class Color(Enum):
+    """Used to define blocks color."""
     YELLOW = 1
     BLUE = 2
     RED = 3
@@ -16,45 +19,66 @@ class COLOR(Enum):
     NEUTRAL = 6
 
 class Block:
-    """ Used to create a block."""
+    """Used to create a block."""
 
-    def __init__(self, posX: int = None, posY: int = None, color = None) -> None:
+    def __init__(self, x: int = None, y: int = None, color = None) -> None:
         """
         Create a simple block defined by its position and color, if the color is not passed as
         parameter the color will be assigned as Neutral.
 
         Args:
-            posX (int, optional): _description_. Defaults to None.
-            posY (int, optional): _description_. Defaults to None.
-            color (_type_, optional): _description_. Defaults to None.
+            x (int, optional): Description. Defaults to None.
+            y (int, optional): Description. Defaults to None.
+            color (_type_, optional): Description. Defaults to None.
         """
         if color is None:
-            self.__color = COLOR.NEUTRAL
+            self.__color = Color.NEUTRAL
         else:
             self.__color = color
-        if posX is None or posY is None:
-            self.__position = (None, None)
-        self.__position = (posX, posY)
+        self.switch_color() 
+        if x is None or y is None:
+            self.__position = Vector2()
+            self.__rect = Rect(0, 0, 0, 0)
+        else:
+            self.__position = Vector2(x, y)
+            self.__rect = Rect(x, y, 20, 20)
     
-    def setColor(self, color: COLOR) -> None:
+    def set_color(self, color: Color) -> None:
         """
         Set block color.
 
         Args:
-            color (COLOR): Number that define the color based on Enum COLOR.
+            color (Color): Number that defines the color based on Enum Color.
         """
         self.__color = color
         
-    def getColor(self) -> COLOR:
+    def get_color(self) -> Color:
         """
         Get block color.
 
         Returns:
-            COLOR: actual color of the block.
+            Color: actual color of the block.
         """
         return self.__color
     
-    def getPosition(self) -> tuple:
+    def get_color_rgb(self) -> Vector3:
+        return self.__color_rgb
+    
+    def switch_color(self) -> None:
+        if self.__color == Color.BLACK:
+            self.__color_rgb = Vector3(0,0,0)
+        elif self.__color == Color.GRAY:
+            self.__color_rgb = Vector3(128,128,128)
+        elif self.__color == Color.RED:
+            self.__color_rgb = Vector3(255,0,0)
+        elif self.__color == Color.YELLOW:
+            self.__color_rgb = Vector3(255,255,0)
+        elif self.__color == Color.BLUE:
+            self.__color_rgb = Vector3(0,0,255)
+        elif self.__color == Color.NEUTRAL:
+            self.__color_rgb = Vector3()
+
+    def get_position(self) -> Vector2:
         """
         Get position as tuple.
 
@@ -63,17 +87,40 @@ class Block:
         """
         return self.__position
     
-    def setPosition(self, posX: int, posY: int) -> None:
-        """_summary_
+    def set_position(self, x: int, y: int) -> None:
+        """Summary.
 
         Args:
-            posX (int): _description_
-            posY (int): _description_
+            x (int): Description.
+            y (int): Description.
         """
-        self.__position = (posX, posY)
+        if self.__position.get_x() is None or self.__position.get_y() is None:
+            self.__position = Vector2(x, y)
+        else:
+            self.set_x(x)
+            self.set_y(y)
     
+    def set_x(self, x: int) -> None:
+        self.__position.set_x(x) 
+    
+    def set_y(self, y: int) -> None:
+        self.__position.set_y(y) 
+    
+    def move_left(self) -> None:
+        self.__position.set_x(self.__position.get_x() - 1)
+    def move_right(self) -> None:
+        self.__position.set_x(self.__position.get_x() + 1)
+    def move_down(self) -> None:
+        self.__position.set_y(self.__position.get_y() - 1)
+
     def update(self) -> None:
         print(self.__position)
         
     def render(self) -> None:
         pass
+
+    def get_rect(self) -> Rect:
+        return self.__rect
+
+    def print_block(self) -> None:
+        print(self.get_position())
