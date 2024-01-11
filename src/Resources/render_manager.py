@@ -8,9 +8,8 @@ class RenderManager:
         self.__screen = display_surface
         self.__rect = None
 
-
     def clear_screen(self) -> None:
-        self.__screen.fill((0, 0, 0))
+        self.__screen.fill((255, 255, 255))
 
     def update_display(self) -> None:
         pygame.display.flip()
@@ -20,7 +19,7 @@ class RenderManager:
 
     def draw_rectangle(self, color: Vector3, rect: Block) -> None:
         pygame.draw.rect(self.__screen, (color.get_x(),color.get_y(), color.get_z()), rect.get_rect())
-    
+
     def draw_line(self, color: Vector3, start_point: Vector2, end_point: Vector2, width: int = 1) -> None:
         pygame.draw.line(self.__screen, color, start_point, end_point, width)
     

@@ -30,7 +30,7 @@ class Area:
                 else:
                     temp_color = Color.BLACK
 
-                new_block = Block(id * size_x + x, y, temp_color)
+                new_block = Block(id * size_x + x, -y, temp_color)
                 columns.append(new_block)
             self.__blocks.append(columns)
             
