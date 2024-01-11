@@ -38,10 +38,9 @@ class Block:
         self.switch_color() 
         if x is None or y is None:
             self.__position = Vector2()
-            self.__rect = Rect(0, 0, 0, 0)
         else:
             self.__position = Vector2(x, y)
-            self.__rect = Rect(x, y, 20, 20)
+        self.__rect = None
     
     def set_color(self, color: Color) -> None:
         """
@@ -87,6 +86,8 @@ class Block:
         """
         return self.__position
     
+    def create_rect(self, x: int, y: int) -> None:
+        self.__rect = Rect(x,y, 20,20)
     def set_position(self, x: int, y: int) -> None:
         """Summary.
 
