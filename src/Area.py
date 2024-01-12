@@ -21,18 +21,26 @@ class Area:
         self.__id = id
         self.__center = size_x / 2 + size_x * id
         
+        actual_x = 0
+        actual_y = 0
+        area_width = size_x * 20 * id
         for x in range(0, self.__size_x):
             columns = []
             for y in range(0, self.__size_y):
                 temp_color = None
-                if y == 0 or x == 0 or x == self.__size_x - 1:
+                if y == self.__size_y -1 or x == 0 or x == self.__size_x - 1:
                     temp_color = Color.GRAY
                 else:
                     temp_color = Color.BLACK
 
-                new_block = Block(id * size_x + x, -y, temp_color)
+                new_block = Block(id * size_x + x, y, temp_color)
+                new_block.create_rect(actual_x + area_width, actual_y)
+                actual_y += 20
+
                 columns.append(new_block)
             self.__blocks.append(columns)
+            actual_y = 0
+            actual_x += 20
             
     def get_size_x(self) -> int:
         """_summary_

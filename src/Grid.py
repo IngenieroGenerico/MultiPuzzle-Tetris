@@ -1,7 +1,7 @@
 from src.Block import Color
 from src.Area import Area, random
 from src.Pieces.ImportsData import *
-from src.Resources.render_manager import RenderManager
+from src.Resources.RenderManager import RenderManager
 
 
 class Grid:
@@ -144,3 +144,4 @@ class Grid:
             for rows in area.get_blocks():
                 for columns in rows:
                     render.draw_rectangle(columns.get_color_rgb(),columns)
+       

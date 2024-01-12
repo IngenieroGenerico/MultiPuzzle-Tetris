@@ -1,5 +1,5 @@
 import pygame
-from .input_manager import InputManager
+from .InputManager import InputManager
 
 class EventManager:
     "__privada, _Protected"
@@ -7,12 +7,15 @@ class EventManager:
         pygame.init()
         self.__width = width
         self.__height = height
-        self.screen = pygame.display.set_mode((self.__width, self.__height))
+        self.__screen = pygame.display.set_mode((self.__width, self.__height))
         pygame.display.set_caption(window_name)
         self.__running = True
         self.__clock = pygame.time.Clock()
         self.input_manager = InputManager()
 
+    def get_screen(self) -> pygame.Surface:
+        return self.__screen
+    
     def update(self) -> None:
         """
         Starts the main game loop
