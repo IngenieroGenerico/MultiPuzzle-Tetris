@@ -4,58 +4,58 @@ import random
 class Area:
     """Used to create a game area with its own blocks and defined color."""
 
-    def __init__(self, size_x: int = 10, size_y: int = 20, id: int = 0) -> None:
+    def __init__(self, columns: int = 12, rows: int = 22, id: int = 0) -> None:
         """
         Creates a list of blocks that will be the columns and rows for the 
         resulting area.
 
         Args:
-            size_x (int, optional): _description_. Defaults to 10.
-            size_y (int, optional): _description_. Defaults to 20.
+            columns (int, optional): _description_. Defaults to 10.
+            rows (int, optional): _description_. Defaults to 20.
             id (int, optional): _description_. Defaults to 0.
         """
-        self.__size_x = size_x
-        self.__size_y = size_y
+        self.__columns_amount = columns
+        self.__rows_amount = rows
         self.__blocks = []
         self.__color = None
         self.__id = id
-        self.__center = size_x / 2 + size_x * id
+        self.__center = columns / 2 + columns * id
         
         actual_x = 0
         actual_y = 0
-        area_width = size_x * 20 * id
-        for x in range(0, self.__size_x):
-            columns = []
-            for y in range(0, self.__size_y):
+        area_width = columns * Block.BLOCK_SIZE * id
+        for x in range(0, self.__columns_amount):
+            columns_block = []
+            for y in range(0, self.__rows_amount):
                 temp_color = None
-                if y == self.__size_y -1 or x == 0 or x == self.__size_x - 1:
+                if y == self.__rows_amount -1 or x == 0 or x == self.__columns_amount - 1:
                     temp_color = Color.GRAY
                 else:
                     temp_color = Color.BLACK
 
-                new_block = Block(id * size_x + x, y, temp_color)
+                new_block = Block(id * columns + x, y, temp_color)
                 new_block.create_rect(actual_x + area_width, actual_y)
-                actual_y += 20
-                columns.append(new_block)
-            self.__blocks.append(columns)
+                actual_y += Block.BLOCK_SIZE
+                columns_block.append(new_block)
+            self.__blocks.append(columns_block)
             actual_y = 0
-            actual_x += 20
+            actual_x += Block.BLOCK_SIZE
             
-    def get_size_x(self) -> int:
+    def get_columns_amount(self) -> int:
         """_summary_
 
         Returns:
             int: _description_
         """
-        return self.__size_x
+        return self.__columns_amount
     
-    def get_size_y(self) -> int:
+    def get_rows_amount(self) -> int:
         """_summary_
 
         Returns:
             int: _description_
         """
-        return self.__size_y
+        return self.__rows_amount
     
     def get_center(self) -> int:
         return self.__center
@@ -116,3 +116,8 @@ class Area:
             for columns in rows:
                 columns.update()
             rows.update()
+
+    def render(self, render_manager) -> None:
+            for row in self.__blocks:
+                for columns in row:
+                    columns.render(render_manager)
