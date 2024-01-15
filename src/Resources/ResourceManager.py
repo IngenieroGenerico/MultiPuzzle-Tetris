@@ -7,8 +7,8 @@ class MySurface(pygame.Surface):
 class ResourceManager:
     def __init__(self) -> None:
         self.images = {}
-        self.sound = {}
-        self.music = {}
+        self.sounds = {}
+        self.musics = {}
 
     def load_img(self, image_path: str) -> MySurface:
         if image_path not in self.images:
@@ -26,7 +26,7 @@ class ResourceManager:
             file_path (str): the file path of the sound effect
         """
         sound = pygame.mixer.Sound(file_path)
-        self.sound[name] = sound
+        self.sounds[name] = sound
     
     def load_music(self, name: str, file_path: str) -> None:
         """
@@ -36,8 +36,8 @@ class ResourceManager:
             name (str): name to associate with the music track
             file_path (str): the file path of the music track
         """
-        sound = pygame.mixer.music.load(file_path)
-        self.music[name] = sound
+        music = pygame.mixer.music.load(file_path)
+        self.musics[name] = music
 
     def get_sound(self, name: str) -> str:
         """
@@ -49,7 +49,7 @@ class ResourceManager:
         Returns:
             str: the file path of the loaded sound effect
         """
-        return self.sound.get(name)
+        return self.sounds.get(name)
 
     def get_music(self, name: str) -> str:
         """
@@ -61,4 +61,4 @@ class ResourceManager:
         Returns:
             str: the file path of the loaded music track
         """
-        return self.music.get(name)           
+        return self.musics.get(name)           
