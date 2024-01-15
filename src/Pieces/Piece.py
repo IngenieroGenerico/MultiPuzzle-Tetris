@@ -1,5 +1,6 @@
 from ..Block import Block, GameColors
 from enum import Enum
+from ..Resources.RenderManager import RenderManager
 
 class PieceType(Enum):
     I = 1
@@ -14,34 +15,22 @@ class Piece:
     """
     Used as a base class from all pieces will inherit
     """
-    def __init__(self) -> None:
-        """
-        Constructor where all variables and data types are created.
-        """
+    def __init__(self, color: GameColors) -> None:
+        
         self.__type = None
-        self._color = None
-        self._pivot = Block()
-        self._blocks = []
-
-    def set_color(self, color: GameColors) -> None:
-        """
-        Set color to all blocks in this piece
-
-        Args:
-            color (GAME_COLORS): Color to set it.
-        """
         self._color = color
-        for i in self._blocks:
-            i.set_color(color)
-            
+        self._blocks = []
+    
+    def create_rects_in_area(self, area) -> None:
+        for block in self._blocks:
+            block.create_rect((area.get_id() * area.get_columns_amount() + block.get_position().get_x() * Block.BLOCK_SIZE),
+                                (block.get_position().get_y() * Block.BLOCK_SIZE))
+
     def set_type(self, piece_type: PieceType = None) -> None:
         self.__type = piece_type
     
     def get_type(self) -> PieceType:
         return self.__type
-    
-    def set_initial_position(self, x: int, y: int) -> None:
-        self.move_pivot(x, y)
 
     def move_down(self) -> None:
         for block in self._blocks:
@@ -55,23 +44,16 @@ class Piece:
         for block in self._blocks:
             block.move_right()
 
-    def move_pivot(self, x: int, y: int) -> None:
-        self._pivot.set_position(x, y)
-
     def rotate(self) -> None:
         pass
     def update(self) -> None:
         """Summary"""
         pass
-    def render(self) -> None:
-        """Summary"""
-        pass
+    
+    def render(self, render_manager: RenderManager) -> None:
+        for block in self._blocks:
+            block.render(render_manager)
+
     def destroy(self) -> None:
         """Summary"""
         pass
-
-    def print_piece(self) -> None:
-        print(self.__type)
-        print(self._color)
-        for block in self._blocks:
-            block.print_block()

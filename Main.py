@@ -12,13 +12,15 @@ if __name__ == "__main__":
     input_manager = InputManager()
 
     new_grid = Grid()
-    areas_amount = 3 #int(input("Introduce el numero de areas para el juego: "))
-    amount_blocks_y = 20 #int(input("Introduce el numero de Filas: "))
-    amount_blocks_x = 10 #int(input("Introduce el numero de Columnas: "))
+
+    areas_amount = 3
+    rows_amount =22
+    columns_amount = 12
+
     block_size = 20
-    windows_height = amount_blocks_y * block_size
-    windows_width = areas_amount * amount_blocks_x * block_size
-    new_grid.create_level(areas_amount,amount_blocks_x,amount_blocks_y)
+    windows_height = rows_amount * block_size
+    windows_width = areas_amount * columns_amount * block_size
+    new_grid.create_level(areas_amount,columns_amount,rows_amount)
 
     
     resource_manager.load_music("Test", "src/Resources/Music/Test.mp3")
@@ -29,7 +31,7 @@ if __name__ == "__main__":
 
     game = EventManager(windows_width, windows_height)
     renderer = RenderManager(game.get_screen())
-
+    
     while game.is_running():
         renderer.clear_screen()
 
