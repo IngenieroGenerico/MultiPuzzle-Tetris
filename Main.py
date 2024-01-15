@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     game = EventManager(windows_width, windows_height)
     renderer = RenderManager(game.get_screen())
-
+    
     while game.is_running():
         renderer.clear_screen()
         new_grid.render(renderer)

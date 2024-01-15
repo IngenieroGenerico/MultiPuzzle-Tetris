@@ -24,7 +24,7 @@ class Piece:
     def create_rects_in_area(self, area) -> None:
         for block in self._blocks:
             block.create_rect((area.get_id() * area.get_columns_amount() + block.get_position().get_x() * Block.BLOCK_SIZE),
-                                (area.get_id() * area.get_rows_amount() + block.get_position().get_y() * Block.BLOCK_SIZE))
+                                (block.get_position().get_y() * Block.BLOCK_SIZE))
 
     def set_type(self, piece_type: PieceType = None) -> None:
         self.__type = piece_type

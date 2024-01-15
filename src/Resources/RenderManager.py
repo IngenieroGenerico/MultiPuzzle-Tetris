@@ -13,7 +13,7 @@ class RenderManager:
         pygame.display.flip()
     
     def draw_circle(self, color: Vector3, center: Vector2, radius: int) -> None:
-        pygame.draw.circle(self.__screen, color, center, radius)
+        pygame.draw.circle(self.__screen, (color.get_x(),color.get_y(),color.get_z()), (center.get_x(),center.get_y()), radius)
 
     def get_screen(self) -> None:
         return self.__screen

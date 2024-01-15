@@ -47,6 +47,9 @@ class Block:
             y (int): _description_
         """
         self.__rect = pygame.Rect(x, y, Block.BLOCK_SIZE, Block.BLOCK_SIZE)
+    
+    def get_rect_position(self) -> Vector2:
+        return Vector2(self.__rect.topleft[0], self.__rect.topleft[1])
 
     def set_color(self, color: Color) -> None:
         """

@@ -27,7 +27,7 @@ class Grid:
         """
         self.__areas_amount = areas_amount
         self.create_areas(areas_amount, columns, rows)
-        self.__actual_piece = self.create_piece(PieceType.J)
+        self.__actual_piece = self.create_piece()
         self.__next_piece = self.create_piece()
         self.spawn_piece_in_area(self.__actual_piece)
 
