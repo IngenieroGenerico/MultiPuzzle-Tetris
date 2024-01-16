@@ -34,7 +34,6 @@ class Grid:
     def spawn_piece_in_area(self, piece: Piece) -> None:
         random_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
         piece.set_initial_position(random_area.get_center())
-        piece.create_rects_in_area(random_area)
 
         
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:

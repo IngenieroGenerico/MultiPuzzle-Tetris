@@ -19,7 +19,7 @@ class Area:
         self.__blocks = []
         self.__color = None
         self.__id = id
-        self.__center = columns / 2 + columns * id
+        self.__center = int(columns // 2 + columns * id)
         
         actual_x = 0
         actual_y = 0

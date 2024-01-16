@@ -27,9 +27,7 @@ class InputManager:
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
                 self.handle_key_down(event.key)
-            elif event.type == pygame.KEYUP:
-                self.handle_key_up(event.key)
-
+                
     def handle_key_down(self, key) -> None:
         if key == pygame.K_w:
             self.keys["W"] = True
@@ -51,28 +49,6 @@ class InputManager:
             self.keys["TAB"] = True
         elif key == pygame.K_ESCAPE:
             self.keys["ESC"]  = True
-
-    def handle_key_up(self, key) -> None:
-        if key == pygame.K_w:
-            self.keys["W"] = False
-        elif key == pygame.K_a:
-            self.keys["A"] = False
-        elif key == pygame.K_s:
-            self.keys["S"] = False
-        elif key == pygame.K_d:
-            self.keys["D"] = False
-        elif key == pygame.K_UP:
-            self.keys["UP"] = False
-        elif key == pygame.K_DOWN:
-            self.keys["DOWN"] = False
-        elif key == pygame.K_LEFT:
-            self.keys["LEFT"] = False
-        elif key == pygame.K_RIGHT:
-            self.keys["RIGHT"] = False
-        elif key == pygame.K_TAB:
-            self.keys["TAB"] = False
-        elif key == pygame.K_ESCAPE:
-            self.keys["ESC"]  = False
 
     def key_pressed(self, key: int) -> bool:
         """

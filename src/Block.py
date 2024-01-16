@@ -135,22 +135,21 @@ class Block:
     
     def move_block(self, x: int, y: int) -> None:
         self.__position.set_position(x,y)
+        self.__rect.x = x
+        self.__rect.y = y
    
 
     def move_left(self) -> None:
         self.__position.set_x(self.__position.get_x() - 1)
-        self.__rect.move(self.__rect.x - Block.BLOCK_SIZE,
-                         self.__rect.y)
+        self.__rect.x -= Block.BLOCK_SIZE
         
     def move_right(self) -> None:
         self.__position.set_x(self.__position.get_x() + 1)
-        self.__rect.move(self.__rect.x + Block.BLOCK_SIZE,
-                         self.__rect.y)
+        self.__rect.x += Block.BLOCK_SIZE
 
     def move_down(self) -> None:
         self.__position.set_y(self.__position.get_y() + 1)
-        self.__rect.move(self.__rect.x, 
-                         self.__rect.y + Block.BLOCK_SIZE)
+        self.__rect.y += Block.BLOCK_SIZE
 
     def update(self) -> None:
         pass

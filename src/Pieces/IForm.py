@@ -20,6 +20,8 @@ class IForm(Piece):
         self._blocks[1].set_x(area_center)
         self._blocks[2].set_x(area_center)
         self._blocks[3].set_x(area_center)
+        super().create_rect()
+        
 
     def update(self) -> None:
         """Summary"""

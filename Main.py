@@ -22,13 +22,9 @@ if __name__ == "__main__":
     windows_width = areas_amount * columns_amount * block_size
     new_grid.create_level(areas_amount,columns_amount,rows_amount)
 
-    
     resource_manager.load_music("Test", "src/Resources/Music/Test.mp3")
     audio_manager.play_music("Test")
     
-    pygame.mixer.music.load("src/Resources/Music/Test.mp3")
-    pygame.mixer.music.play(-1)
-
     game = EventManager(windows_width, windows_height)
     renderer = RenderManager(game.get_screen())
     
@@ -43,11 +39,14 @@ if __name__ == "__main__":
         if input_manager.key_pressed("W"):
             print("W pressed")
         if input_manager.key_pressed("A"):
-            print("A pressed")
+            new_grid.get_actual_piece().move_left()
+            input_manager.keys["A"] = False
         if input_manager.key_pressed("S"):
-            print("S pressed")
+            new_grid.get_actual_piece().move_down()
+            input_manager.keys["S"] = False
         if input_manager.key_pressed("D"):
-            print("D pressed")
+            new_grid.get_actual_piece().move_right()
+            input_manager.keys["D"] = False
         if input_manager.key_pressed("UP"):
             print("UP pressed")
         if input_manager.key_pressed("DOWN"):
