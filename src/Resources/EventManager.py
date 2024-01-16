@@ -16,39 +16,44 @@ class EventManager:
     def get_screen(self) -> pygame.Surface:
         return self.__screen
     
-    def update(self) -> None:
+    def hande_input(self, input_manager, new_grid, audio_manager) -> None:
+        input_manager.update()
+        if input_manager.key_pressed("W"):
+            print("W pressed")
+        if input_manager.key_pressed("A"):
+            new_grid.get_actual_piece().move_left()
+            audio_manager.play_sound("Key")
+            input_manager.keys["A"] = False
+        if input_manager.key_pressed("S"):
+            new_grid.get_actual_piece().move_down()
+            audio_manager.play_sound("Key")
+            input_manager.keys["S"] = False
+        if input_manager.key_pressed("D"):
+            new_grid.get_actual_piece().move_right()
+            audio_manager.play_sound("Key")
+            input_manager.keys["D"] = False
+        if input_manager.key_pressed("UP"):
+            print("UP pressed")
+        if input_manager.key_pressed("DOWN"):
+            print("DOWN pressed")
+        if input_manager.key_pressed("LEFT"):
+            print("LEFT pressed")
+        if input_manager.key_pressed("RIGHT"):
+            print("RIGHT pressed")
+        if input_manager.key_pressed("TAB"):
+            print("TAB pressed")
+        if input_manager.key_pressed("ESC"):
+            print("ESC pressed")
+
+
+    def update_game(self, grid, render, audio_manager) -> None:
         """
         Starts the main game loop
         """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.__running = False
-            
-            self.input_manager.update()
-            
-            if self.input_manager.key_pressed("W"):
-                print("W Pressed...")
-            if self.input_manager.key_pressed("A"):
-                print("A Pressed...")
-            if self.input_manager.key_pressed("S"):
-                print("S Pressed...")
-            if self.input_manager.key_pressed("D"):
-                print("D Pressed...")
-            if self.input_manager.key_pressed("UP"):
-                print("UP Pressed...")
-            if self.input_manager.key_pressed("DOWN"):
-                print("DOWN Pressed...")
-            if self.input_manager.key_pressed("LEFT"):
-                print("LEFT Pressed...")
-            if self.input_manager.key_pressed("RIGHT"):
-                print("RIGHT Pressed...")
-            if self.input_manager.key_pressed("TAB"):
-                print("TAB Pressed...")
-            if self.input_manager.key_pressed("ESC"):
-                print("ESC Pressed...")
-
-
-            self.__clock.tick(60)   
+        render.clear_screen()
+        grid.render(render)
+        render.update_display()
+        self.__clock.tick(60)   
     
     def is_running(self) -> bool:
         return self.__running
