@@ -59,6 +59,7 @@ class Block:
             color (Color): Number that defines the color based on Enum Color.
         """
         self.__color = color
+        self.set_color_rgb()
         
     def get_color(self) -> Color:
         """

@@ -1,5 +1,7 @@
 from .Block import Block, Color, GameColors
+from .Pieces.Piece import Piece
 import random
+import copy
 
 class Area:
     """Used to create a game area with its own blocks and defined color."""
@@ -17,6 +19,9 @@ class Area:
         self.__columns_amount = columns
         self.__rows_amount = rows
         self.__blocks = []
+        self.__left_boundaries = []
+        self.__right_boundaries = []
+        self.__bottom_boundaries = []
         self.__color = None
         self.__id = id
         self.__center = int(columns // 2 + columns * id)
@@ -27,15 +32,22 @@ class Area:
         for x in range(0, self.__columns_amount):
             columns_block = []
             for y in range(0, self.__rows_amount):
-                temp_color = None
-                if y == self.__rows_amount -1 or x == 0 or x == self.__columns_amount - 1:
-                    temp_color = Color.GRAY
-                else:
-                    temp_color = Color.BLACK
-
-                new_block = Block(id * columns + x, y, temp_color)
+                
+                new_block = Block(id * columns + x, y, Color.NEUTRAL)
                 new_block.create_rect(actual_x + area_width, actual_y)
-
+            
+                if y == self.__rows_amount -1:
+                    new_block.set_color(Color.GRAY)
+                    self.__bottom_boundaries.append(new_block)
+                elif x == 0:
+                    new_block.set_color(Color.GRAY)
+                    self.__left_boundaries.append(new_block)
+                elif x == self.__columns_amount - 1:
+                    new_block.set_color(Color.GRAY)
+                    self.__right_boundaries.append(new_block)
+                else:
+                    new_block.set_color(Color.BLACK)
+        
                 actual_y += Block.BLOCK_SIZE
                 columns_block.append(new_block)
             self.__blocks.append(columns_block)
@@ -69,6 +81,9 @@ class Area:
             list: Blocks of the actual area.
         """
         return self.__blocks
+    
+    def get_bottom_boundaries(self) -> list:
+        return self.__bottom_boundaries
     
     def set_color(self, color: GameColors = None) -> None:
         """
@@ -110,6 +125,19 @@ class Area:
         """
         return self.__id
     
+    def add_piece_to_area(self,piece: Piece) -> None:
+        
+        for columns in range(self.__columns_amount):
+            for rows in range(self.__rows_amount):
+                if len(piece.get_blocks()) != 0:
+                    for i in range(0, len(piece.get_blocks())):
+                        if self.__blocks[columns][rows].get_position() == piece.get_blocks()[i].get_position():
+                            self.__blocks[columns][rows] = copy.deepcopy(piece.get_blocks()[i])
+                            self.__bottom_boundaries.append(self.__blocks[columns][rows])
+                            del piece.get_blocks()[i]
+                            break
+
+        
     def update(self):
         """_summary_
         """

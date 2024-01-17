@@ -14,7 +14,9 @@ class Grid:
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
+        self.__actual_area = None
         self.__grid = []
+        
 
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         """
@@ -29,13 +31,23 @@ class Grid:
         self.create_areas(areas_amount, columns, rows)
         self.__actual_piece = self.create_piece()
         self.__next_piece = self.create_piece()
-        self.spawn_piece_in_area(self.__actual_piece)
+        self.spawn_piece_in_area()
 
-    def spawn_piece_in_area(self, piece: Piece) -> None:
-        random_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
-        piece.set_initial_position(random_area.get_center())
+    def spawn_piece_in_area(self) -> None:
+        self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
+        self.__actual_piece.set_initial_position(self.__actual_area.get_center())
 
-        
+    def check_down_colition(self) -> None:
+        for boundarie_block in self.__actual_area.get_bottom_boundaries():
+            for piece_block in self.__actual_piece.get_blocks():
+                if piece_block.get_position() == boundarie_block.get_position():
+                    self.__actual_area.add_piece_to_area(self.__actual_piece)
+                    self.__actual_piece = self.__next_piece
+                    self.__next_piece = self.create_piece()
+                    self.spawn_piece_in_area()
+                    break
+
+
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         """
         Create a list of areas defined by the amount given as a parameter.
@@ -96,8 +108,7 @@ class Grid:
         return self.__next_piece
     
     def update(self) -> None:
-        for area in self.__grid:
-            area.update()   
+        self.check_down_colition()
     
     def get_areas_amount(self) -> int:
         return self.__areas_amount

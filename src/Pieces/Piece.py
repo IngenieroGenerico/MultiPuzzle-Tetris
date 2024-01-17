@@ -54,6 +54,5 @@ class Piece:
         for block in self._blocks:
             block.render(render_manager)
 
-    def destroy(self) -> None:
-        """Summary"""
-        pass
+    def get_blocks(self) -> list:
+        return self._blocks

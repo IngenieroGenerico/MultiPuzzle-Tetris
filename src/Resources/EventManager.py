@@ -32,7 +32,7 @@ class EventManager:
         self.__rules_area.fill(verde)#TODO: Imagen
 
         #TODO:Crear superficie para el area de juegos.
-        
+
         self.__running = True
         self.__clock = pygame.time.Clock()
         self.__input_manager = InputManager()
@@ -85,7 +85,7 @@ class EventManager:
         # Renderizar el rules_area 
         self.__screen.blit(self.__rules_area, (0, self.__height_gameplay_area))
 
-        
+        grid.update()
         grid.render(render)
         render.update_display()
         self.__clock.tick(60)   
