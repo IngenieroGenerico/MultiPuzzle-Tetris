@@ -1,9 +1,7 @@
 import pygame
-from src.Resources.ResourceManager import ResourceManager
 
 class AudioManager:
     def __init__(self) -> None:
-        self.resource_manager = ResourceManager()
         self.sounds = {}
         self.musics = {}
         self.sound_volume = 1.0 # 0.0 a 1.0

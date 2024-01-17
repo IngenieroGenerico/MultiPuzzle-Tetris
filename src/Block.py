@@ -154,7 +154,7 @@ class Block:
     def update(self) -> None:
         pass
         
-    def render(self, render_manager: RenderManager) -> None:
+    def render(self, render_manager: RenderManager) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
         pygame.draw.rect(render_manager.get_screen(), (self.__color_rgb.get_x(),
                                                    self.__color_rgb.get_y(),
                                                    self.__color_rgb.get_z()),self.__rect)

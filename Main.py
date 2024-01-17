@@ -14,21 +14,50 @@ if __name__ == "__main__":
     columns_amount = 12
 
     block_size = 20
-    windows_height = rows_amount * block_size
-    windows_width = areas_amount * columns_amount * block_size
+    height_gameplay_area = rows_amount * block_size
+    width_gameplay_area = areas_amount * columns_amount * block_size
+
     new_grid.create_level(areas_amount,columns_amount,rows_amount)
 
-    audio_manager.load_music("Test", "src/Resources/Music/Test_music.mp3")
-    audio_manager.set_music_volume(0.3)
-    #audio_manager.play_music("Test")
+    audio_manager.load_music("Test", "src/Resources/Music/gameplay.mp3")
+    audio_manager.set_music_volume(0.1)
+    audio_manager.play_music("Test")
 
     audio_manager.load_sound("Key", "src/Resources/Music/Test_key_pressed.mp3")
 
-    game = EventManager(windows_width, windows_height)
+    game = EventManager(width_gameplay_area, height_gameplay_area)
     render = RenderManager(game.get_screen())
     
     
     while game.is_running():
-        game.hande_input(input_manager, new_grid, audio_manager)
-        game.update_game(new_grid, render, audio_manager)
+        game.hande_input(new_grid)
+        game.update_game(new_grid, render)
     game.destroy()
+
+
+    """GameManager-----
+		
+		    EventManager-------
+				    InputManager
+				    AudioManager
+				    ResourceManager
+		
+	    	WindowsManager-----------
+				    RenderManager
+		    Grid-------------
+				    Area
+				    Bloques
+				    Piezas
+				    RenderManager
+		    Gameplay---------------
+				    RenderManager
+		    UI/UX-------------------
+				    RenderManager
+
+--------------------------------------------------------------
+
+	FUNCIONES
+		*Update()
+		*Render()
+		 
+    """
