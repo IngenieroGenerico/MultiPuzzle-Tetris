@@ -28,13 +28,15 @@ if __name__ == "__main__":
     song.play_music("GameSong")
     img.load_img("src/Resources/Images/cat.png")
     img.load_img("src/Resources/Images/cat_transparent.png", True)
-    
+    img.rotate("cat_transparent", 180.0)
+    img.scale("cat", 0.25)
 
     while game.is_running():
         game.handle_input(new_grid)
         mouse.mouse_pressed()
         render.clear_screen()
         #game.update_game(new_grid, render)
-        img.draw(render)
+        img.draw(render.get_screen(), "cat")
+        img.draw(render.get_screen(), "cat_transparent")
         render.update_display()
     game.destroy()

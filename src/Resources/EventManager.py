@@ -63,7 +63,7 @@ class EventManager:
         
         grid.render(render)
         render.update_display()
-        self.__clock.tick(144)   
+        self.__clock.tick(60)   
     
     def is_running(self) -> bool:
         return self.__running
