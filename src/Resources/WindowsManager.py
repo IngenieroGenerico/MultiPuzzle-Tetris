@@ -1,6 +1,10 @@
 import pygame
 
 class WindowsManager:
+    BLANCO = (255, 255, 255)
+    ROJO = (255, 0, 0)
+    VERDE = (0, 255, 0)
+    
     def __init__(self, width: int, height: int, window_name: str = "My Game") -> None:
         pygame.init() 
         self.__width_gampley_area = width
@@ -16,16 +20,13 @@ class WindowsManager:
         pygame.display.set_caption(window_name)
 
         # Definir colores
-        blanco = (255, 255, 255)
-        rojo = (255, 0, 0)
-        verde = (0, 255, 0)
         # Crear superficie para el área de puntos y siguiente pieza
         self.__score_area = pygame.Surface((self.__width_score_area, self.__height_score_area))
-        self.__score_area.fill(blanco)
+        self.__score_area.fill(WindowsManager.BLANCO)
 
         # Crear superficie para el de reglas
         self.__rules_area = pygame.Surface((self.__width_rules_area, self.__height_rules_area))
-        self.__rules_area.fill(verde)
+        self.__rules_area.fill(WindowsManager.VERDE)
 
     def get_screen(self) -> pygame.Surface:
         return self.__screen

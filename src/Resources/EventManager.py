@@ -13,13 +13,14 @@ class EventManager:
         self.__audio_manager = AudioManager()
         self.__clock = pygame.time.Clock()
         self.__running = True
+
     def get_screen(self):
         return self.__windows_manager.get_screen()
     
     def handle_input(self, new_grid: Grid) -> None:
         self.__input_manager.update()
         if self.__input_manager.key_pressed("W"):
-            print("W pressed")
+            self.__input_manager.keys["W"] = False
         if self.__input_manager.key_pressed("A"):
             new_grid.get_actual_piece().move_left()
             self.__audio_manager.play_sound("Key")
@@ -33,17 +34,18 @@ class EventManager:
             self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["D"] = False
         if self.__input_manager.key_pressed("UP"):
-            print("UP pressed")
+            self.__input_manager.keys["UP"] = False
         if self.__input_manager.key_pressed("DOWN"):
-            print("DOWN pressed")
+            self.__input_manager.keys["DOWN"] = False
         if self.__input_manager.key_pressed("LEFT"):
-            print("LEFT pressed")
+            self.__input_manager.keys["LEFT"] = False
         if self.__input_manager.key_pressed("RIGHT"):
-            print("RIGHT pressed")
+            self.__input_manager.keys["RIGHT"] = False
         if self.__input_manager.key_pressed("TAB"):
-            print("TAB pressed")
+            self.__input_manager.keys["TAB"] = False
         if self.__input_manager.key_pressed("ESC"):
-            print("ESC pressed")
+            self.__input_manager.keys["ESC"] = False
+            pygame.quit()
 
     def update_game(self, grid: Grid, render: RenderManager) -> None:
         """
@@ -61,7 +63,7 @@ class EventManager:
         
         grid.render(render)
         render.update_display()
-        self.__clock.tick(60)   
+        self.__clock.tick(144)   
     
     def is_running(self) -> bool:
         return self.__running

@@ -5,6 +5,7 @@ class InputManager:
         """
         Diccionario para almacenar el estado de todas las teclas 
         """
+        self.mouse_state = None
         self.keys = {
             "W": False,
             "A": False,
@@ -17,6 +18,17 @@ class InputManager:
             "ESC": False,
             "TAB": False
         }
+    
+    def mouse_position(self) -> tuple:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        return mouse_x, mouse_y
+    
+    def mouse_pressed(self) -> None:
+        buttons = pygame.mouse.get_pressed() 
+        if buttons[0] and (self.mouse_state is None or not self.mouse_state[0]):
+            mouse_x, mouse_y = self.mouse_position()
+            print("Left button pressed ({}, {})".format(mouse_x, mouse_y))
+        self.mouse_state = buttons
 
     def update(self) -> None:
         """
@@ -49,6 +61,10 @@ class InputManager:
             self.keys["TAB"] = True
         elif key == pygame.K_ESCAPE:
             self.keys["ESC"]  = True
+    
+    def clear_keys(self) -> None:
+        for key in self.keys:
+            self.keys[key] = False
 
     def key_pressed(self, key: int) -> bool:
         """
