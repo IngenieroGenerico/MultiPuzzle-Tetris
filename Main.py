@@ -3,10 +3,10 @@ from src.Resources.EventManager import EventManager
 from src.Resources.RenderManager import RenderManager
 from src.Resources.AudioManager import AudioManager
 from src.Resources.InputManager import InputManager
-import time, random
+import random, time
 
 if __name__ == "__main__":
-  
+    random.seed(int(time.time()))
     audio_manager = AudioManager()
     input_manager = InputManager()
     new_grid = Grid()

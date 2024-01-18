@@ -38,6 +38,7 @@ class Block:
         self.set_color_rgb() 
         self.__position = Vector2(x, y)
         self.__rect = None
+        self.__area_parent = None
 
     def create_rect(self, x: int, y: int) -> None:
         """_summary_
@@ -94,7 +95,13 @@ class Block:
         """
         return self.__color_rgb
 
-    
+    def get_area_parent_color_rgb(self) -> Vector3:
+        if self.__area_parent.get_color() == Color.RED or self.__area_parent.get_color() == GameColors.RED:
+            return Vector3(255,0,0)
+        elif self.__area_parent.get_color() == Color.YELLOW or self.__area_parent.get_color() == GameColors.YELLOW:
+            return Vector3(255,255,0)
+        elif self.__area_parent.get_color() == Color.BLUE or self.__area_parent.get_color() == GameColors.BLUE:
+            return Vector3(0,0,255)
     
     def set_position(self, x: int, y: int) -> None:
         """Summary.
@@ -152,17 +159,25 @@ class Block:
         self.__position.set_y(self.__position.get_y() + 1)
         self.__rect.y += Block.BLOCK_SIZE
 
+    def set_area_parent(self, area) -> None:
+        self.__area_parent = area
+
     def update(self) -> None:
         pass
-        
+    
     def render(self, render_manager: RenderManager) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
         pygame.draw.rect(render_manager.get_screen(), (self.__color_rgb.get_x(),
                                                    self.__color_rgb.get_y(),
                                                    self.__color_rgb.get_z()),self.__rect)
+        line_color = (255,255,255)
+        if self.__area_parent is not None:
+            line_color = (self.get_area_parent_color_rgb().get_x(),
+                          self.get_area_parent_color_rgb().get_y(),
+                          self.get_area_parent_color_rgb().get_z())
         if self.__color != Color.BLACK:
-            pygame.draw.line(render_manager.get_screen(), (255,255,255), self.__rect.topleft,self.__rect.bottomleft,1)
-            pygame.draw.line(render_manager.get_screen(), (255,255,255), self.__rect.bottomleft,self.__rect.bottomright,1)
-            pygame.draw.line(render_manager.get_screen(), (255,255,255), self.__rect.bottomright,self.__rect.topright,1)
-            pygame.draw.line(render_manager.get_screen(), (255,255,255), self.__rect.topright,self.__rect.topleft,1)
+            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,1)
+            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,1)
+            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,1)
+            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,1)
 
 

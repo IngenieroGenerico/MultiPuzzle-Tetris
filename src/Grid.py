@@ -2,7 +2,7 @@ from src.Block import Color, GameColors
 from src.Area import Area, random
 from src.Pieces.ImportsData import *
 from src.Resources.RenderManager import RenderManager
-
+import copy
 
 class Grid:
     """Creates a game area."""
@@ -42,11 +42,10 @@ class Grid:
             for piece_block in self.__actual_piece.get_blocks():
                 if piece_block.get_position() == boundarie_block.get_position():
                     self.__actual_area.add_piece_to_area(self.__actual_piece)
-                    self.__actual_piece = self.__next_piece
+                    self.__actual_piece = copy.deepcopy(self.__next_piece)
                     self.__next_piece = self.create_piece()
                     self.spawn_piece_in_area()
                     break
-
 
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         """
@@ -59,7 +58,6 @@ class Grid:
         """
         for i in range(0, amount):
             new_area = Area(columns, rows, i)
-            new_area.set_color()
             self.__grid.append(new_area)
      
     def create_piece(self, piece: PieceType = random.choice(list(PieceType))) -> Piece:

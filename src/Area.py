@@ -29,6 +29,7 @@ class Area:
         actual_x = 0
         actual_y = 0
         area_width = columns * Block.BLOCK_SIZE * id
+        self.set_color()
         for x in range(0, self.__columns_amount):
             columns_block = []
             for y in range(0, self.__rows_amount):
@@ -48,6 +49,7 @@ class Area:
                 else:
                     new_block.set_color(Color.BLACK)
         
+                new_block.set_area_parent(self)
                 actual_y += Block.BLOCK_SIZE
                 columns_block.append(new_block)
             self.__blocks.append(columns_block)
