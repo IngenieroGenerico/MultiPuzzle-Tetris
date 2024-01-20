@@ -31,7 +31,11 @@ class Piece:
     
     def get_type(self) -> PieceType:
         return self.__type
-
+    
+    def move_up(self) -> None:
+        for block in self._blocks:
+            block.move_up()
+            
     def move_down(self) -> None:
         for block in self._blocks:
             block.move_down()

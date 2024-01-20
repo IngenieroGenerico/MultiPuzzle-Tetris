@@ -127,19 +127,31 @@ class Area:
         """
         return self.__id
     
-    def add_piece_to_area(self,piece: Piece) -> None:
-        
-        for columns in range(self.__columns_amount):
-            for rows in range(self.__rows_amount):
-                if len(piece.get_blocks()) != 0:
-                    for i in range(0, len(piece.get_blocks())):
-                        if self.__blocks[columns][rows].get_position() == piece.get_blocks()[i].get_position():
-                            self.__blocks[columns][rows] = copy.deepcopy(piece.get_blocks()[i])
-                            self.__bottom_boundaries.append(self.__blocks[columns][rows])
-                            del piece.get_blocks()[i]
-                            break
+    def check_left_colition(self, piece: Piece) -> bool:
+        for block_boundarie in self.__left_boundaries:
+            for block_piece in piece.get_blocks():
+                if block_piece.get_position() == block_boundarie.get_position():
+                   return True
+        return False
+    def check_right_colition(self, piece: Piece) -> bool:
+        for block_boundarie in self.__right_boundaries:
+            for block_piece in piece.get_blocks():
+                if block_piece.get_position() == block_boundarie.get_position():
+                   return True
+        return False
+    def check_down_colition(self, piece: Piece) -> bool:
+        for block_boundarie in self.__bottom_boundaries:
+            for block_piece in piece.get_blocks():
+                if block_piece.get_position() == block_boundarie.get_position():
+                    piece.move_up()
+                    for i in range(0, 4):
+                        pos_x = piece.get_blocks()[i].get_position().get_x() - self.__columns_amount * self.__id
+                        pos_y = piece.get_blocks()[i].get_position().get_y()
+                        self.__blocks[pos_x][pos_y] = copy.deepcopy(piece.get_blocks()[i])
+                        self.__bottom_boundaries.append(self.__blocks[pos_x][pos_y])
+                    return True
+        return False
 
-        
     def update(self):
         """_summary_
         """
@@ -147,6 +159,7 @@ class Area:
             for columns in rows:
                 columns.update()
             rows.update()
+       
 
     def render(self, render_manager) -> None:
             for row in self.__blocks:

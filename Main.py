@@ -11,7 +11,7 @@ if __name__ == "__main__":
     input_manager = InputManager()
     new_grid = Grid()
 
-    areas_amount = 3
+    areas_amount = 5
     rows_amount = 22
     columns_amount = 12
 

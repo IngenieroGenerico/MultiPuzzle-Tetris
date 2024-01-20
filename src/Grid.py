@@ -37,16 +37,6 @@ class Grid:
         self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
         self.__actual_piece.set_initial_position(self.__actual_area.get_center())
 
-    def check_down_colition(self) -> None:
-        for boundarie_block in self.__actual_area.get_bottom_boundaries():
-            for piece_block in self.__actual_piece.get_blocks():
-                if piece_block.get_position() == boundarie_block.get_position():
-                    self.__actual_area.add_piece_to_area(self.__actual_piece)
-                    self.__actual_piece = copy.deepcopy(self.__next_piece)
-                    self.__next_piece = self.create_piece()
-                    self.spawn_piece_in_area()
-                    break
-
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         """
         Create a list of areas defined by the amount given as a parameter.
@@ -106,7 +96,25 @@ class Grid:
         return self.__next_piece
     
     def update(self) -> None:
-        self.check_down_colition()
+        for area in self.__grid:
+            if area.check_down_colition(self.__actual_piece):
+                self.__actual_piece = copy.deepcopy(self.__next_piece)
+                self.__next_piece = self.create_piece()
+                self.spawn_piece_in_area()
+            elif area.check_left_colition(self.__actual_piece):
+                if area.get_id() != 0:  
+                    for _ in range(4):
+                        self.__actual_piece.move_left()
+                else:
+                    self.__actual_piece.move_right()
+                        
+            elif area.check_right_colition(self.__actual_piece):
+                if area.get_id() != self.__areas_amount - 1:  
+                    for _ in range(4):
+                        self.__actual_piece.move_right()
+                else:
+                    self.__actual_piece.move_left()
+                        
     
     def get_areas_amount(self) -> int:
         return self.__areas_amount

@@ -146,7 +146,10 @@ class Block:
         self.__rect.x = x
         self.__rect.y = y
    
-
+    def move_up(self) -> None:
+        self.__position.set_y(self.__position.get_y() - 1)
+        self.__rect.y -= Block.BLOCK_SIZE
+        
     def move_left(self) -> None:
         self.__position.set_x(self.__position.get_x() - 1)
         self.__rect.x -= Block.BLOCK_SIZE
