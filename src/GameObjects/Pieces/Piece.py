@@ -1,6 +1,5 @@
 from ..Block import Block, GameColors
 from enum import Enum
-from ..Resources.RenderManager import RenderManager
 
 class PieceType(Enum):
     I = 1
@@ -10,22 +9,31 @@ class PieceType(Enum):
     S = 5
     T = 6
     Z = 7
-    
-class Piece:
-    """
-    Used as a base class from all pieces will inherit
-    """
-    class Direction(Enum):
+
+class Orientation(Enum):
         VERTICAL = 1
         HORIZONTAL = 2
         VERTICAL_NEGATIVO = 3
         HORIZONTAL_NEGATIVO = 4
+
+class Direction(Enum):
+    LEFT = 1
+    RIGHT = 2
+    DOWN = 3
+    UP = 4
+
+class Piece:
+    """
+    Used as a base class from all pieces will inherit
+    """
+    
         
     def __init__(self, color: GameColors) -> None:
+        self._can_move = True
         self.__type = None
         self._pivot = None
         self._color = color
-        self._direction = Piece.Direction.VERTICAL
+        self._orientation = Orientation.VERTICAL
         self._blocks = []
     
     def create_rect(self) -> None:
@@ -39,9 +47,20 @@ class Piece:
     def get_type(self) -> PieceType:
         return self.__type
     
-    def set_direction(self, direction: Direction) -> None:
-        self._direction = direction
+    def set_orientation(self, orientation: Orientation) -> None:
+        self._orientation = orientation
     
+    def move(self, direction) -> None:
+        if self._can_move:
+            if direction == Direction.LEFT:
+                self.move_left()
+            elif direction == Direction.RIGHT:
+                self.move_right()
+            elif direction == Direction.DOWN:
+                self.move_down()
+            elif direction == Direction.UP:
+                self.move_up()
+
     def move_up(self) -> None:
         for block in self._blocks:
             block.move_up()
@@ -64,9 +83,9 @@ class Piece:
         """Summary"""
         pass
     
-    def render(self, render_manager: RenderManager) -> None:
+    def render(self, window) -> None:
         for block in self._blocks:
-            block.render(render_manager)
+            block.render(window)
 
     def get_blocks(self) -> list:
         return self._blocks

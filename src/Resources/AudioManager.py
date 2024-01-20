@@ -74,4 +74,5 @@ class AudioManager:
         self.music_volume = max(0.0, min(1.0, volume))
         pygame.mixer.music.set_volume(self.music_volume)
 
- 
+    def update(self) -> None:
+        pass

@@ -1,7 +1,6 @@
 from .Block import Block, Color, GameColors
 from .Pieces.Piece import Piece
-import random
-import copy
+import random, copy
 
 class Area:
     """Used to create a game area with its own blocks and defined color."""
@@ -161,7 +160,7 @@ class Area:
             rows.update()
        
 
-    def render(self, render_manager) -> None:
+    def render(self, window) -> None:
             for row in self.__blocks:
                 for columns in row:
-                    columns.render(render_manager)
+                    columns.render(window)

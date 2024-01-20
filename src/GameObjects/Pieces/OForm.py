@@ -26,8 +26,8 @@ class OForm(Piece):
         """Summary"""
         pass
 
-    def render(self, render_manager: RenderManager) -> None:
-        super().render(render_manager)
+    def render(self, window) -> None:
+        super().render(window)
 
     def destroy(self) -> None:
         """Summary"""

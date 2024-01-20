@@ -1,21 +1,26 @@
-from src.Block import Color, GameColors
-from src.Area import Area, random
-from src.Pieces.ImportsData import *
-from src.Resources.RenderManager import RenderManager
-import copy
+from .Block import GameColors
+from .Area import Area, random
+from .Pieces.ImportsData import *
+import copy, pygame
 
 class Game:
     """Creates a game area."""
 
-    def __init__(self) -> None:
+    def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         """
         Default constructor, define the data for this class.
         """
+        self.__clock = pygame.time.Clock()
+        self.__elapsed_time = 0
+        self.__time = 1000
+
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
         self.__actual_area = None
         self.__grid = []
+
+        self.create_level(areas_amount, columns, rows)
         
 
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -95,9 +100,28 @@ class Game:
         """
         return self.__next_piece
     
-    def update(self, delta_time) -> None:
-        if delta_time:
+    def get_areas_amount(self) -> int:
+        return self.__areas_amount
+    
+    def get_columns_in_area(self) -> int:
+        return self.__grid[0].get_columns_amount()
+    
+    def get_rows_in_area(self) -> int:
+        return self.__grid[0].get_rows_amount()
+    
+    def get_delta_time(self) -> bool:
+        if self.__elapsed_time >= self.__time:
+            self.__elapsed_time = 0
+            return True
+        else:
+            delta_time = self.__clock.tick(60)
+            self.__elapsed_time += delta_time
+            return False
+        
+    def update(self) -> None:
+        if self.get_delta_time():
             self.__actual_piece.move_down()
+
         for area in self.__grid:
             if area.check_down_colition(self.__actual_piece):
                 self.__actual_piece = copy.deepcopy(self.__next_piece)
@@ -108,27 +132,16 @@ class Game:
                     for _ in range(4):
                         self.__actual_piece.move_left()
                 else:
-                    self.__actual_piece.move_right()
-                        
+                    self.__actual_piece.move_right()      
             elif area.check_right_colition(self.__actual_piece):
                 if area.get_id() != self.__areas_amount - 1:  
                     for _ in range(4):
                         self.__actual_piece.move_right()
                 else:
                     self.__actual_piece.move_left()
-                        
-    
-    def get_areas_amount(self) -> int:
-        return self.__areas_amount
-    
-    def get_columns_in_area(self) -> int:
-        return self.__grid[0].get_columns_amount()
-    
-    def get_rows_in_area(self) -> int:
-        return self.__grid[0].get_rows_amount()
-    
-    def render(self, render_manager: RenderManager) -> None:
+
+    def render(self, window) -> None:
         for area in self.__grid:
-            area.render(render_manager)
-        self.__actual_piece.render(render_manager)
+            area.render(window)
+        self.__actual_piece.render(window)
        

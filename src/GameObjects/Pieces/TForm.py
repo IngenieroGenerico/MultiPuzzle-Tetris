@@ -28,37 +28,37 @@ class TForm(Piece):
         pos_x = self._pivot.get_position().get_x()
         pos_y = self._pivot.get_position().get_y()
 
-        if self._direction == Piece.Direction.VERTICAL:
+        if self._orientation == Orientation.VERTICAL:
             self._blocks[0].set_position(pos_x - 1, pos_y)
             self._blocks[2].set_position(pos_x, pos_y - 1)
             self._blocks[3].set_position(pos_x, pos_y + 1)
-            self._direction = Piece.Direction.HORIZONTAL
+            self._orientation = Orientation.HORIZONTAL
 
-        elif self._direction == Piece.Direction.HORIZONTAL:
+        elif self._orientation == Orientation.HORIZONTAL:
             self._blocks[0].set_position(pos_x, pos_y - 1)
             self._blocks[2].set_position(pos_x + 1, pos_y)
             self._blocks[3].set_position(pos_x - 1, pos_y)
-            self._direction = Piece.Direction.VERTICAL_NEGATIVO
+            self._orientation = Orientation.VERTICAL_NEGATIVO
         
-        elif self._direction == Piece.Direction.VERTICAL_NEGATIVO:
+        elif self._orientation == Orientation.VERTICAL_NEGATIVO:
             self._blocks[0].set_position(pos_x + 1, pos_y)
             self._blocks[2].set_position(pos_x, pos_y - 1)
             self._blocks[3].set_position(pos_x, pos_y + 1)
-            self._direction = Piece.Direction.HORIZONTAL_NEGATIVO
+            self._orientation = Orientation.HORIZONTAL_NEGATIVO
 
-        elif self._direction == Piece.Direction.HORIZONTAL_NEGATIVO:
+        elif self._orientation == Orientation.HORIZONTAL_NEGATIVO:
             self._blocks[0].set_position(pos_x, pos_y + 1)
             self._blocks[2].set_position(pos_x - 1, pos_y)
             self._blocks[3].set_position(pos_x + 1, pos_y)
-            self._direction = Piece.Direction.VERTICAL
+            self._orientation = Orientation.VERTICAL
         super().create_rect()
 
     def update(self) -> None:
         """Summary"""
         pass
 
-    def render(self, render_manager: RenderManager) -> None:
-        super().render(render_manager)
+    def render(self, window) -> None:
+        super().render(window)
 
     def destroy(self) -> None:
         """Summary"""

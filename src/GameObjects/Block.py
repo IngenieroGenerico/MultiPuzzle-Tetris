@@ -1,8 +1,7 @@
 import pygame
 from enum import Enum
-from .Math.Vector2 import Vector2
-from .Math.Vector3 import Vector3
-from .Resources.RenderManager import RenderManager
+from ..Math.Vector2 import Vector2
+from ..Math.Vector3 import Vector3
 
 class GameColors(Enum):
     """Used to define game color"""
@@ -168,8 +167,8 @@ class Block:
     def update(self) -> None:
         pass
     
-    def render(self, render_manager: RenderManager) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
-        pygame.draw.rect(render_manager.get_screen(), (self.__color_rgb.get_x(),
+    def render(self, window) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
+        pygame.draw.rect(window.get_screen(), (self.__color_rgb.get_x(),
                                                    self.__color_rgb.get_y(),
                                                    self.__color_rgb.get_z()),self.__rect)
         line_color = (255,255,255)
@@ -178,9 +177,9 @@ class Block:
                           self.get_area_parent_color_rgb().get_y(),
                           self.get_area_parent_color_rgb().get_z())
         if self.__color != Color.BLACK:
-            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,1)
-            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,1)
-            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,1)
-            pygame.draw.line(render_manager.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,1)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,1)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,1)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,1)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,1)
 
 
