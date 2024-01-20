@@ -6,12 +6,12 @@ from src.Resources.InputManager import InputManager
 import random, time
 
 if __name__ == "__main__":
-    random.seed(int(time.time()))
+    random.seed(time.time())
     audio_manager = AudioManager()
     input_manager = InputManager()
     new_grid = Grid()
 
-    areas_amount = 5
+    areas_amount = 3
     rows_amount = 22
     columns_amount = 12
 

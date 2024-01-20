@@ -29,8 +29,8 @@ class Grid:
         """
         self.__areas_amount = areas_amount
         self.create_areas(areas_amount, columns, rows)
-        self.__actual_piece = self.create_piece()
-        self.__next_piece = self.create_piece()
+        self.__actual_piece = self.create_piece(random.choice(list(PieceType)))
+        self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
 
     def spawn_piece_in_area(self) -> None:
@@ -95,11 +95,13 @@ class Grid:
         """
         return self.__next_piece
     
-    def update(self) -> None:
+    def update(self, delta_time) -> None:
+        if delta_time:
+            self.__actual_piece.move_down()
         for area in self.__grid:
             if area.check_down_colition(self.__actual_piece):
                 self.__actual_piece = copy.deepcopy(self.__next_piece)
-                self.__next_piece = self.create_piece()
+                self.__next_piece = self.create_piece(random.choice(list(PieceType)))
                 self.spawn_piece_in_area()
             elif area.check_left_colition(self.__actual_piece):
                 if area.get_id() != 0:  

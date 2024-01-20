@@ -35,6 +35,8 @@ class EventManager:
 
         self.__running = True
         self.__clock = pygame.time.Clock()
+        self.__elapsed_time = 0
+        self.__time = 1000
         self.__input_manager = InputManager()
         self.__audio_manager = AudioManager()
 
@@ -85,10 +87,18 @@ class EventManager:
         # Renderizar el rules_area 
         self.__screen.blit(self.__rules_area, (0, self.__height_gameplay_area))
 
-        grid.update()
+        grid.update(self.get_delta_time())
         grid.render(render)
         render.update_display()
-        self.__clock.tick(60)   
+          
+    def get_delta_time(self) -> bool:
+        if self.__elapsed_time >= self.__time:
+            self.__elapsed_time = 0
+            return True
+        else:
+            delta_time = self.__clock.tick(60)
+            self.__elapsed_time += delta_time
+            return False
     
     def is_running(self) -> bool:
         return self.__running

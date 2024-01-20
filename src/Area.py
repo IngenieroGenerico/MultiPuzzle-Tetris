@@ -143,7 +143,7 @@ class Area:
         for block_boundarie in self.__bottom_boundaries:
             for block_piece in piece.get_blocks():
                 if block_piece.get_position() == block_boundarie.get_position():
-                    piece.move_up()
+                    piece.move_up() #HardCore
                     for i in range(0, 4):
                         pos_x = piece.get_blocks()[i].get_position().get_x() - self.__columns_amount * self.__id
                         pos_y = piece.get_blocks()[i].get_position().get_y()
