@@ -1,3 +1,3 @@
 import EventManager
 import WindowsManager
-from..Grid import Grid
+from..Game import Game

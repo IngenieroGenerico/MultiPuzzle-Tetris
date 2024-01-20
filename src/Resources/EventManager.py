@@ -1,10 +1,14 @@
 import pygame
+from ..Game import Game
 from .InputManager import InputManager
 from .AudioManager import AudioManager
+from .WindowsManager import WindowsManager
+from .RenderManager import RenderManager
 
 class EventManager:
     "__privada, _Protected"
     def __init__(self, width: int, height: int, window_name: str = "My Game") -> None:
+
         pygame.init() #TODO: Esto va en el GameManager.
         self.__width_gampley_area = width
         self.__height_gameplay_area = height
@@ -37,58 +41,64 @@ class EventManager:
         self.__clock = pygame.time.Clock()
         self.__elapsed_time = 0
         self.__time = 1000
+
+        self.__windows_manager = WindowsManager(width, height, window_name)
+
         self.__input_manager = InputManager()
         self.__audio_manager = AudioManager()
+        self.__clock = pygame.time.Clock()
+        self.__running = True
 
-    #Crear input manager
-    #Crear audio manager
-    def get_screen(self) -> pygame.Surface:
-        return self.__screen
+    def get_screen(self):
+        return self.__windows_manager.get_screen()
     
-    def hande_input(self, new_grid) -> None:
+    def handle_input(self, new_game: Game) -> None:
         self.__input_manager.update()
         if self.__input_manager.key_pressed("W"):
-            print("W pressed")
+            self.__input_manager.keys["W"] = False
         if self.__input_manager.key_pressed("A"):
-            new_grid.get_actual_piece().move_left()
-            #self.__audio_manager.play_sound("Key")
+            new_game.get_actual_piece().move_left()
+            self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["A"] = False
         if self.__input_manager.key_pressed("S"):
-            new_grid.get_actual_piece().move_down()
-            #self.__audio_manager.play_sound("Key")
+            new_game.get_actual_piece().move_down()
+            self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["S"] = False
         if self.__input_manager.key_pressed("D"):
-            new_grid.get_actual_piece().move_right()
-            #self.__audio_manager.play_sound("Key")
+            new_game.get_actual_piece().move_right()
+            self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["D"] = False
         if self.__input_manager.key_pressed("UP"):
-            print("UP pressed")
+            self.__input_manager.keys["UP"] = False
         if self.__input_manager.key_pressed("DOWN"):
-            print("DOWN pressed")
+            self.__input_manager.keys["DOWN"] = False
         if self.__input_manager.key_pressed("LEFT"):
-            print("LEFT pressed")
+            self.__input_manager.keys["LEFT"] = False
         if self.__input_manager.key_pressed("RIGHT"):
-            print("RIGHT pressed")
+            self.__input_manager.keys["RIGHT"] = False
         if self.__input_manager.key_pressed("TAB"):
-            print("TAB pressed")
+            self.__input_manager.keys["TAB"] = False
         if self.__input_manager.key_pressed("ESC"):
-            print("ESC pressed")
+            self.__input_manager.keys["ESC"] = False
+            pygame.quit()
 
-
-    def update_game(self, grid, render) -> None:
+    def update_game(self, game: Game, render: RenderManager) -> None:
         """
         Starts the main game loop
         """
         render.clear_screen()
 
-         # Renderizar el score_area 
-        self.__screen.blit(self.__score_area, (self.__width_gampley_area, 0))
+        # Renderizar el score_area
+        #self.__windows_manager.get_screen().blit(self.__windows_manager.get_score_area(), 
+        #                                         (self.__windows_manager.get_width_gameplay_area(), 0))
 
         # Renderizar el rules_area 
+
         self.__screen.blit(self.__rules_area, (0, self.__height_gameplay_area))
 
-        grid.update(self.get_delta_time())
-        grid.render(render)
+        game.update(self.get_delta_time())
+
+        game.render(render)
         render.update_display()
           
     def get_delta_time(self) -> bool:

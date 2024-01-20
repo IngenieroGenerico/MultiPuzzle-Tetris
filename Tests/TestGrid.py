@@ -1,5 +1,5 @@
 import unittest
-from src.Grid import Grid, PieceType, Piece
+from Game import Grid, PieceType, Piece
 
 class TestGrid(unittest.TestCase):
     def setUp(self):

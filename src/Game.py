@@ -4,7 +4,7 @@ from src.Pieces.ImportsData import *
 from src.Resources.RenderManager import RenderManager
 import copy
 
-class Grid:
+class Game:
     """Creates a game area."""
 
     def __init__(self) -> None:
@@ -121,10 +121,10 @@ class Grid:
     def get_areas_amount(self) -> int:
         return self.__areas_amount
     
-    def get_area_columns(self) -> int:
+    def get_columns_in_area(self) -> int:
         return self.__grid[0].get_columns_amount()
     
-    def get_area_rows(self) -> int:
+    def get_rows_in_area(self) -> int:
         return self.__grid[0].get_rows_amount()
     
     def render(self, render_manager: RenderManager) -> None:

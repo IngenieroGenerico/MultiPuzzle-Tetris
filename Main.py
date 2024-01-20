@@ -1,65 +1,30 @@
-from src.Grid import Grid
+from src.Game import Game
+from src.Block import Block
 from src.Resources.EventManager import EventManager
 from src.Resources.RenderManager import RenderManager
-from src.Resources.AudioManager import AudioManager
-from src.Resources.InputManager import InputManager
 import random, time
 
 if __name__ == "__main__":
     random.seed(time.time())
-    audio_manager = AudioManager()
-    input_manager = InputManager()
-    new_grid = Grid()
+    
+    new_game = Game()
 
     areas_amount = 3
     rows_amount = 22
     columns_amount = 12
+   
+    height_gameplay_area = rows_amount * Block.BLOCK_SIZE
+    width_gameplay_area = areas_amount * columns_amount * Block.BLOCK_SIZE
 
-    block_size = 20
-    height_gameplay_area = rows_amount * block_size
-    width_gameplay_area = areas_amount * columns_amount * block_size
-
-    new_grid.create_level(areas_amount,columns_amount,rows_amount)
-
-    audio_manager.load_music("Test", "src/Resources/Music/gameplay.mp3")
-    audio_manager.set_music_volume(0.1)
-    audio_manager.play_music("Test")
-
-    audio_manager.load_sound("Key", "src/Resources/Music/Test_key_pressed.mp3")
+    new_game.create_level(areas_amount,columns_amount,rows_amount)
 
     game = EventManager(width_gameplay_area, height_gameplay_area)
     render = RenderManager(game.get_screen())
-    
-    
+
+
     while game.is_running():
-        game.hande_input(new_grid)
-        game.update_game(new_grid, render)
+        game.handle_input(new_game)
+        render.clear_screen()
+        game.update_game(new_game, render)
+        render.update_display()
     game.destroy()
-
-
-    """GameManager-----
-		
-		    EventManager-------
-				    InputManager
-				    AudioManager
-				    ResourceManager
-		
-	    	WindowsManager-----------
-				    RenderManager
-		    Grid-------------
-				    Area
-				    Bloques
-				    Piezas
-				    RenderManager
-		    Gameplay---------------
-				    RenderManager
-		    UI/UX-------------------
-				    RenderManager
-
---------------------------------------------------------------
-
-	FUNCIONES
-		*Update()
-		*Render()
-		 
-    """
