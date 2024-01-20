@@ -6,8 +6,9 @@ import random, time
 
 if __name__ == "__main__":
     random.seed(time.time())
-    
+
     new_game = Game()
+
 
     areas_amount = 3
     rows_amount = 22
@@ -18,13 +19,13 @@ if __name__ == "__main__":
 
     new_game.create_level(areas_amount,columns_amount,rows_amount)
 
-    game = EventManager(width_gameplay_area, height_gameplay_area)
-    render = RenderManager(game.get_screen())
+    event_manager = EventManager(width_gameplay_area, height_gameplay_area)
+    render = RenderManager(event_manager.get_screen())
 
 
-    while game.is_running():
-        game.handle_input(new_game)
+    while event_manager.is_running():
+        event_manager.handle_input(new_game)
         render.clear_screen()
-        game.update_game(new_game, render)
+        event_manager.update_game(new_game, render)
         render.update_display()
-    game.destroy()
+    event_manager.destroy()

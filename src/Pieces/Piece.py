@@ -15,10 +15,17 @@ class Piece:
     """
     Used as a base class from all pieces will inherit
     """
-    def __init__(self, color: GameColors) -> None:
+    class Direction(Enum):
+        VERTICAL = 1
+        HORIZONTAL = 2
+        VERTICAL_NEGATIVO = 3
+        HORIZONTAL_NEGATIVO = 4
         
+    def __init__(self, color: GameColors) -> None:
         self.__type = None
+        self._pivot = None
         self._color = color
+        self._direction = Piece.Direction.VERTICAL
         self._blocks = []
     
     def create_rect(self) -> None:
@@ -31,6 +38,9 @@ class Piece:
     
     def get_type(self) -> PieceType:
         return self.__type
+    
+    def set_direction(self, direction: Direction) -> None:
+        self._direction = direction
     
     def move_up(self) -> None:
         for block in self._blocks:

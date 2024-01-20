@@ -77,6 +77,7 @@ class EventManager:
         if self.__input_manager.key_pressed("RIGHT"):
             self.__input_manager.keys["RIGHT"] = False
         if self.__input_manager.key_pressed("TAB"):
+            new_game.get_actual_piece().rotate()
             self.__input_manager.keys["TAB"] = False
         if self.__input_manager.key_pressed("ESC"):
             self.__input_manager.keys["ESC"] = False
