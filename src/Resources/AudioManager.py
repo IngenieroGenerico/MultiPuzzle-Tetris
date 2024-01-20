@@ -1,46 +1,37 @@
 import pygame
-from src.Resources.ResourceManager import ResourceManager
 
 class AudioManager:
     def __init__(self) -> None:
-        self.resource_manager = ResourceManager()
+        self.sounds = {}
+        self.musics = {}
         self.sound_volume = 1.0 # 0.0 a 1.0
         self.music_volume = 1.0 # 0.0 a 1.0
         pygame.mixer.init()
 
+    def load_sound(self, name: str, file_path: str) -> None:
+        if name not in self.sounds:
+            self.sounds[name] = {"file_path": file_path, "sound": pygame.mixer.Sound(file_path)}
+
     def play_sound(self, name: str) -> None:
-        """
-        Play a loaded sound effect.
-
-        Args:
-            name (str): the name of the loaded sound effect
-        """
-        sound = self.resource_manager.get_sound(name)
-        if sound:
-            sound.play()
+        if name in self.sounds:
+            self.sounds[name]["sound"].play()
+        else:
+            print("No found sound {}".format(name))
     
-    def play_music(self, name: str, loops: int = -1) ->None:
-        """
-        Play a loaded music track.
+    def load_music(self, name: str, file_path: str) -> None:
+        if name not in self.musics:
+            self.musics[name] = {"file_path": file_path}
+            pygame.mixer.music.load(file_path)
 
-        Args:
-            name (str): the name of the loaded music track
-            loops (int, optional): number of times to repeat the music. Defaults to 1.
-        """
-        file_path = self.resource_manager.get_music(name)
-        if file_path:
+    def play_music(self, name: str, loops: int = -1) ->None:
+        if name in self.musics:
             pygame.mixer.music.play(loops)
+        else:
+            print("No found track {}".format(name))
 
     def pause_sound(self, name: str) -> None:
-        """
-        Pause a playing sound effect.
-
-        Args:
-            name (str): the name of the playing sound effect
-        """
-        sound = self.resource_manager.get_sound(name)
-        if sound:
-            sound.pause()
+        if name in self.sounds:
+            pygame.mixer.find_channel().pause()
     
     def pause_music(self) -> None:
         """
@@ -49,15 +40,8 @@ class AudioManager:
         pygame.mixer.music.pause()
 
     def unpause_sound(self, name: str) -> None:
-        """
-        Unpasue a pause sound effect.
-
-        Args:
-            name (str): the name of the paused sound effect
-        """
-        sound = self.resource_manager.get_sound(name)
-        if sound:
-            sound.unpause()
+        if name in self.sounds:
+            pygame.mixer.find_channel().unpause()
     
     def unpause_music(self) -> None:
         """
@@ -66,15 +50,8 @@ class AudioManager:
         pygame.mixer.music.unpause()
 
     def stop_sound(self, name: str):
-        """
-        Stop a playing sound effect.
-
-        Args:
-            name (str): the name of the playing sound effect
-        """
-        sound = self.resource_manager.get_sound(name)
-        if sound:
-            sound.stop()
+        if name in self.sounds:
+            pygame.mixer.find_channel().stop()
     
     def set_sound_volume(self, volume: float) -> None:
         """
@@ -84,7 +61,8 @@ class AudioManager:
             volume (float): the volume level (0.0 to 1.0)
         """
         self.sound_volume = max(0.0, min(1.0, volume))
-        pygame.mixer.set_num_channels(int(pygame.mixer.get_num_channels() * self.sound_volume))
+        num_channels = int(pygame.mixer.get_num_channels() * self.sound_volume)
+        pygame.mixer.set_num_channels(num_channels)
     
     def set_music_volume(self, volume: float) -> None:
         """
@@ -96,4 +74,5 @@ class AudioManager:
         self.music_volume = max(0.0, min(1.0, volume))
         pygame.mixer.music.set_volume(self.music_volume)
 
- 
+    def update(self) -> None:
+        pass

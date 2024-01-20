@@ -4,13 +4,13 @@ from ..Math.Vector3 import Vector3
 
 class RenderManager:
     def __init__(self, display_surface: pygame.Surface) -> None:
-        self.__screen = display_surface
+        self.__screen = display_surface #TODO: Esto es del windows manager
 
     def clear_screen(self) -> None:
-        self.__screen.fill((255, 255, 255))
+        self.__screen.fill((255, 255, 255)) #TODO: Esto es del windows manager
 
     def update_display(self) -> None:
-        pygame.display.flip()
+        pygame.display.flip() #TODO: Esto es del windows manager
     
     def draw_circle(self, color: Vector3, center: Vector2, radius: int) -> None:
         pygame.draw.circle(self.__screen, (color.get_x(),color.get_y(),color.get_z()), (center.get_x(),center.get_y()), radius)

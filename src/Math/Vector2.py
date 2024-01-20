@@ -10,6 +10,33 @@ class Vector2:
         self.__x = x
         self.__y = y
 
+    def __eq__(self, other):
+        if isinstance(other, Vector2):
+            return self.__x == other.get_x() and self.__y == other.get_y()
+        return False
+    
+    def __add__(self, other):
+        if isinstance(other, Vector2):
+            return Vector2(self.__x + other.get_x(), self.__y + other.get_y())
+        raise ValueError("Unsupported operand type for +")
+
+    def __sub__(self, other):
+        if isinstance(other, Vector2):
+            return Vector2(self.__x - other.get_x(), self.__y - other.get_y())
+        raise ValueError("Unsupported operand type for -")
+
+    def __mul__(self, scalar):
+        return Vector2(self.__x * scalar, self.__y * scalar)
+
+    def __truediv__(self, scalar):
+        return Vector2(self.__x / scalar, self.__y / scalar)
+
+    def __mod__(self, scalar):
+        return Vector2(self.__x % scalar, self.__y % scalar)
+
+    def __pow__(self, exponent):
+        return Vector2(self.__x ** exponent, self.__y ** exponent)
+    
     def set_position(self, x: int, y: int) -> None:
         """Summary.
 

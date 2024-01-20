@@ -1,57 +1,55 @@
 import pygame
+from ..GameObjects.Game import Game
 from .InputManager import InputManager
+from .AudioManager import AudioManager
+from .ResourceManager import CImage, CSurface
 
 class EventManager:
     "__privada, _Protected"
-    def __init__(self, width: int, height: int, window_name: str = "My Game") -> None:
-        pygame.init()
-        self.__width = width
-        self.__height = height
-        self.__screen = pygame.display.set_mode((self.__width, self.__height))
-        pygame.display.set_caption(window_name)
-        self.__running = True
-        self.__clock = pygame.time.Clock()
-        self.input_manager = InputManager()
+    def __init__(self) -> None:
+        self.__input_manager = InputManager()
+        self.__audio_manager = AudioManager()
 
-    def get_screen(self) -> pygame.Surface:
-        return self.__screen
-    
-    def update(self) -> None:
-        """
-        Starts the main game loop
-        """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.__running = False
-            
-            self.input_manager.update()
-            
-            if self.input_manager.key_pressed("W"):
-                print("W Pressed...")
-            if self.input_manager.key_pressed("A"):
-                print("A Pressed...")
-            if self.input_manager.key_pressed("S"):
-                print("S Pressed...")
-            if self.input_manager.key_pressed("D"):
-                print("D Pressed...")
-            if self.input_manager.key_pressed("UP"):
-                print("UP Pressed...")
-            if self.input_manager.key_pressed("DOWN"):
-                print("DOWN Pressed...")
-            if self.input_manager.key_pressed("LEFT"):
-                print("LEFT Pressed...")
-            if self.input_manager.key_pressed("RIGHT"):
-                print("RIGHT Pressed...")
-            if self.input_manager.key_pressed("TAB"):
-                print("TAB Pressed...")
-            if self.input_manager.key_pressed("ESC"):
-                print("ESC Pressed...")
+    def handle_input(self, game: Game) -> None:
+        
+        if self.__input_manager.key_pressed("W"):
+            self.__input_manager.keys["W"] = False
+        if self.__input_manager.key_pressed("A"):
+            game.get_actual_piece().move_left()
+            self.__audio_manager.play_sound("Key")
+            self.__input_manager.keys["A"] = False
+        if self.__input_manager.key_pressed("S"):
+            game.get_actual_piece().move_down()
+            self.__audio_manager.play_sound("Key")
+            self.__input_manager.keys["S"] = False
+        if self.__input_manager.key_pressed("D"):
+            game.get_actual_piece().move_right()
+            self.__audio_manager.play_sound("Key")
+            self.__input_manager.keys["D"] = False
+        if self.__input_manager.key_pressed("UP"):
+            self.__input_manager.keys["UP"] = False
+        if self.__input_manager.key_pressed("DOWN"):
+            self.__input_manager.keys["DOWN"] = False
+        if self.__input_manager.key_pressed("LEFT"):
+            self.__input_manager.keys["LEFT"] = False
+        if self.__input_manager.key_pressed("RIGHT"):
+            self.__input_manager.keys["RIGHT"] = False
+        if self.__input_manager.key_pressed("TAB"):
+            game.get_actual_piece().rotate()
+            self.__input_manager.keys["TAB"] = False
+        if self.__input_manager.key_pressed("ESC"):
+            self.__input_manager.keys["ESC"] = False
+            pygame.quit()
 
-
-            self.__clock.tick(60)   
-    
-    def is_running(self) -> bool:
-        return self.__running
+    def update(self, game: Game) -> None:
+       self.__input_manager.update()
+       self.__audio_manager.update()
+       self.handle_input(game)
 
     def destroy(self) -> None:
         pygame.quit()
+
+    """def render()
+        input->render()
+        audio->render()
+        resource->render()"""
