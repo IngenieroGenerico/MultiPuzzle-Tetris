@@ -1,5 +1,4 @@
 import pygame
-from ..GameObjects.Game import Game
 from .InputManager import InputManager
 from .AudioManager import AudioManager
 from .ResourceManager import CImage, CSurface
@@ -10,7 +9,7 @@ class EventManager:
         self.__input_manager = InputManager()
         self.__audio_manager = AudioManager()
 
-    def handle_input(self, game: Game) -> None:
+    def handle_input(self, game) -> None:
         
         if self.__input_manager.key_pressed("W"):
             self.__input_manager.keys["W"] = False
@@ -41,7 +40,7 @@ class EventManager:
             self.__input_manager.keys["ESC"] = False
             pygame.quit()
 
-    def update(self, game: Game) -> None:
+    def update(self, game) -> None:
        self.__input_manager.update()
        self.__audio_manager.update()
        self.handle_input(game)

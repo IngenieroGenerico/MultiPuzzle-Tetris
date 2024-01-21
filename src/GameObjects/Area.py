@@ -1,5 +1,6 @@
 from .Block import Block, Color, GameColors
 from .Pieces.Piece import Piece
+from data import data
 import random, copy
 
 class Area:
@@ -27,7 +28,7 @@ class Area:
         
         actual_x = 0
         actual_y = 0
-        area_width = columns * Block.BLOCK_SIZE * id
+        area_width = columns * data["block-size"] * id
         self.set_color()
         for x in range(0, self.__columns_amount):
             columns_block = []
@@ -49,11 +50,11 @@ class Area:
                     new_block.set_color(Color.BLACK)
         
                 new_block.set_area_parent(self)
-                actual_y += Block.BLOCK_SIZE
+                actual_y += data["block-size"]
                 columns_block.append(new_block)
             self.__blocks.append(columns_block)
             actual_y = 0
-            actual_x += Block.BLOCK_SIZE
+            actual_x += data["block-size"]
             
     def get_columns_amount(self) -> int:
         """_summary_

@@ -1,11 +1,11 @@
 import pygame, random, time
-from .Resources.EventManager import EventManager
-from .Resources.WindowsManager import WindowsManager
-from .GameObjects.Game import Game
+from .Resources import EventManager, WindowsManager
+from .GameObjects import Game
+from data import data
 
 class GameManger:
-    height_gameplay_area = 22 * 20
-    width_gameplay_area = 3 * 12 * 20
+    height_gameplay_area = data["rows-amount"] * data["block-size"]
+    width_gameplay_area = data["areas-amount"] * data["columns-amount"] * data["block-size"]
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()

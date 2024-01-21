@@ -1,10 +1,8 @@
 import pygame
+from data import data
 
 class WindowsManager:
-    BLANCO = (255, 255, 255)
-    ROJO = (255, 0, 0)
-    VERDE = (0, 255, 0)
-    
+  
     def __init__(self, width: int, height: int, window_name: str = "My Game") -> None:
         
         self.__width_gampley_area = width
@@ -23,11 +21,15 @@ class WindowsManager:
         # Definir colores
         # Crear superficie para el área de puntos y siguiente pieza
         self.__score_area = pygame.Surface((self.__width_score_area, self.__height_score_area))
-        self.__score_area.fill(WindowsManager.BLANCO)
+        self.__score_area.fill((data["colors"]["white"][0],
+                                data["colors"]["white"][1],
+                                data["colors"]["white"][2]))
 
         # Crear superficie para el de reglas
         self.__rules_area = pygame.Surface((self.__width_rules_area, self.__height_rules_area))
-        self.__rules_area.fill(WindowsManager.VERDE)
+        self.__rules_area.fill((data["colors"]["green"][0],
+                                data["colors"]["green"][1],
+                                data["colors"]["green"][2]))
         
     def blit_score_area(self) -> None:
         self.__screen.blit(self.__score_area,(self.__width_gampley_area, 0))

@@ -1,5 +1,6 @@
 from ..Block import Block, GameColors
 from enum import Enum
+from data import data
 
 class PieceType(Enum):
     I = 1
@@ -38,8 +39,8 @@ class Piece:
     
     def create_rect(self) -> None:
         for block in self._blocks:
-            block.create_rect(block.get_position().get_x() * Block.BLOCK_SIZE, 
-                              block.get_position().get_y() * Block.BLOCK_SIZE)
+            block.create_rect(block.get_position().get_x() * data["block-size"], 
+                              block.get_position().get_y() * data["block-size"])
             
     def set_type(self, piece_type: PieceType = None) -> None:
         self.__type = piece_type
