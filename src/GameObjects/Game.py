@@ -73,10 +73,10 @@ class Game:
             self.__actual_piece.move_down()
         for area in self.__grid:
             area.update()
-            if area.check_colition(self.__actual_piece):
-                self.__actual_piece = self.__next_piece
-                self.__next_piece = self.create_piece()
-                self.spawn_piece_in_area()
+        if self.__actual_area.check_colition(self.__actual_piece):
+            self.__actual_piece = self.__next_piece
+            self.__next_piece = self.create_piece(random.choice(list(PieceType)))
+            self.spawn_piece_in_area()
             
     def render(self, window) -> None:
         for area in self.__grid:

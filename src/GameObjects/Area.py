@@ -34,23 +34,19 @@ class Area:
             actual_x += data["block-size"]
 
     def check_colition(self, piece: Piece) -> bool:
-        for columns in self.__blocks:
-            for block in columns:
-                color = block.get_color()
-                for block_piece in piece.get_blocks():
-                    pos_x_in_area = block_piece.get_position().get_x() - self.__columns_amount * self.__id
-                    pos_x = block_piece.get_position().get_x()
-                    pos_y = block_piece.get_position().get_y()
-                    if pos_y + 1 == block.get_position().get_y() and color == Color.GRAY:
-                        if pos_x == self.__columns_amount - 1 or 0:
-                            return False
-                        else:
-                            self.__blocks[pos_x_in_area][pos_y] = copy.deepcopy(block_piece)
-                            return True
-                    else:
-                        #TODO: Logica para colicion de no bordes.
-                        return False
-
+       for i in range(0,4):    
+            x = piece.get_blocks()[i].get_position().get_x() - self.__columns_amount * self.__id
+            y = piece.get_blocks()[i].get_position().get_y()
+            if self.__blocks[x][y + 1].get_color() == Color.GRAY:
+                if x != 0 or ((self.__id + 1) * (self.__columns_amount - 1)):
+                    for block in piece.get_blocks():    
+                        block_x = block.get_position().get_x() - self.__columns_amount * self.__id
+                        block_y = block.get_position().get_y()
+                        self.__blocks[block_x][block_y] =  copy.deepcopy(block)
+                    return True
+                else:
+                    return False
+                
     def get_columns_amount(self) -> int:
         return self.__columns_amount
     
