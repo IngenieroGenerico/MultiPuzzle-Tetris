@@ -148,18 +148,10 @@ class Area:
                     for i in range(0, 4):
                         pos_x = piece.get_blocks()[i].get_position().get_x() - self.__columns_amount * self.__id
                         pos_y = piece.get_blocks()[i].get_position().get_y()
-                        self.__blocks[pos_x][pos_y] = piece.get_blocks()[i]
+                        self.__blocks[pos_x][pos_y] = copy.deepcopy(piece.get_blocks()[i])
+                        self.__bottom_boundaries.append(self.__blocks[pos_x][pos_y])
                     return True
         return False
-
-    def add_bottom_boundaries(self) -> None:
-        for columns in self.__blocks:
-            for block in columns:
-                if block.get_color() != Color.BLACK and Color.NEUTRAL and block not in self.__left_boundaries and self.__right_boundaries:
-                    self.__bottom_boundaries.append(block)
-                elif block.get_color() == Color.BLACK and block in self.__bottom_boundaries:
-                    self.__bottom_boundaries.remove(block)
-
 
 
     def check_line(self) -> bool:
@@ -180,7 +172,20 @@ class Area:
         if can_delete_line:
             for block_del in blocks_to_delete:
                 block_del.set_color(Color.BLACK)
-                self.add_bottom_boundaries()
+                try:
+                    index = self.__bottom_boundaries.index(block_del)
+                    del self.__bottom_boundaries[index]
+                except ValueError:
+                    print("No esta el elemento")
+
+            for block in self.__bottom_boundaries:
+                pos_x = block.get_position().get_x() - self.__columns_amount * self.__id
+                pos_y = block.get_position().get_y()
+                if pos_y + 1 < self.__rows_amount -1:
+                    if self.__blocks[pos_x][pos_y + 1].get_color() == Color.BLACK:
+                        block.move_down()
+                        #TODO: Mover todos los bloques hacia abajo,
+                        #TODO: Contemplar Render,Logic and Boundaries para cada bloque.
 
 
     def update(self):

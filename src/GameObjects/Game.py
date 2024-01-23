@@ -125,7 +125,6 @@ class Game:
         for area in self.__grid:
             area.update()
             if area.check_down_colition(self.__actual_piece):
-                area.add_bottom_boundaries()
                 self.__actual_piece = self.__next_piece
                 self.__next_piece = self.create_piece(random.choice(list(PieceType)))
                 self.spawn_piece_in_area()

@@ -9,7 +9,7 @@ class GameManger:
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()
-        self.__game = Game(1)
+        self.__game = Game()
         self.__event_manager = EventManager()
         self.__windows_manager = WindowsManager(GameManger.width_gameplay_area, 
                                                 GameManger.height_gameplay_area)

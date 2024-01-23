@@ -30,6 +30,11 @@ class Block:
         self.__position = Vector2(x, y)
         self.__rect = None
         self.__area_parent = None
+        
+    def __eq__(self, other):
+        if isinstance(other, Block):
+            return self.__position == other.get_position()
+        return False
     
     def create_rect(self, x: int, y: int) -> None:
         """_summary_
