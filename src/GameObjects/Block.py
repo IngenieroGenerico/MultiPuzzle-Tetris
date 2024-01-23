@@ -4,7 +4,6 @@ from ..Math import Vector2, Vector3
 from data import data
 
 class Color(Enum):
-    """Used to define blocks color."""
     YELLOW = 1
     BLUE = 2
     RED = 3
@@ -13,18 +12,8 @@ class Color(Enum):
     NEUTRAL = 6
 
 class Block:
-    """Used to create a block."""
-
+    
     def __init__(self, x: int, y: int, color) -> None:
-        """
-        Create a simple block defined by its position and color, if the color is not passed as
-        parameter the color will be assigned as Neutral.
-
-        Args:
-            x (int, optional): Description. Defaults to None.
-            y (int, optional): Description. Defaults to None.
-            color (_type_, optional): Description. Defaults to None.
-        """
         self.__color = color
         self.set_color_rgb() 
         self.__position = Vector2(x, y)
@@ -37,39 +26,19 @@ class Block:
         return False
     
     def create_rect(self, x: int, y: int) -> None:
-        """_summary_
-
-        Args:
-            x (int): _description_
-            y (int): _description_
-        """
         self.__rect = pygame.Rect(x, y, data["block-size"], data["block-size"])
     
     def get_rect_position(self) -> Vector2:
         return Vector2(self.__rect.topleft[0], self.__rect.topleft[1])
 
     def set_color(self, color: Color) -> None:
-        """
-        Set block color.
-
-        Args:
-            color (Color): Number that defines the color based on Enum Color.
-        """
         self.__color = color
         self.set_color_rgb()
         
     def get_color(self) -> Color:
-        """
-        Get block color.
-
-        Returns:
-            Color: actual color of the block.
-        """
         return self.__color
       
     def set_color_rgb(self) -> None:
-        """_summary_
-        """
         if self.__color == Color.BLACK:
             self.__color_rgb = Vector3(0,0,0)
         elif self.__color == Color.GRAY:
@@ -84,11 +53,6 @@ class Block:
             self.__color_rgb = Vector3()
     
     def get_color_rgb(self) -> Vector3:
-        """_summary_
-
-        Returns:
-            Vector3: _description_
-        """
         return self.__color_rgb
 
     def get_area_parent_color_rgb(self) -> Vector3:
@@ -100,12 +64,6 @@ class Block:
             return Vector3(0,0,255)
     
     def set_position(self, x: int, y: int) -> None:
-        """Summary.
-
-        Args:
-            x (int): Description.
-            y (int): Description.
-        """
         if self.__position.get_x() is None or self.__position.get_y() is None:
             self.__position = Vector2(x, y)
         else:
@@ -113,28 +71,12 @@ class Block:
             self.set_y(y)
 
     def set_x(self, x: int) -> None:
-        """_summary_
-
-        Args:
-            x (int): _description_
-        """
         self.__position.set_x(x) 
     
     def set_y(self, y: int) -> None:
-        """_summary_
-
-        Args:
-            y (int): _description_
-        """
         self.__position.set_y(y)
 
     def get_position(self) -> Vector2:
-        """
-        Get position as tuple.
-
-        Returns:
-            tuple: actual position.
-        """
         return self.__position
     
     def move_block(self, x: int, y: int) -> None:

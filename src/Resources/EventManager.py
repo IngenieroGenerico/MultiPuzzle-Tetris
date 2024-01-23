@@ -15,15 +15,12 @@ class EventManager:
             self.__input_manager.keys["W"] = False
         if self.__input_manager.key_pressed("A"):
             game.get_actual_piece().move_left()
-            self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["A"] = False
         if self.__input_manager.key_pressed("S"):
             game.get_actual_piece().move_down()
-            self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["S"] = False
         if self.__input_manager.key_pressed("D"):
             game.get_actual_piece().move_right()
-            self.__audio_manager.play_sound("Key")
             self.__input_manager.keys["D"] = False
         if self.__input_manager.key_pressed("UP"):
             self.__input_manager.keys["UP"] = False
