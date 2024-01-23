@@ -1,4 +1,4 @@
-from .Block import Block, Color, GameColors
+from .Block import Block, Color
 from .Pieces.Piece import Piece
 from data import data
 import random, copy
@@ -87,7 +87,7 @@ class Area:
     def get_bottom_boundaries(self) -> list:
         return self.__bottom_boundaries
     
-    def set_color(self, color: GameColors = None) -> None:
+    def set_color(self, color: Color = None) -> None:
         """
         Set area color by parameter, if not define area color will be 
         set it randomly.
@@ -95,12 +95,13 @@ class Area:
         Args:
             :param color: Area color given as parameter.
         """
+        game_color = [Color.YELLOW, Color.BLUE, Color.RED]
         if color is None:
-            self.__color = random.choice(list(GameColors))
+            self.__color = random.choice(game_color)
         else:
             self.__color = color
     
-    def get_color(self) -> GameColors:
+    def get_color(self) -> Color:
         """
         Get the Area color.
 
@@ -147,18 +148,45 @@ class Area:
                     for i in range(0, 4):
                         pos_x = piece.get_blocks()[i].get_position().get_x() - self.__columns_amount * self.__id
                         pos_y = piece.get_blocks()[i].get_position().get_y()
-                        self.__blocks[pos_x][pos_y] = copy.deepcopy(piece.get_blocks()[i])
-                        self.__bottom_boundaries.append(self.__blocks[pos_x][pos_y])
+                        self.__blocks[pos_x][pos_y] = piece.get_blocks()[i]
                     return True
         return False
+
+    def add_bottom_boundaries(self) -> None:
+        for columns in self.__blocks:
+            for block in columns:
+                if block.get_color() != Color.BLACK and Color.NEUTRAL and block not in self.__left_boundaries and self.__right_boundaries:
+                    self.__bottom_boundaries.append(block)
+                elif block.get_color() == Color.BLACK and block in self.__bottom_boundaries:
+                    self.__bottom_boundaries.remove(block)
+
+
+
+    def check_line(self) -> bool:
+        blocks_to_delete = []
+        can_delete_line = False
+        for x in range(0,self.__columns_amount):
+            for y in range(0,self.__rows_amount):
+                if self.__blocks[x][y].get_color() == self.__color:
+                    for next in range(1, self.__columns_amount - 1):
+                        if self.__blocks[next][y].get_color() == self.__color:
+                            blocks_to_delete.append(self.__blocks[next][y])
+                            can_delete_line = True
+                            continue
+                        else:
+                            blocks_to_delete = []
+                            can_delete_line = False
+                            break
+        if can_delete_line:
+            for block_del in blocks_to_delete:
+                block_del.set_color(Color.BLACK)
+                self.add_bottom_boundaries()
+
 
     def update(self):
         """_summary_
         """
-        for rows in self.__blocks:
-            for columns in rows:
-                columns.update()
-            rows.update()
+        self.check_line()
        
 
     def render(self, window) -> None:

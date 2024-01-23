@@ -3,12 +3,6 @@ from enum import Enum
 from ..Math import Vector2, Vector3
 from data import data
 
-class GameColors(Enum):
-    """Used to define game color"""
-    YELLOW = 1
-    BLUE = 2
-    RED = 3
-
 class Color(Enum):
     """Used to define blocks color."""
     YELLOW = 1
@@ -36,7 +30,7 @@ class Block:
         self.__position = Vector2(x, y)
         self.__rect = None
         self.__area_parent = None
-
+    
     def create_rect(self, x: int, y: int) -> None:
         """_summary_
 
@@ -75,11 +69,11 @@ class Block:
             self.__color_rgb = Vector3(0,0,0)
         elif self.__color == Color.GRAY:
             self.__color_rgb = Vector3(128,128,128)
-        elif self.__color == Color.RED or self.__color == GameColors.RED:
+        elif self.__color == Color.RED:
             self.__color_rgb = Vector3(255,0,0)
-        elif self.__color == Color.YELLOW or self.__color == GameColors.YELLOW:
+        elif self.__color == Color.YELLOW:
             self.__color_rgb = Vector3(255,255,0)
-        elif self.__color == Color.BLUE or self.__color == GameColors.BLUE:
+        elif self.__color == Color.BLUE:
             self.__color_rgb = Vector3(0,0,255)
         elif self.__color == Color.NEUTRAL:
             self.__color_rgb = Vector3()
@@ -93,11 +87,11 @@ class Block:
         return self.__color_rgb
 
     def get_area_parent_color_rgb(self) -> Vector3:
-        if self.__area_parent.get_color() == Color.RED or self.__area_parent.get_color() == GameColors.RED:
+        if self.__area_parent.get_color() == Color.RED:
             return Vector3(255,0,0)
-        elif self.__area_parent.get_color() == Color.YELLOW or self.__area_parent.get_color() == GameColors.YELLOW:
+        elif self.__area_parent.get_color() == Color.YELLOW:
             return Vector3(255,255,0)
-        elif self.__area_parent.get_color() == Color.BLUE or self.__area_parent.get_color() == GameColors.BLUE:
+        elif self.__area_parent.get_color() == Color.BLUE:
             return Vector3(0,0,255)
     
     def set_position(self, x: int, y: int) -> None:

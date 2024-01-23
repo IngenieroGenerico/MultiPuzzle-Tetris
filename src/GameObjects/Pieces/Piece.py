@@ -1,4 +1,4 @@
-from ..Block import Block, GameColors
+from ..Block import Block, Color
 from enum import Enum
 from data import data
 
@@ -29,7 +29,7 @@ class Piece:
     """
     
         
-    def __init__(self, color: GameColors) -> None:
+    def __init__(self, color: Color) -> None:
         self._can_move = True
         self.__type = None
         self._pivot = None

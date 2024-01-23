@@ -1,4 +1,4 @@
-from .Block import GameColors
+from .Block import Color
 from .Area import Area, random
 from .Pieces.ImportsData import *
 import copy, pygame
@@ -64,7 +64,7 @@ class Game:
         Returns:
             Piece: _description_
         """
-        temp_color = GameColors(self.__grid[random.randint(0, self.__areas_amount - 1)].get_color())
+        temp_color = self.__grid[random.randint(0, self.__areas_amount - 1)].get_color()
         if piece == PieceType.I:
             return IForm(temp_color) 
         elif piece == PieceType.J:
@@ -123,8 +123,10 @@ class Game:
             self.__actual_piece.move_down()
 
         for area in self.__grid:
+            area.update()
             if area.check_down_colition(self.__actual_piece):
-                self.__actual_piece = copy.deepcopy(self.__next_piece)
+                area.add_bottom_boundaries()
+                self.__actual_piece = self.__next_piece
                 self.__next_piece = self.create_piece(random.choice(list(PieceType)))
                 self.spawn_piece_in_area()
             elif area.check_left_colition(self.__actual_piece):

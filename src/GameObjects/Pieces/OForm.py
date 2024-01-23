@@ -4,7 +4,7 @@ class OForm(Piece):
     """
     Create an O piece 
     """
-    def __init__(self, color: GameColors) -> None:
+    def __init__(self, color: Color) -> None:
         """
         Initialize and create data for this piece.
         """
