@@ -1,11 +1,12 @@
 import pygame, random, time
 from .Resources import InputManager, WindowsManager
 from .GameObjects import Game
-from data import data
+from data import BLOCK_SIZE
 
 class GameManger:
-    height_gameplay_area = data["rows-amount"] * data["block-size"]
-    width_gameplay_area = data["areas-amount"] * data["columns-amount"] * data["block-size"]
+    #TODO: Estas variables tienen que cambiarse, no pueden ser estaticas en este
+    height_gameplay_area = 22 * BLOCK_SIZE
+    width_gameplay_area = 3 * 12 * BLOCK_SIZE
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()

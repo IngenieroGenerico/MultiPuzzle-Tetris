@@ -1,11 +1,10 @@
-import os
-import json
-
-def load_config():
-    scrip_dir = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(scrip_dir, 'config.json')
-    with open(config_path, 'r') as file:
-        info = json.load(file)
-    return info
-
-data = load_config()
+BLOCK_SIZE = 20
+COLORS = {"red":(255,0,0),
+        "green":(0,255,0),
+        "blue":(0,0,255),
+        "yellow":(255,255,0),
+        "orange":(255,128,0),
+        "purple":(128,0,255),
+        "gray":(128,128,128),
+        "white":(255,255,255),
+        "black":(0,0,0)}

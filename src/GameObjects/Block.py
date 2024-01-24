@@ -1,7 +1,7 @@
 import pygame
 from enum import Enum
 from ..Math import Vector2, Vector3
-from data import data
+from data import BLOCK_SIZE
 
 class Color(Enum):
     YELLOW = 1
@@ -26,7 +26,7 @@ class Block:
         return False
     
     def create_rect(self, x: int, y: int) -> None:
-        self.__rect = pygame.Rect(x, y, data["block-size"], data["block-size"])
+        self.__rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
     
     def get_rect(self):
         return self.__rect
@@ -89,19 +89,19 @@ class Block:
    
     def move_up(self) -> None:
         self.__position.set_y(self.__position.get_y() - 1)
-        self.__rect.y -= data["block-size"]
+        self.__rect.y -= BLOCK_SIZE
         
     def move_left(self) -> None:
         self.__position.set_x(self.__position.get_x() - 1)
-        self.__rect.x -= data["block-size"]
+        self.__rect.x -= BLOCK_SIZE
         
     def move_right(self) -> None:
         self.__position.set_x(self.__position.get_x() + 1)
-        self.__rect.x += data["block-size"]
+        self.__rect.x += BLOCK_SIZE
 
     def move_down(self) -> None:
         self.__position.set_y(self.__position.get_y() + 1)
-        self.__rect.y += data["block-size"]
+        self.__rect.y += BLOCK_SIZE
 
     def set_area_parent(self, area) -> None:
         self.__area_parent = area

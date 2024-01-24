@@ -76,7 +76,7 @@ class Game:
                 for columns in area.get_blocks():
                     for block in reversed(columns):
                         if block.get_color() == Color.BLACK:
-                            block.set_color(self.__actual_piece.get_color())
+                            block.set_color(self.__actual_area.get_color())
                             count_penalty += 1
                             break
                     if count_penalty != 0:

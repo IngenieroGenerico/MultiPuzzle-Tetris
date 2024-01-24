@@ -1,2 +1,2 @@
 # data/__init__.py
-from .config import data
+from .config import BLOCK_SIZE, COLORS
