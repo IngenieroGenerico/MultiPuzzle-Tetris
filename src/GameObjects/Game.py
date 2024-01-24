@@ -18,12 +18,15 @@ class Game:
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         self.__areas_amount = areas_amount
         self.create_areas(areas_amount, columns, rows)
-        self.__actual_piece = self.create_piece(random.choice(list(PieceType)))
+        self.__actual_piece = self.create_piece(PieceType.T)
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
 
-    def spawn_piece_in_area(self) -> None:
-        self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
+    def spawn_piece_in_area(self, id_area: int = None) -> None:
+        if id_area is not None and 0 <= id_area < len(self.__grid):
+            self.__actual_area = self.__grid[id_area]
+        else:
+             self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
         self.__actual_piece.set_initial_position(self.__actual_area.get_center())
 
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -49,15 +52,6 @@ class Game:
             return ZForm(temp_color)
         else:
             return None
-        
-    def get_actual_piece(self) -> Piece:
-        return self.__actual_piece
-    
-    def get_next_piece(self) -> Piece:
-        return self.__next_piece
-    
-    def get_areas_amount(self) -> int:
-        return self.__areas_amount
     
     def get_delta_time(self) -> bool:
         if self.__elapsed_time >= self.__time:
@@ -67,16 +61,37 @@ class Game:
             delta_time = self.__clock.tick(60)
             self.__elapsed_time += delta_time
             return False
-        
-    def update(self) -> None:
+    
+    def handle_input(self, input):
+        if len(input.get_keys()) != 0:
+            for key in input.get_keys():
+                if key == pygame.K_a:
+                    self.__actual_piece.move_left()
+                elif key == pygame.K_s:
+                    self.__actual_piece.move_down()
+                elif key == pygame.K_d:
+                    self.__actual_piece.move_right()
+                elif key == pygame.K_w:
+                    self.__actual_piece.move_up()
+                elif key == pygame.K_SPACE:
+                    self.__actual_piece.rotate()
+                elif key == pygame.K_TAB:
+                    area_id = self.__actual_area.get_id() + 1
+                    if area_id > self.__areas_amount - 1:
+                        area_id = 0
+                    self.spawn_piece_in_area(area_id)
+            input.clear_keys()
+
+    def update(self, input) -> None:
         if self.get_delta_time():
             self.__actual_piece.move_down()
+        self.handle_input(input)
         for area in self.__grid:
-            area.update()
-        if self.__actual_area.check_colition(self.__actual_piece):
-            self.__actual_piece = self.__next_piece
-            self.__next_piece = self.create_piece(random.choice(list(PieceType)))
-            self.spawn_piece_in_area()
+            for columns in area.get_blocks():
+                for block in columns:
+                    if block.get_color() == Color.GRAY:
+                        if(self.__actual_piece.check_colition(block)):
+                            print("Do something")
             
     def render(self, window) -> None:
         for area in self.__grid:

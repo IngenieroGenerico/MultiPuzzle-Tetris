@@ -32,20 +32,6 @@ class Area:
             self.__blocks.append(columns_block)
             actual_y = 0
             actual_x += data["block-size"]
-
-    def check_colition(self, piece: Piece) -> bool:
-       for i in range(0,4):    
-            x = piece.get_blocks()[i].get_position().get_x() - self.__columns_amount * self.__id
-            y = piece.get_blocks()[i].get_position().get_y()
-            if self.__blocks[x][y + 1].get_color() == Color.GRAY:
-                if x != 0 or ((self.__id + 1) * (self.__columns_amount - 1)):
-                    for block in piece.get_blocks():    
-                        block_x = block.get_position().get_x() - self.__columns_amount * self.__id
-                        block_y = block.get_position().get_y()
-                        self.__blocks[block_x][block_y] =  copy.deepcopy(block)
-                    return True
-                else:
-                    return False
                 
     def get_columns_amount(self) -> int:
         return self.__columns_amount

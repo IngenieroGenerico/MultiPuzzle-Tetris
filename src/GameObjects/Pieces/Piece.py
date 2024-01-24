@@ -84,6 +84,12 @@ class Piece:
         """Summary"""
         pass
     
+    def check_colition(self, other_block) -> bool:
+        for block in self._blocks:
+            if block.check_colition(other_block):
+                return True
+        return False
+    
     def render(self, window) -> None:
         for block in self._blocks:
             block.render(window)

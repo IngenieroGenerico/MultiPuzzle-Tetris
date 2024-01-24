@@ -1,5 +1,5 @@
 import pygame, random, time
-from .Resources import EventManager, WindowsManager
+from .Resources import InputManager, WindowsManager
 from .GameObjects import Game
 from data import data
 
@@ -10,12 +10,12 @@ class GameManger:
         random.seed(time.time())
         pygame.init()
         self.__game = Game()
-        self.__event_manager = EventManager()
+        self.__input_manager = InputManager()
         self.__windows_manager = WindowsManager(GameManger.width_gameplay_area, 
                                                 GameManger.height_gameplay_area)
     def update(self) -> None:
-        self.__game.update()
-        self.__event_manager.update(self.__game)
+        self.__input_manager.update()
+        self.__game.update(self.__input_manager)
 
     def render(self) -> None:
         self.__windows_manager.clear_screen()

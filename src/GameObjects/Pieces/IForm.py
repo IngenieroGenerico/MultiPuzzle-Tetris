@@ -17,10 +17,14 @@ class IForm(Piece):
         self._pivot = self._blocks[1]
     
     def set_initial_position(self, area_center: int) -> None:
-        self._blocks[0].set_x(area_center)
-        self._blocks[1].set_x(area_center)
-        self._blocks[2].set_x(area_center)
-        self._blocks[3].set_x(area_center)
+        if self._orientation == Orientation.VERTICAL:
+            for block in self._blocks:
+                block.set_x(area_center)
+        else:
+            self._blocks[0].set_x(area_center + 1)
+            self._blocks[1].set_x(area_center)
+            self._blocks[2].set_x(area_center - 1)
+            self._blocks[3].set_x(area_center - 2)
         super().create_rect()
         
     def rotate(self) -> None:

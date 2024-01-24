@@ -28,6 +28,9 @@ class Block:
     def create_rect(self, x: int, y: int) -> None:
         self.__rect = pygame.Rect(x, y, data["block-size"], data["block-size"])
     
+    def get_rect(self):
+        return self.__rect
+    
     def get_rect_position(self) -> Vector2:
         return Vector2(self.__rect.topleft[0], self.__rect.topleft[1])
 
@@ -121,4 +124,8 @@ class Block:
             pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,1)
             pygame.draw.line(window.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,1)
 
-
+    def check_colition(self, other_block) -> bool:
+        if self.__rect.colliderect(other_block.get_rect()):
+            print("Detecto colision con GRAY")
+            return True
+        return False
