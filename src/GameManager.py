@@ -1,21 +1,22 @@
 import pygame, random, time
-from .Resources.EventManager import EventManager
-from .Resources.WindowsManager import WindowsManager
-from .GameObjects.Game import Game
+from .Resources import InputManager, WindowsManager
+from .GameObjects import Game
+from data import BLOCK_SIZE
 
 class GameManger:
-    height_gameplay_area = 22 * 20
-    width_gameplay_area = 3 * 12 * 20
+    #TODO: Estas variables tienen que cambiarse, no pueden ser estaticas en este
+    height_gameplay_area = 22 * BLOCK_SIZE
+    width_gameplay_area = 3 * 12 * BLOCK_SIZE
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()
         self.__game = Game()
-        self.__event_manager = EventManager()
+        self.__input_manager = InputManager()
         self.__windows_manager = WindowsManager(GameManger.width_gameplay_area, 
                                                 GameManger.height_gameplay_area)
     def update(self) -> None:
-        self.__game.update()
-        self.__event_manager.update(self.__game)
+        self.__input_manager.update()
+        self.__game.update(self.__input_manager)
 
     def render(self) -> None:
         self.__windows_manager.clear_screen()

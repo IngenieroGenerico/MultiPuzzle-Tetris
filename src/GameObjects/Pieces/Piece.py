@@ -1,5 +1,6 @@
-from ..Block import Block, GameColors
+from ..Block import Block, Color
 from enum import Enum
+from data import BLOCK_SIZE
 
 class PieceType(Enum):
     I = 1
@@ -28,7 +29,7 @@ class Piece:
     """
     
         
-    def __init__(self, color: GameColors) -> None:
+    def __init__(self, color: Color) -> None:
         self._can_move = True
         self.__type = None
         self._pivot = None
@@ -38,14 +39,17 @@ class Piece:
     
     def create_rect(self) -> None:
         for block in self._blocks:
-            block.create_rect(block.get_position().get_x() * Block.BLOCK_SIZE, 
-                              block.get_position().get_y() * Block.BLOCK_SIZE)
+            block.create_rect(block.get_position().get_x() * BLOCK_SIZE, 
+                              block.get_position().get_y() * BLOCK_SIZE)
             
     def set_type(self, piece_type: PieceType = None) -> None:
         self.__type = piece_type
     
     def get_type(self) -> PieceType:
         return self.__type
+    
+    def get_color(self) -> Color:
+        return self._color
     
     def set_orientation(self, orientation: Orientation) -> None:
         self._orientation = orientation
@@ -82,6 +86,12 @@ class Piece:
     def update(self) -> None:
         """Summary"""
         pass
+    
+    def check_colition(self, other_block) -> bool:
+        for block in self._blocks:
+            if block.check_colition(other_block):
+                return True
+        return False
     
     def render(self, window) -> None:
         for block in self._blocks:

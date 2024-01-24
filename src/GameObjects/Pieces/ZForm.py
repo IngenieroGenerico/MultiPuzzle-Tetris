@@ -5,7 +5,7 @@ class ZForm(Piece):
     Create a Z piece 
     """
 
-    def __init__(self, color: GameColors) -> None:
+    def __init__(self, color: Color) -> None:
         """
         Initialize and create data for this piece.
         """
@@ -18,10 +18,16 @@ class ZForm(Piece):
         self._pivot = self._blocks[1]
        
     def set_initial_position(self, area_center: int) -> None:
-        self._blocks[0].set_x(area_center + 1)
-        self._blocks[1].set_x(area_center)
-        self._blocks[2].set_x(area_center)
-        self._blocks[3].set_x(area_center - 1)
+        if self._orientation == Orientation.VERTICAL:
+            self._blocks[0].set_x(area_center + 1)
+            self._blocks[1].set_x(area_center)
+            self._blocks[2].set_position(area_center, self._pivot.get_position().get_y() - 1)
+            self._blocks[3].set_position(area_center - 1, self._pivot.get_position().get_y() - 1)
+        else:
+            self._blocks[1].set_x(area_center)
+            self._blocks[0].set_position(area_center, self._pivot.get_position().get_y() + 1)
+            self._blocks[2].set_x(area_center + 1)
+            self._blocks[3].set_position(area_center + 1, self._pivot.get_position().get_y() - 1)
         super().create_rect()
 
     def rotate(self) -> None:

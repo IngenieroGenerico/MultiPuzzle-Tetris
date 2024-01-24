@@ -2,11 +2,13 @@ import pygame
 
 class AudioManager:
     def __init__(self) -> None:
+        pygame.mixer.init()
         self.sounds = {}
         self.musics = {}
         self.sound_volume = 1.0 # 0.0 a 1.0
         self.music_volume = 1.0 # 0.0 a 1.0
-        pygame.mixer.init()
+        self.load_music("music", "src/Resources/Music/gameplay.mp3")
+        self.load_sound("move", "src/Resources/Music/Click.mp3")
 
     def load_sound(self, name: str, file_path: str) -> None:
         if name not in self.sounds:

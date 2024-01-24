@@ -1,6 +1,6 @@
 import unittest
 from src.Area import Area
-from src.Block import GameColors
+from src.Block import Colors
 
 class TestArea(unittest.TestCase):
     def setUp(self):
@@ -16,8 +16,8 @@ class TestArea(unittest.TestCase):
         self.assertEqual(self.area.get_center(), 1.0)
 
     def test_color(self):
-        self.area.set_color(GameColors.RED)
-        self.assertEqual(self.area.get_color(), GameColors.RED)
+        self.area.set_color(Colors.RED)
+        self.assertEqual(self.area.get_color(), Colors.RED)
     
     def test_id(self):
         self.area.set_id(2)
