@@ -61,6 +61,14 @@ class Area:
     def get_id(self) -> int:
         return self.__id
     
+    def get_block_next_right(self, block: Block) -> Block:
+        x_abs = block.get_position().get_x() - self.__columns_amount * self.__id
+        return self.__blocks[x_abs + 1][block.get_position().get_y()]
+    
+    def get_block_next_left(self, block: Block) -> Block:
+        x_abs = block.get_position().get_x() - self.__columns_amount * self.__id
+        return self.__blocks[x_abs - 1][block.get_position().get_y()]
+    
     def update(self):
         pass
 

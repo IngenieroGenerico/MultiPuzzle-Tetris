@@ -7,7 +7,7 @@ class Game:
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         self.__clock = pygame.time.Clock()
         self.__elapsed_time = 0
-        self.__time = 200
+        self.__time = 1000
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
@@ -61,13 +61,35 @@ class Game:
             delta_time = self.__clock.tick(60)
             self.__elapsed_time += delta_time
             return False
-    
+        
+    def remove_line(self) -> None:
+        for area in self.__grid:
+            for columns in area.get_blocks():
+                for block in reversed(columns):
+                    if block.get_color() != Color.BLACK and Color.GRAY:
+                        pass    
+
+    def add_penalty_to_area(self) -> None:
+        count_penalty = 0
+        for area in self.__grid:
+            if area.get_id() != self.__actual_area.get_id():
+                for columns in area.get_blocks():
+                    for block in reversed(columns):
+                        if block.get_color() == Color.BLACK:
+                            block.set_color(self.__actual_piece.get_color())
+                            count_penalty += 1
+                            break
+                    if count_penalty != 0:
+                        count_penalty = 0
+                        break
+                        
     def add_piece_to_area(self) -> None:
         for block in self.__actual_piece.get_blocks():
             x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
             y = block.get_position().get_y()
             self.__actual_area.get_blocks()[x][y] = copy.deepcopy(block)
-
+        if self.__actual_piece.get_color() != self.__actual_area.get_color():
+            self.add_penalty_to_area()
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()

@@ -48,6 +48,9 @@ class Piece:
     def get_type(self) -> PieceType:
         return self.__type
     
+    def get_color(self) -> Color:
+        return self._color
+    
     def set_orientation(self, orientation: Orientation) -> None:
         self._orientation = orientation
     
