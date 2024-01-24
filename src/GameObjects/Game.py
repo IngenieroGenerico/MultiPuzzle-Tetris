@@ -7,7 +7,7 @@ class Game:
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         self.__clock = pygame.time.Clock()
         self.__elapsed_time = 0
-        self.__time = 1000
+        self.__time = 200
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
@@ -18,7 +18,7 @@ class Game:
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         self.__areas_amount = areas_amount
         self.create_areas(areas_amount, columns, rows)
-        self.__actual_piece = self.create_piece(PieceType.T)
+        self.__actual_piece = self.create_piece(random.choice(list(PieceType)))
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
 
@@ -62,6 +62,16 @@ class Game:
             self.__elapsed_time += delta_time
             return False
     
+    def add_piece_to_area(self) -> None:
+        for block in self.__actual_piece.get_blocks():
+            x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
+            y = block.get_position().get_y()
+            self.__actual_area.get_blocks()[x][y] = copy.deepcopy(block)
+
+        self.__actual_piece = self.__next_piece
+        self.__next_piece = self.create_piece(random.choice(list(PieceType)))
+        self.spawn_piece_in_area()
+
     def handle_input(self, input):
         if len(input.get_keys()) != 0:
             for key in input.get_keys():
@@ -86,12 +96,24 @@ class Game:
         if self.get_delta_time():
             self.__actual_piece.move_down()
         self.handle_input(input)
-        for area in self.__grid:
-            for columns in area.get_blocks():
-                for block in columns:
+        for columns in self.__actual_area.get_blocks():
+            for block in columns:
+                if block.get_color() != Color.BLACK and self.__actual_piece.check_colition(block):
                     if block.get_color() == Color.GRAY:
-                        if(self.__actual_piece.check_colition(block)):
-                            print("Do something")
+                        pos_abs_x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
+                        if pos_abs_x == 0:
+                            self.__actual_piece.move_right()
+                        elif pos_abs_x == self.__actual_area.get_columns_amount() - 1:
+                            self.__actual_piece.move_left()
+                        else:
+                            #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
+                            self.__actual_piece.move_up() #HardCore
+                            self.add_piece_to_area()
+                    else:
+                        #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
+                        self.__actual_piece.move_up() #HardCore
+                        self.add_piece_to_area()
+        
             
     def render(self, window) -> None:
         for area in self.__grid:

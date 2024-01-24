@@ -126,6 +126,5 @@ class Block:
 
     def check_colition(self, other_block) -> bool:
         if self.__rect.colliderect(other_block.get_rect()):
-            print("Detecto colision con GRAY")
             return True
         return False
