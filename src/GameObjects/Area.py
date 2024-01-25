@@ -43,7 +43,10 @@ class Area:
     
     def get_blocks(self) -> list:
         return self.__blocks
-     
+    
+    def get_block(self, x: int, y: int) -> Block:
+        return self.__blocks[x][y]
+        
     def set_color(self, color: tuple = None) -> None:
         game_color = [COLORS["yellow"], COLORS["blue"], COLORS["red"], COLORS["purple"],COLORS["green"]]
         if color is None:

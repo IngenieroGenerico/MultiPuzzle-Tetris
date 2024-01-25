@@ -5,3 +5,4 @@ if __name__ == "__main__":
     while True:
         game_manager.update()
         game_manager.render()
+        

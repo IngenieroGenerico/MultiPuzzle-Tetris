@@ -7,7 +7,7 @@ class Game:
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         self.__clock = pygame.time.Clock()
         self.__elapsed_time = 0
-        self.__time = 200
+        self.__time = 1000
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
@@ -70,16 +70,26 @@ class Game:
             self.__elapsed_time += delta_time
             return False
         
-    def move_blocks_down_in_area(self) -> None:
-        for columns in self.__actual_area.get_blocks():
-            for i in range(self.__actual_area.get_rows_amount() - 2, 0, -1):
-                if (columns[i].get_color() != COLORS["black"] and
-                    columns[i].get_color() != COLORS["gray"]):
-                    pos_x = columns[i].get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
-                    pos_y = columns[i].get_position().get_y()
-                    if self.__actual_area.get_blocks()[pos_x][pos_y + 1].get_color() != COLORS["gray"]:
-                        self.__actual_area.get_blocks()[pos_x][pos_y + 1].set_color(columns[i].get_color())
-                        columns[i].set_color(COLORS["black"])
+    def move_blocks_area_down(self) -> None:
+        next_column = False
+        for x in range(1, self.__actual_area.get_columns_amount() - 1):
+            for y in range(self.__actual_area.get_rows_amount() - 2, 0, -1):
+                if self.__actual_area.get_block(x,y).get_color() == COLORS["black"]:
+                    target = self.__actual_area.get_block(x,y)
+                    itt_y = target.get_position().get_y()
+                    while True:
+                        itt_y -= 1
+                        if self.__actual_area.get_block(x, itt_y).get_color() != COLORS["black"]:
+                            block_to_move = self.__actual_area.get_block(x, itt_y)
+                            target.set_color(block_to_move.get_color())
+                            block_to_move.set_color(COLORS["black"])
+                            break
+                        if itt_y == 0:
+                            next_column = True
+                            break
+                if next_column:
+                    next_column = False
+                    break
 
     def delete_line_in_area(self) -> bool:
         dont_delete = set()
@@ -124,7 +134,7 @@ class Game:
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
         if self.delete_line_in_area():
-            print("TODO: FIX THIS LOGIC, NEED TO ADD DOWN BLOCKS IN AREAS CORRECTLY")
+            self.move_blocks_area_down()
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
