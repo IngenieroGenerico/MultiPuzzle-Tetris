@@ -124,7 +124,7 @@ class Game:
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
         if self.delete_line_in_area():
-            self.move_blocks_down_in_area()
+            print("TODO: FIX THIS LOGIC, NEED TO ADD DOWN BLOCKS IN AREAS CORRECTLY")
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
