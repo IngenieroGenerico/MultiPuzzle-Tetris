@@ -1,4 +1,4 @@
-from ..Block import Block, Color
+from ..Block import Block
 from enum import Enum
 from data import BLOCK_SIZE
 
@@ -24,12 +24,7 @@ class Direction(Enum):
     UP = 4
 
 class Piece:
-    """
-    Used as a base class from all pieces will inherit
-    """
-    
-        
-    def __init__(self, color: Color) -> None:
+    def __init__(self, color: tuple) -> None:
         self._can_move = True
         self.__type = None
         self._pivot = None
@@ -48,7 +43,7 @@ class Piece:
     def get_type(self) -> PieceType:
         return self.__type
     
-    def get_color(self) -> Color:
+    def get_color(self) -> tuple:
         return self._color
     
     def set_orientation(self, orientation: Orientation) -> None:

@@ -1,13 +1,7 @@
 from .Piece import *
 
 class SForm(Piece):
-    """
-    Create an S piece 
-    """
-    def __init__(self, color: Color) -> None:
-        """
-        Initialize and create data for this piece.
-        """
+    def __init__(self, color: tuple) -> None:
         super().__init__(color)
         self.set_type(PieceType.S)
         self._blocks.append(Block(-1, -1, color))

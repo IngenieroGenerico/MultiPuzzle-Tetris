@@ -1,5 +1,5 @@
-from .Block import Block, Color
-from data import BLOCK_SIZE
+from .Block import Block
+from data import BLOCK_SIZE, COLORS
 import random
 
 class Area:
@@ -20,9 +20,9 @@ class Area:
             columns_block = []
             for y in range(0, self.__rows_amount):
                 if y == self.__rows_amount -1 or x == 0 or  x == self.__columns_amount - 1:
-                    color = Color.GRAY
+                    color = COLORS["gray"]
                 else:
-                    color = Color.BLACK
+                    color = COLORS["black"]
                 new_block = Block(id * columns + x, y, color)
                 new_block.create_rect(actual_x + area_width, actual_y)
                 new_block.set_area_parent(self)
@@ -44,14 +44,14 @@ class Area:
     def get_blocks(self) -> list:
         return self.__blocks
      
-    def set_color(self, color: Color = None) -> None:
-        game_color = [Color.YELLOW, Color.BLUE, Color.RED]
+    def set_color(self, color: tuple = None) -> None:
+        game_color = [COLORS["yellow"], COLORS["blue"], COLORS["red"], COLORS["purple"],COLORS["green"]]
         if color is None:
             self.__color = random.choice(game_color)
         else:
             self.__color = color
     
-    def get_color(self) -> Color:
+    def get_color(self) -> tuple:
         return self.__color
 
     def set_id(self, id: int) -> None:
@@ -59,15 +59,7 @@ class Area:
     
     def get_id(self) -> int:
         return self.__id
-    
-    def get_block_next_right(self, block: Block) -> Block:
-        x_abs = block.get_position().get_x() - self.__columns_amount * self.__id
-        return self.__blocks[x_abs + 1][block.get_position().get_y()]
-    
-    def get_block_next_left(self, block: Block) -> Block:
-        x_abs = block.get_position().get_x() - self.__columns_amount * self.__id
-        return self.__blocks[x_abs - 1][block.get_position().get_y()]
-    
+     
     def update(self):
         pass
 
