@@ -48,7 +48,12 @@ class Area:
         return self.__blocks[x][y]
         
     def set_color(self, color: tuple = None) -> None:
-        game_color = [COLORS["yellow"], COLORS["blue"], COLORS["red"], COLORS["purple"],COLORS["green"]]
+        game_color = [COLORS["yellow"], 
+                      COLORS["blue"], 
+                      COLORS["red"], 
+                      COLORS["purple"],
+                      COLORS["green"]
+                    ]
         if color is None:
             self.__color = random.choice(game_color)
         else:

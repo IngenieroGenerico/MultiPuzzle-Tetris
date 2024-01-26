@@ -82,7 +82,9 @@ class Game:
                         if self.__actual_area.get_block(x, itt_y).get_color() != COLORS["black"]:
                             block_to_move = self.__actual_area.get_block(x, itt_y)
                             target.set_color(block_to_move.get_color())
+                            target.set_penalty(block_to_move.get_penalty())
                             block_to_move.set_color(COLORS["black"])
+                            block_to_move.set_penalty(False)
                             break
                         if itt_y == 0:
                             next_column = True

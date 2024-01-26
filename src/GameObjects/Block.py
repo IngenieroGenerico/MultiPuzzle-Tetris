@@ -88,7 +88,7 @@ class Block:
         pygame.draw.rect(window.get_screen(), self.__color, self.__rect)
         line_width = 1
         if self.__color != COLORS["gray"]:
-            line_color = COLORS["gray"]
+            line_color = COLORS["white"]
         else:
             line_color = self.get_area_parent_color()
             line_width = 2
