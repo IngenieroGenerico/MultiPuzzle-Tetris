@@ -10,6 +10,7 @@ class Block:
         self.__position = Vector2(x, y)
         self.__rect = None
         self.__area_parent = None
+        self.__is_penalty = False
         
     def __eq__(self, other):
         if isinstance(other, Block):
@@ -47,6 +48,12 @@ class Block:
     def set_y(self, y: int) -> None:
         self.__position.set_y(y)
 
+    def set_penalty(self, penalty: bool) -> None:
+        self.__is_penalty = penalty
+    
+    def get_penalty(self) -> bool:
+        return self.__is_penalty
+    
     def get_position(self) -> Vector2:
         return self.__position
     
@@ -79,14 +86,20 @@ class Block:
     
     def render(self, window) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
         pygame.draw.rect(window.get_screen(), self.__color, self.__rect)
-        line_color = (255,255,255)
-        if self.__area_parent is not None:
+        line_width = 1
+        if self.__color != COLORS["gray"]:
+            line_color = COLORS["gray"]
+        else:
             line_color = self.get_area_parent_color()
+            line_width = 2
         if self.__color != COLORS["black"]:
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,1)
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,1)
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,1)
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,1)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,line_width)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,line_width)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,line_width)
+            pygame.draw.line(window.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,line_width)
+        if self.__is_penalty:
+            pygame.draw.line(window.get_screen(), COLORS["black"], self.__rect.topleft, self.__rect.bottomright, 1)
+            pygame.draw.line(window.get_screen(), COLORS["black"], self.__rect.bottomleft,self.__rect.topright,1)
 
     def check_colition(self, other_block) -> bool:
         if self.__rect.colliderect(other_block.get_rect()):

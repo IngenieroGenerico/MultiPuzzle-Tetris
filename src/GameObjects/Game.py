@@ -97,7 +97,7 @@ class Game:
         final = set()
         for x in range(1, self.__actual_area.get_columns_amount() - 1):
             for y in range(self.__actual_area.get_rows_amount() - 2, 0, -1):
-                if self.__actual_area.get_blocks()[x][y].get_color() != COLORS["black"]:
+                if self.__actual_area.get_blocks()[x][y].get_color() != COLORS["black"] and not self.__actual_area.get_blocks()[x][y].get_penalty():
                     can_delete.add(y)
                 else:
                     dont_delete.add(y)
@@ -120,6 +120,7 @@ class Game:
                     for block in reversed(columns):
                         if block.get_color() == COLORS["black"]:
                             block.set_color(self.__actual_area.get_color())
+                            block.set_penalty(True)
                             count_penalty += 1
                             break
                     if count_penalty != 0:
@@ -127,10 +128,16 @@ class Game:
                         break
                         
     def add_piece_to_area(self) -> None:
+        count = 0
         for block in self.__actual_piece.get_blocks():
             x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
             y = block.get_position().get_y()
+            if block.get_color() != self.__actual_area.get_color():
+                count += 1
+                block.set_penalty(True)
             self.__actual_area.get_blocks()[x][y] = copy.deepcopy(block)
+            if count > 1:
+                break
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
         if self.delete_line_in_area():
