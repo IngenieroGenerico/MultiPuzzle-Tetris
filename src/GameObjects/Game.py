@@ -1,7 +1,7 @@
-from .Block import Color
 from .Area import Area, random
 from .Pieces.ImportsData import *
 import copy, pygame
+from data import BLOCK_SIZE,COLORS
 
 class Game:
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -13,6 +13,8 @@ class Game:
         self.__actual_piece = None
         self.__actual_area = None
         self.__grid = []
+        self.__height_gameplay_area = rows * BLOCK_SIZE
+        self.__width_gameplay_area = areas_amount * columns * BLOCK_SIZE
         self.create_level(areas_amount, columns, rows)
         
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -52,6 +54,12 @@ class Game:
             return ZForm(temp_color)
         else:
             return None
+        
+    def get_height_gameplay(self) -> int:
+        return self.__height_gameplay_area
+    
+    def get_width_gameplay(self) -> int:
+        return self.__width_gameplay_area
     
     def get_delta_time(self) -> bool:
         if self.__elapsed_time >= self.__time:
@@ -62,12 +70,49 @@ class Game:
             self.__elapsed_time += delta_time
             return False
         
-    def remove_line(self) -> None:
-        for area in self.__grid:
-            for columns in area.get_blocks():
-                for block in reversed(columns):
-                    if block.get_color() != Color.BLACK and Color.GRAY:
-                        pass    
+    def move_blocks_area_down(self) -> None:
+        next_column = False
+        for x in range(1, self.__actual_area.get_columns_amount() - 1):
+            for y in range(self.__actual_area.get_rows_amount() - 2, 0, -1):
+                if self.__actual_area.get_block(x,y).get_color() == COLORS["black"]:
+                    target = self.__actual_area.get_block(x,y)
+                    itt_y = target.get_position().get_y()
+                    while True:
+                        itt_y -= 1
+                        if self.__actual_area.get_block(x, itt_y).get_color() != COLORS["black"]:
+                            block_to_move = self.__actual_area.get_block(x, itt_y)
+                            target.set_color(block_to_move.get_color())
+                            target.set_penalty(block_to_move.get_penalty())
+                            block_to_move.set_color(COLORS["black"])
+                            block_to_move.set_penalty(False)
+                            break
+                        if itt_y == 0:
+                            next_column = True
+                            break
+                if next_column:
+                    next_column = False
+                    break
+
+    def delete_line_in_area(self) -> bool:
+        dont_delete = set()
+        can_delete = set()
+        final = set()
+        for x in range(1, self.__actual_area.get_columns_amount() - 1):
+            for y in range(self.__actual_area.get_rows_amount() - 2, 0, -1):
+                if self.__actual_area.get_blocks()[x][y].get_color() != COLORS["black"] and not self.__actual_area.get_blocks()[x][y].get_penalty():
+                    can_delete.add(y)
+                else:
+                    dont_delete.add(y)
+
+        final = can_delete - dont_delete
+        final_list = list(final)
+        if len(final_list) != 0:
+            for i in final_list:
+                for columns in self.__actual_area.get_blocks():
+                    if columns[i].get_color() != COLORS["gray"]:
+                        columns[i].set_color(COLORS["black"])
+            return True
+        else: return False
 
     def add_penalty_to_area(self) -> None:
         count_penalty = 0
@@ -75,8 +120,9 @@ class Game:
             if area.get_id() != self.__actual_area.get_id():
                 for columns in area.get_blocks():
                     for block in reversed(columns):
-                        if block.get_color() == Color.BLACK:
+                        if block.get_color() == COLORS["black"]:
                             block.set_color(self.__actual_area.get_color())
+                            block.set_penalty(True)
                             count_penalty += 1
                             break
                     if count_penalty != 0:
@@ -84,12 +130,20 @@ class Game:
                         break
                         
     def add_piece_to_area(self) -> None:
+        count = 0
         for block in self.__actual_piece.get_blocks():
             x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
             y = block.get_position().get_y()
+            if block.get_color() != self.__actual_area.get_color():
+                count += 1
+                block.set_penalty(True)
             self.__actual_area.get_blocks()[x][y] = copy.deepcopy(block)
+            if count > 1:
+                break
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
+        if self.delete_line_in_area():
+            self.move_blocks_area_down()
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
@@ -120,8 +174,8 @@ class Game:
         self.handle_input(input)
         for columns in self.__actual_area.get_blocks():
             for block in columns:
-                if block.get_color() != Color.BLACK and self.__actual_piece.check_colition(block):
-                    if block.get_color() == Color.GRAY:
+                if block.get_color() != COLORS["black"] and self.__actual_piece.check_colition(block):
+                    if block.get_color() == COLORS["gray"]:
                         pos_abs_x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
                         if pos_abs_x == 0:
                             self.__actual_piece.move_right()
