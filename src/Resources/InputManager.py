@@ -9,12 +9,15 @@ class InputManager:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return mouse_x, mouse_y
     
-    def mouse_pressed(self) -> None:
-        buttons = pygame.mouse.get_pressed() 
+    def mouse_pressed(self) -> bool:
+        buttons = pygame.mouse.get_pressed()
+        mouse_x, mouse_y = self.mouse_position()
         if buttons[0] and (self.__mouse_state is None or not self.__mouse_state[0]):
             mouse_x, mouse_y = self.mouse_position()
             print("Left button pressed ({}, {})".format(mouse_x, mouse_y))
+            return True
         self.__mouse_state = buttons
+        return False 
 
     def update(self) -> None:
         """
