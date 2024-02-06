@@ -9,6 +9,14 @@ class GameManger:
     height_gameplay_area = 900#22 * BLOCK_SIZE
     width_gameplay_area = 900#3 * 12 * BLOCK_SIZE
     def __init__(self) -> None:
+        """
+        Initialize the GameManager.
+
+        - Seed the random number generator.
+        - Initialize Pygame.
+        - Set the initial game state to "start_screen".
+        - Create instance of Game, InputManager, StartScreen, and WindowsManager.
+        """
         random.seed(time.time())
         pygame.init()
         self.__state_game = "start_screen"
@@ -18,6 +26,12 @@ class GameManger:
         self.__windows_manager = WindowsManager(GameManger.width_gameplay_area, 
                                                 GameManger.height_gameplay_area)
     def update(self) -> None:
+        """
+        Update the game state.
+
+        - Check for a state transition from the start screen to the game screen.
+        - If in the game screen state, update the game.
+        """
         new_state = self.__start_screen.update(self.__input_manager)
         if new_state == "game_screen":
             self.__state_game = "game_screen"
@@ -25,6 +39,14 @@ class GameManger:
             
 
     def render(self) -> None:
+        """
+        Render the game based on the current state.
+
+        - Clear the screen.
+        - Render the start screen if in the "start_screen" state.
+        - Render the game if in the "game_screen" state.
+        - Update the display.
+        """
         self.__windows_manager.clear_screen()
         if self.__state_game == "start_screen":
             self.__windows_manager.clear_screen()
@@ -39,4 +61,7 @@ class GameManger:
         self.__windows_manager.update_display()
 
     def destroy(self) -> None:
-        self.__event_manager.destroy()
+        """
+        Destroy the GameManager.
+        """
+        pass
