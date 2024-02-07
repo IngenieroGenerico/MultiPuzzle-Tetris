@@ -49,6 +49,8 @@ class InputManager:
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
                 self.__keys.add(event.key)
+            elif event.type == pygame.KEYUP:
+                self.__keys.discard(event.key)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouse_pressed()
      

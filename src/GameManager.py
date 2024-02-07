@@ -1,6 +1,7 @@
 import pygame, random, time
 from .Resources.StartScreen import StartScreen
-from .Resources import InputManager, WindowsManager
+from .Resources.ScoreScreen import ScoreScreen
+from .Resources import InputManager, WindowsManager, CImage
 from .GameObjects import Game
 from data import BLOCK_SIZE
 
@@ -20,6 +21,8 @@ class GameManger:
         random.seed(time.time())
         pygame.init()
         self.__state_game = "start_screen"
+        self.__resources_manager = CImage
+        self.__score_screen = ScoreScreen(self.__resources_manager)
         self.__game = Game()
         self.__input_manager = InputManager()
         self.__start_screen = StartScreen()
@@ -32,10 +35,11 @@ class GameManger:
         - Check for a state transition from the start screen to the game screen.
         - If in the game screen state, update the game.
         """
-        new_state = self.__start_screen.update(self.__input_manager)
+        new_state = self.__start_screen.update()
         if new_state == "game_screen":
             self.__state_game = "game_screen"
             self.__game.update(self.__input_manager)
+        self.__input_manager.update()
             
 
     def render(self) -> None:
@@ -48,16 +52,31 @@ class GameManger:
         - Update the display.
         """
         self.__windows_manager.clear_screen()
+
         if self.__state_game == "start_screen":
-            self.__windows_manager.clear_screen()
-            self.__start_screen.render(self.__windows_manager)
-            self.__windows_manager.update_display()
+            self.render_start_screen()
         elif self.__state_game == "game_screen":
-            self.__windows_manager.clear_screen()
             self.__game.render(self.__windows_manager)
-            self.__windows_manager.update_display()
-        elif self.__state_game == "gameover_screen":
-            pass
+        elif self.__state_game == "crendits_screen":
+            self.render_credits_screen()
+        elif self.__state_game == "score_screen":
+            self.render_score_screen()
+
+        self.__windows_manager.update_display()
+
+    def render_start_screen(self) -> None:
+        self.__windows_manager.clear_screen()
+        self.__start_screen.render(self.__windows_manager)
+        self.__windows_manager.update_display()
+
+    def render_credits_screen(self) -> None:
+        self.__windows_manager.clear_screen()
+        self.__credit_screen.render(self.__windows_manager)
+        self.__windows_manager.update_display()
+
+    def render_score_screen(self) -> None:
+        self.__windows_manager.clear_screen()
+        self.__score_screen.render(self.__windows_manager)
         self.__windows_manager.update_display()
 
     def destroy(self) -> None:
