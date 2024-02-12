@@ -21,8 +21,7 @@ class GameManger:
         random.seed(time.time())
         pygame.init()
         self.__state_game = "start_screen"
-        self.__resources_manager = CImage
-        self.__score_screen = ScoreScreen(self.__resources_manager)
+        self.__score_screen = ScoreScreen()
         self.__game = Game()
         self.__input_manager = InputManager()
         self.__start_screen = StartScreen()
@@ -57,7 +56,7 @@ class GameManger:
             self.render_start_screen()
         elif self.__state_game == "game_screen":
             self.__game.render(self.__windows_manager)
-        elif self.__state_game == "crendits_screen":
+        elif self.__state_game == "credits_screen":
             self.render_credits_screen()
         elif self.__state_game == "score_screen":
             self.render_score_screen()

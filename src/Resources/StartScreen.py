@@ -38,7 +38,6 @@ class StartScreen:
             new_state = "score_screen"
             print("changed to {}".format(new_state))
         elif 450 < mouse_x < 582 and 646 < mouse_y < 688 and click:
-            # TODO: Check Event Quit Here
             pygame.quit()
         return new_state
 

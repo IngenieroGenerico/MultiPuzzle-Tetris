@@ -1,12 +1,14 @@
 import os
 import json
 import pygame
+from .ResourceManager import CImage
+from .WindowsManager import WindowsManager
 
 class ScoreScreen:
-    def __init__(self, resource_manager) -> None:
+    def __init__(self) -> None:
         self.__name = "name"
         self.__score = "score"
-        self.__resources_manager = resource_manager
+        self.__resources_manager = CImage()
 
     def get_info_player(self) -> None:
         return {"name": self.__name, "score": self.__score}
@@ -37,7 +39,7 @@ class ScoreScreen:
             return []
     
     # Render para test
-    def render(self, windows_manager) -> None:
+    def render(self, windows_manager: WindowsManager) -> None:
         scores = self.load_score()
         self.__resources_manager.load_img("src/Resources/Images/score_screen.png")
         self.__resources_manager.draw(windows_manager.get_screen(), "score_screen", position=(0, 0))
