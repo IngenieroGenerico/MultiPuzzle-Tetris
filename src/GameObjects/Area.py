@@ -3,8 +3,15 @@ from data import BLOCK_SIZE, COLORS
 import random
 
 class Area:
-
     def __init__(self, columns: int = 12, rows: int = 22, id: int = 0) -> None:
+        """
+        Initialize an Area.
+
+        Args:
+            columns (int): the number of columns in the area. Defaults to 12.
+            rows (int): The number of rows in the area. Defaults to 22.
+            id (int): The identifier for the area. Defaults to 0.
+        """
         self.__columns_amount = columns
         self.__rows_amount = rows
         self.__blocks = []
@@ -43,7 +50,7 @@ class Area:
     
     def get_blocks(self) -> list:
         return self.__blocks
-    
+
     def get_block(self, x: int, y: int) -> Block:
         return self.__blocks[x][y]
         
@@ -63,15 +70,30 @@ class Area:
         return self.__color
 
     def set_id(self, id: int) -> None:
+        """
+        Set the identifier of the area.
+
+        Args:
+            id (int): The new identifier.
+        """
         self.__id = id
     
     def get_id(self) -> int:
         return self.__id
-     
+    
     def update(self):
+        """
+        Update method for the area
+        """
         pass
 
     def render(self, window) -> None:
-            for row in self.__blocks:
-                for columns in row:
-                    columns.render(window)
+        """
+        Render the area on the window.
+
+        Args:
+            window (WindowManager): The window where the area will be renderized.
+        """
+        for row in self.__blocks:
+            for columns in row:
+                columns.render(window)

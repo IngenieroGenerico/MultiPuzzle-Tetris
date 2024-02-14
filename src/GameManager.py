@@ -20,5 +20,3 @@ class GameManger:
         self.__windows_manager.blit_screen()
         self.__game.render(self.__windows_manager)
         self.__windows_manager.update_display()
-
- 
