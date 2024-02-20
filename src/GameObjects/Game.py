@@ -17,7 +17,6 @@ class Game:
         self.__clock = pygame.time.Clock()
         self.__elapsed_time = 0
         self.__time = 1000
-        self.__score = 0
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
@@ -192,13 +191,9 @@ class Game:
             if count > 1:
                 break
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
-            if self.__score >= 2: 
-                self.__score -= 2
             self.add_penalty_to_area()
         if self.delete_line_in_area():
-            self.__score += 5
             self.move_blocks_area_down()
-        self.__score += 1
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
@@ -256,33 +251,6 @@ class Game:
                         #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
                         self.__actual_piece.move_up() #HardCore
                         self.add_piece_to_area()
-        
-            
-    def get_grid(self):
-        return self.__grid
-    
-    def get_actual_piece(self):
-        return self.__actual_piece
-    
-    def get_score(self) -> int:
-        return self.__score
-    
-    def update_score(self, points: int) -> None:
-        self.__score += points
-
-    def blit_score_area(self, window_score: WindowsManager) -> None:
-        self.render_score(window_score)
-
-    def render_score(self, window_score: WindowsManager) -> None:
-        window_score.get_score_area().fill(COLORS["white"])
-        font = pygame.font.Font(None, 50)
-        text_surface = font.render(f"Score: {self.__score}", True, COLORS["black"])
-        window_score.get_score_area().blit(text_surface, (0, 0))
-    
-    def render_controls(self, window: WindowsManager) -> None:
-        window.render_controls_area()
-        window.render_img_controls("controls")
-        window.get_rules_area()
 
     def render(self, window: WindowsManager) -> None:
         """
@@ -294,6 +262,5 @@ class Game:
         for area in self.__grid:
             area.render(window)
         self.__actual_piece.render(window)
-        self.render_score(window)
-        self.render_controls(window)        
+
        

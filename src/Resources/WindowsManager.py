@@ -22,6 +22,8 @@ class WindowsManager:
 
         self.__img_controller = CImage()
         self.__img_controller.load_img("src/Resources/Images/controls.png", False)
+
+        self.__score = 0
         
         # Definir colores
         # Crear superficie para el área de puntos y siguiente pieza
@@ -35,12 +37,28 @@ class WindowsManager:
     def render_img_controls(self, img_name: str) -> None:
         self.__img_controller.draw(self.__rules_area, img_name)
         self.update_display()
+
+    def render_score(self, score: int) -> None:
+        self.__score_area.fill(COLORS["white"])
+        font = pygame.font.Font(None, 50)
+        text_surface = font.render(f"Score: {score}", True, COLORS["black"])
+        self.__score_area.blit(text_surface, (0, 0))
     
+    def render_controls(self) -> None:
+        self.render_controls_area()
+        self.render_img_controls("controls")
+        self.get_rules_area()
+
     def render_controls_area(self) -> None:
         self.__screen.blit(self.__rules_area, (0, self.__height_gameplay_area))
 
-    def render_score_area(self) -> None:
+    def render_score_area(self, score: int) -> None:
         self.__screen.blit(self.__score_area, (self.__width_gampley_area, 0))
+        self.render_score(score)
+    
+    def blit_screen(self) -> None:
+        self.render_score()
+        self.render_controls()
 
     def get_screen(self) -> pygame.Surface:
         return self.__screen
