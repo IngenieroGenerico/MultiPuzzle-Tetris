@@ -262,5 +262,3 @@ class Game:
         for area in self.__grid:
             area.render(window)
         self.__actual_piece.render(window)
-
-       

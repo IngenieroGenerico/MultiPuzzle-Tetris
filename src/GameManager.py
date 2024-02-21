@@ -27,6 +27,12 @@ class GameManger:
 
     def update(self) -> None:
         self.__input_manager.update()
+        lines_deleted = self.__game.delete_line_in_area()
+        if lines_deleted > 0:
+            print("aumento")
+            self.update_score(lines_deleted * 100)
+        elif lines_deleted == 0:
+            print("no aumento")
         self.__game.update(self.__input_manager)
 
     def render(self) -> None:
