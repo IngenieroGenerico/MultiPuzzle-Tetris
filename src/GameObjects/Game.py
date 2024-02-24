@@ -193,7 +193,7 @@ class Game:
                 break
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
-        if self.delete_line_in_area():
+        while self.delete_line_in_area():
             self.move_blocks_area_down()
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
