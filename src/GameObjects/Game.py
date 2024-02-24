@@ -3,9 +3,15 @@ from ..Resources import InputManager, WindowsManager
 from .Pieces.ImportsData import *
 import copy, pygame
 from data import BLOCK_SIZE,COLORS
+from enum import Enum
+
+class GameState(Enum):
+    IDLE = 1
+    DROPING = 2
+    DELETING_PENALTY = 3
 
 class Game:
-    def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
+    def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22, speed_level: int = 1) -> None:
         """
         Initialize the Game.
 
@@ -15,9 +21,14 @@ class Game:
             rows (int): Number of rows in each are. Defaults to 22.
         """
         self.__clock = pygame.time.Clock()
+        self.__game_state = GameState.DROPING
+        self.__speed_level = speed_level if speed_level >= 1 else 1
+        self.__lines_deleted = 0 
+        self.__penalty_counter = 0
+        self.__render_text = False
         self.__elapsed_time = 0
-        self.__time = 1000
-        self.__areas_amount = None
+        self.__time = 1000 / self.__speed_level 
+        self.__areas_amount = areas_amount
         self.__next_piece = None
         self.__actual_piece = None
         self.__actual_area = None
@@ -101,14 +112,14 @@ class Game:
     def get_width_gameplay(self) -> int:
         return self.__width_gameplay_area
     
-    def get_delta_time(self) -> bool:
+    def get_delta_time(self, time_ms) -> bool:
         """
         Get whether the elapsed time exceeds a specified time interval.
 
         Returns:
             bool: True if the time has elapsed, False otherwise.
         """
-        if self.__elapsed_time >= self.__time:
+        if self.__elapsed_time >= time_ms:
             self.__elapsed_time = 0
             return True
         else:
@@ -116,6 +127,17 @@ class Game:
             self.__elapsed_time += delta_time
             return False
         
+    def set_dropdown_time(self) -> None:
+        self.__time = 1000 / self.__speed_level
+
+    def level_up(self) -> None:
+        if self.__lines_deleted > 10:
+            self.__speed_level += 1
+            self.__lines_deleted = 0
+            self.set_dropdown_time()
+        else:
+            self.__lines_deleted += 1
+
     def move_blocks_area_down(self) -> None:
         next_column = False
         for x in range(1, self.__actual_area.get_columns_amount() - 1):
@@ -172,6 +194,7 @@ class Game:
                         if block.get_color() == COLORS["black"]:
                             block.set_color(self.__actual_area.get_color())
                             block.set_penalty(True)
+                            self.__penalty_counter += 1
                             count_penalty += 1
                             break
                     if count_penalty != 0:
@@ -188,6 +211,7 @@ class Game:
             if block.get_color() != self.__actual_area.get_color():
                 count += 1
                 block.set_penalty(True)
+                self.__penalty_counter += 1
             self.__actual_area.get_blocks()[x][y] = copy.deepcopy(block)
             if count > 1:
                 break
@@ -195,6 +219,9 @@ class Game:
             self.add_penalty_to_area()
         while self.delete_line_in_area():
             self.move_blocks_area_down()
+            self.level_up()
+            if self.__penalty_counter > 0:
+                self.__game_state = GameState.DELETING_PENALTY
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
         self.spawn_piece_in_area()
@@ -232,28 +259,53 @@ class Game:
         Args:
             input (InputManager): The input manager for the game.
         """
-        if self.get_delta_time():
-            self.__actual_piece.move_down()
-        self.handle_input(input)
-        for columns in self.__actual_area.get_blocks():
-            for block in columns:
-                if block.get_color() != COLORS["black"] and self.__actual_piece.check_colition(block):
-                    if block.get_color() == COLORS["gray"]:
-                        pos_abs_x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
-                        if pos_abs_x == 0:
-                            self.__actual_piece.move_right()
-                        elif pos_abs_x == self.__actual_area.get_columns_amount() - 1:
-                            self.__actual_piece.move_left()
+        if self.__game_state == GameState.DROPING:
+            if self.get_delta_time(self.__time):
+                self.__actual_piece.move_down()
+            self.handle_input(input)
+            for columns in self.__actual_area.get_blocks():
+                for block in columns:
+                    if block.get_color() != COLORS["black"] and self.__actual_piece.check_colition(block):
+                        if block.get_color() == COLORS["gray"]:
+                            pos_abs_x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
+                            if pos_abs_x == 0:
+                                self.__actual_piece.move_right()
+                            elif pos_abs_x == self.__actual_area.get_columns_amount() - 1:
+                                self.__actual_piece.move_left()
+                            else:
+                                #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
+                                self.__actual_piece.move_up() #HardCore
+                                self.add_piece_to_area()
                         else:
                             #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
                             self.__actual_piece.move_up() #HardCore
                             self.add_piece_to_area()
-                    else:
-                        #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
-                        self.__actual_piece.move_up() #HardCore
-                        self.add_piece_to_area()
+        elif self.__game_state == GameState.DELETING_PENALTY:
+            for areas in self.__grid:
+                for columns in areas.get_blocks():
+                    for block in columns:
+                        if block.get_penalty():
+                            if block.get_rect().collidepoint(input.get_mouse_x(),input.get_mouse_y()):
+                                block.set_penalty(False)
+                                block.set_color(COLORS["black"])
+                                self.__penalty_counter -= 1
+                                self.__game_state = GameState.DROPING
+                                return
+                    
+    def render_text_penalty(self, window) -> None:
+        font = pygame.font.Font(None, 100)  # Fuente predeterminada, tamaño 50
+        text = "DESTROY PENALTY"
+        text_surface = font.render(text, True, COLORS["white"])
+        text_rect = text_surface.get_rect()
+        text_rect.center = (self.__width_gameplay_area // 2, self.__height_gameplay_area // 2)
+        if self.get_delta_time(500):
+            if self.__render_text:
+                self.__render_text = False
+            else:
+                self.__render_text = True
+        if self.__render_text:
+            window.get_screen().blit(text_surface,text_rect)
         
-            
     def render(self, window: WindowsManager) -> None:
         """
         Render the game areas and the current piece.
@@ -264,4 +316,6 @@ class Game:
         for area in self.__grid:
             area.render(window)
         self.__actual_piece.render(window)
+        if self.__game_state == GameState.DELETING_PENALTY:
+            self.render_text_penalty(window)
        

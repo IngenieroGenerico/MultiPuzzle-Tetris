@@ -7,7 +7,7 @@ class GameManger:
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()
-        self.__game = Game()
+        self.__game = Game(3,12,22,1)
         self.__input_manager = InputManager()
         self.__windows_manager = WindowsManager(self.__game.get_width_gameplay(), 
                                                 self.__game.get_height_gameplay())

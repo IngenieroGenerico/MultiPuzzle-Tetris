@@ -9,17 +9,8 @@ class InputManager:
         """
         self.__keys = set()
         self.__mouse_state = None
-
-    def mouse_position(self) -> tuple:
-        """
-        Get the current mouse position.
-
-        Returns:
-            tuple: (mouse_x, mouse_y)
-        """
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        return mouse_x, mouse_y
-    
+        self.__mouse_xy = (0,0)
+ 
     def mouse_pressed(self) -> bool:
         """
         Check if the left button is pressed.
@@ -28,13 +19,18 @@ class InputManager:
             bool: True if the left mouse button is pressed, False otherwise.
         """
         buttons = pygame.mouse.get_pressed()
-        mouse_x, mouse_y = self.mouse_position()
+        
         if buttons[0] and (self.__mouse_state is None or not self.__mouse_state[0]):
-            mouse_x, mouse_y = self.mouse_position()
-            print("Left button pressed ({}, {})".format(mouse_x, mouse_y))
+            self.__mouse_xy = pygame.mouse.get_pos()
+            print("Left button pressed ({}, {})".format(self.__mouse_xy[0], self.__mouse_xy[1]))
             return True
         self.__mouse_state = buttons
         return False 
+    
+    def get_mouse_x(self) -> int:
+        return self.__mouse_xy[0]
+    def get_mouse_y(self) -> int:
+        return self.__mouse_xy[1]
 
     def update(self) -> None:
         """
