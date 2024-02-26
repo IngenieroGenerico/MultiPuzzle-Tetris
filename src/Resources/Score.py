@@ -8,17 +8,24 @@ class Score:
 
     def get_info_player(self) -> None:
         return {"name": self.__name, "score": self.__score}
+    
+    def get_score(self) -> int:
+        """
+        Get the current score.
+
+        Returns:
+            int: The current score.
+        """
+        return self.__score
 
     def save_score(self, player_name, score) -> None:
         scores = self.load_score()
 
-        if len(scores) != 0:
-            for player in scores:
-                if scores[player] == player_name:
-                    scores["score"] = score
-                    break
+        if player_name in scores:
+            if scores > scores[player_name]:
+                scores[player_name] = scores
         else:
-            scores.append(self.get_info_player())
+            scores[player_name] = score
 
         with open("data/score.json", "w") as file:
             json.dump(scores, file, indent=4)
