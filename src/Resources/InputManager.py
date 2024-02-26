@@ -2,35 +2,57 @@ import pygame
 
 class InputManager:
     def __init__(self) -> None:
-        self.__keys = set()
-        self.__mouse_state = None
+        """
+        Initialize the InputManager.
 
-    def mouse_position(self) -> tuple:
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        return mouse_x, mouse_y
-    
-    def mouse_pressed(self) -> None:
-        buttons = pygame.mouse.get_pressed() 
-        if buttons[0] and (self.__mouse_state is None or not self.__mouse_state[0]):
-            mouse_x, mouse_y = self.mouse_position()
-            print("Left button pressed ({}, {})".format(mouse_x, mouse_y))
-        self.__mouse_state = buttons
+        - Initialize sets to track keys and mouse state.
+        """
+        self.__keys = set()
+        self.__mouse_xy = (0,0)
+ 
+    def set_mouse_position(self) -> None:
+        self.__mouse_xy = pygame.mouse.get_pos()
+
+    def clear_mouse_position(self) -> None:
+        self.__mouse_xy = (0,0)
+
+    def get_mouse_x(self) -> int:
+        return self.__mouse_xy[0]
+    def get_mouse_y(self) -> int:
+        return self.__mouse_xy[1]
 
     def update(self) -> None:
         """
-        Actualiza el estado de todas las teclas
+        Update the state of keys and mouse.
+
+        - Handle QUIT event to quit the game.
+        - Handle KEYDOWN event to add pressed keys to the set.
+        - Handle MOUSEBUTTONDOWN event to check if the left mouse button is pressed.
         """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
                 self.__keys.add(event.key)
+            elif event.type == pygame.KEYUP:
+                self.__keys.discard(event.key)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.mouse_pressed()
+                self.set_mouse_position()
+            
+
      
     def clear_keys(self) -> None:
+        """
+        Clear the set of pressed keys.
+        """
         self.__keys.clear()
 
     def get_keys(self) -> set:
+        """
+        Get the set of currently pressed keys.
+
+        Returns:
+            set: Set of pressed keys.
+        """
         return self.__keys
     

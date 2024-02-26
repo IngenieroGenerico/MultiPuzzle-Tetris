@@ -1,7 +1,14 @@
 from .Piece import *
 
 class IForm(Piece):
+
     def __init__(self, color: tuple) -> None:
+        """
+        Initialize an IForm piece.
+
+        Args:
+            color (tuple): The color of the piece.
+        """
         super().__init__(color)
         self.set_type(PieceType.I)
         self._blocks.append(Block(-1, -1, color))
@@ -11,6 +18,12 @@ class IForm(Piece):
         self._pivot = self._blocks[1]
     
     def set_initial_position(self, area_center: int) -> None:
+        """
+        Set the initial position of the IForm within an area.
+
+        Args:
+            area_center (int): The center position of the area.
+        """
         if self._orientation == Orientation.VERTICAL:
             for block in self._blocks:
                 block.set_x(area_center)
@@ -22,6 +35,9 @@ class IForm(Piece):
         super().create_rect()
         
     def rotate(self) -> None:
+        """
+        Rotate the IForm piece.
+        """
         pos_x = self._pivot.get_position().get_x()
         pos_y = self._pivot.get_position().get_y()
         if self._orientation == Orientation.VERTICAL:
@@ -38,12 +54,22 @@ class IForm(Piece):
         super().create_rect()
 
     def update(self) -> None:
-        """Summary"""
+        """
+        Update method for the IForm piece.
+        """
         pass
 
     def render(self, window) -> None:
+        """
+        Render the IForm piece on the window.
+
+        Args:
+            window (WindowManager): The window where the piece will be rendered.
+        """
         super().render(window)
 
     def destroy(self) -> None:
-        """Summary"""
+        """
+        Destroy method for the IForm piece.
+        """
         pass
