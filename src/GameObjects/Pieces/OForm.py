@@ -1,7 +1,15 @@
 from .Piece import *
 
 class OForm(Piece):
+
     def __init__(self, color: tuple) -> None:
+        """
+        Initialize an OForm piece.
+
+        Args:
+            color (Color): The color of the piece.
+        """
+
         super().__init__(color)
         self.set_type(PieceType.O)
         self._blocks.append(Block(-1, -1, color))
@@ -10,6 +18,12 @@ class OForm(Piece):
         self._blocks.append(Block(-2, -1, color))
        
     def set_initial_position(self, area_center: int) -> None:
+        """
+        Set the initial position of the OForm within an area.
+
+        Args:
+            area_center (int): The center position of the area.
+        """
         self._blocks[0].set_x(area_center)
         self._blocks[1].set_x(area_center)
         self._blocks[2].set_x(area_center -1)
@@ -17,12 +31,22 @@ class OForm(Piece):
         super().create_rect()
 
     def update(self) -> None:
-        """Summary"""
+        """
+        Update method for the OForm piece.
+        """
         pass
 
     def render(self, window) -> None:
+        """
+        Render the OForm piece on the window.
+
+        Args:
+            window (WindowManager): The window where the piece will be rendered.
+        """
         super().render(window)
 
     def destroy(self) -> None:
-        """Summary"""
+        """
+        Destroy method for the OForm piece.
+        """
         pass
