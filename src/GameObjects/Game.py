@@ -17,6 +17,8 @@ class Game:
         self.__clock = pygame.time.Clock()
         self.__elapsed_time = 0
         self.__time = 1000
+        self.__lines_deleted_counter = 0
+        self.__lines_deleted = False
         self.__areas_amount = None
         self.__next_piece = None
         self.__actual_piece = None
@@ -157,8 +159,9 @@ class Game:
                 for columns in self.__actual_area.get_blocks():
                     if columns[i].get_color() != COLORS["gray"]:
                         columns[i].set_color(COLORS["black"])
-            return True
-        else: return False
+            
+            self.__lines_deleted = True
+        return self.__lines_deleted
         
     def add_penalty_to_area(self) -> None:
         """
@@ -193,6 +196,7 @@ class Game:
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
         if self.delete_line_in_area():
+            self.__lines_deleted_counter += 1
             self.move_blocks_area_down()
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PieceType)))
@@ -223,6 +227,12 @@ class Game:
                         area_id = 0
                     self.spawn_piece_in_area(area_id)
             input.clear_keys()
+
+    def get_line_deleted(self) -> bool:
+        return self.__lines_deleted
+
+    def get_lines_deleted_counter(self) -> int:
+        return self.__lines_deleted_counter
 
     def update(self, input: InputManager) -> None:
         """

@@ -19,24 +19,17 @@ class GameManger:
     def get_actual_piece(self):
         return self.__game.__actual_piece
     
-    def get_score(self) -> int:
-        return self.__score
-    
     def update_score(self, points: int) -> None:
         self.__score += points
 
     def update(self) -> None:
         self.__input_manager.update()
-        lines_deleted = self.__game.delete_line_in_area()
-        if lines_deleted > 0:
-            print("aumento")
-            self.update_score(lines_deleted * 100)
-        elif lines_deleted == 0:
-            print("no aumento")
+        if self.__game.get_line_deleted():
+            self.__game.__lines_deleted = False
         self.__game.update(self.__input_manager)
 
     def render(self) -> None:
         self.__windows_manager.clear_screen()
-        self.__windows_manager.render_score_area(self.get_score())
+        self.__windows_manager.render_score_area(self.__game.get_lines_deleted_counter())
         self.__game.render(self.__windows_manager)
         self.__windows_manager.update_display()
