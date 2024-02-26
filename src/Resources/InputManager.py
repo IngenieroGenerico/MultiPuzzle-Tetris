@@ -8,25 +8,14 @@ class InputManager:
         - Initialize sets to track keys and mouse state.
         """
         self.__keys = set()
-        self.__mouse_state = None
         self.__mouse_xy = (0,0)
  
-    def mouse_pressed(self) -> bool:
-        """
-        Check if the left button is pressed.
+    def set_mouse_position(self) -> None:
+        self.__mouse_xy = pygame.mouse.get_pos()
 
-        Returns:
-            bool: True if the left mouse button is pressed, False otherwise.
-        """
-        buttons = pygame.mouse.get_pressed()
-        
-        if buttons[0] and (self.__mouse_state is None or not self.__mouse_state[0]):
-            self.__mouse_xy = pygame.mouse.get_pos()
-            print("Left button pressed ({}, {})".format(self.__mouse_xy[0], self.__mouse_xy[1]))
-            return True
-        self.__mouse_state = buttons
-        return False 
-    
+    def clear_mouse_position(self) -> None:
+        self.__mouse_xy = (0,0)
+
     def get_mouse_x(self) -> int:
         return self.__mouse_xy[0]
     def get_mouse_y(self) -> int:
@@ -48,7 +37,9 @@ class InputManager:
             elif event.type == pygame.KEYUP:
                 self.__keys.discard(event.key)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.mouse_pressed()
+                self.set_mouse_position()
+            
+
      
     def clear_keys(self) -> None:
         """

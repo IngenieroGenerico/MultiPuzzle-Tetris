@@ -1,10 +1,11 @@
 import pygame
+from data import COLORS
 
 class Button:
-    def __init__(self, x, y, width, height, color, hover_color, text, font_size=30):
+    def __init__(self, x, y, width, height, text, font_size=30):
         self.rect = pygame.Rect(x, y, width, height)
-        self.color = color  
-        self.hover_color = hover_color
+        self.color = None  
+        self.hover_color = None
         self.text = text
         self.font = pygame.font.Font(None, font_size)
         self.hovered = False

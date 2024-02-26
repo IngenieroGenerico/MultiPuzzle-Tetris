@@ -3,11 +3,11 @@ from .Resources import InputManager, WindowsManager
 from .GameObjects import Game
 from data import BLOCK_SIZE
 
-class GameManger:
+class GameManager:
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()
-        self.__game = Game(3,12,22,1)
+        self.__game = Game(7,12,22,10)
         self.__input_manager = InputManager()
         self.__windows_manager = WindowsManager(self.__game.get_width_gameplay(), 
                                                 self.__game.get_height_gameplay())

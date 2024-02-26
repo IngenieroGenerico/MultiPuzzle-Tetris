@@ -25,7 +25,7 @@ class WindowsManager:
 
         # Crear superficie para el de reglas
         self.__rules_area = pygame.Surface((self.__width_rules_area, self.__height_rules_area))
-        self.__rules_area.fill(COLORS["green"])
+        self.__rules_area.fill(COLORS["white"])
         
     def blit_score_area(self) -> None:
         self.__screen.blit(self.__score_area,(self.__width_gampley_area, 0))

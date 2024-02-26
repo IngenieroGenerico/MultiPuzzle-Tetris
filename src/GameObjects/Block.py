@@ -172,8 +172,8 @@ class Block:
             pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,line_width)
             pygame.draw.line(window.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,line_width)
         if self.__is_penalty:
-            pygame.draw.line(window.get_screen(), COLORS["black"], self.__rect.topleft, self.__rect.bottomright, 1)
-            pygame.draw.line(window.get_screen(), COLORS["black"], self.__rect.bottomleft,self.__rect.topright,1)
+            pygame.draw.line(window.get_screen(), COLORS["white"], self.__rect.topleft, self.__rect.bottomright, 3)
+            pygame.draw.line(window.get_screen(), COLORS["white"], self.__rect.bottomleft,self.__rect.topright,3)
 
     def check_colition(self, other_block) -> bool:
         """

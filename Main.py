@@ -1,8 +1,8 @@
-from src.GameManager import GameManger
+from src.GameManager import GameManager
 
 if __name__ == "__main__":
     # Initialize the GameManager
-    game_manager = GameManger()
+    game_manager = GameManager()
     # Main game loop
     while True:
         # Update the game state

@@ -3,7 +3,7 @@ from data import BLOCK_SIZE, COLORS
 import random
 
 class Area:
-    def __init__(self, columns: int = 12, rows: int = 22, id: int = 0) -> None:
+    def __init__(self, columns: int = 12, rows: int = 22, id: int = 0, color: tuple = None) -> None:
         """
         Initialize an Area.
 
@@ -15,14 +15,13 @@ class Area:
         self.__columns_amount = columns
         self.__rows_amount = rows
         self.__blocks = []
-        self.__color = None
         self.__id = id
         self.__center = int(columns // 2 + columns * id)
+        self.set_color(color)
         
         actual_x = 0
         actual_y = 0
         area_width = columns * BLOCK_SIZE * id
-        self.set_color()
         for x in range(0, self.__columns_amount):
             columns_block = []
             for y in range(0, self.__rows_amount):
@@ -55,14 +54,13 @@ class Area:
         return self.__blocks[x][y]
         
     def set_color(self, color: tuple = None) -> None:
-        game_color = [COLORS["yellow"], 
-                      COLORS["blue"], 
-                      COLORS["red"], 
-                      COLORS["purple"],
-                      COLORS["green"]
-                    ]
         if color is None:
-            self.__color = random.choice(game_color)
+            key_color = random.choice(list(COLORS.keys()))
+            while (key_color == "white" or 
+                   key_color == "black" or 
+                   key_color == "gray"): 
+                key_color = random.choice(list(COLORS.keys()))
+            self.__color = COLORS[key_color]
         else:
             self.__color = color
     

@@ -2,16 +2,17 @@ from .Area import Area, random
 from ..Resources import InputManager, WindowsManager
 from .Pieces.ImportsData import *
 import copy, pygame
-from data import BLOCK_SIZE,COLORS
+from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE
 from enum import Enum
 
 class GameState(Enum):
     IDLE = 1
     DROPING = 2
     DELETING_PENALTY = 3
+    GAME_OVER = 4
 
 class Game:
-    def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22, speed_level: int = 1) -> None:
+    def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         """
         Initialize the Game.
 
@@ -22,12 +23,12 @@ class Game:
         """
         self.__clock = pygame.time.Clock()
         self.__game_state = GameState.DROPING
-        self.__speed_level = speed_level if speed_level >= 1 else 1
+        self.__speed = speed if speed >= 1 else 1
         self.__lines_deleted = 0 
         self.__penalty_counter = 0
         self.__render_text = False
         self.__elapsed_time = 0
-        self.__time = 1000 / self.__speed_level 
+        self.__time = 1000 / self.__speed 
         self.__areas_amount = areas_amount
         self.__next_piece = None
         self.__actual_piece = None
@@ -74,8 +75,14 @@ class Game:
             columns (int): Number of columns in each area. Defaults to 12.
             rows (int): Number of rows in each area. Defaults to 22.
         """
+        keys = []
+        while len(keys) < amount:
+            key = random.choice(list(COLORS.keys()))
+            if key != "white" and key != "black" and key != "gray" and key not in keys:
+                 keys.append(key)
+
         for i in range(0, amount):
-            new_area = Area(columns, rows, i)
+            new_area = Area(columns, rows, i,COLORS[keys[i]])
             self.__grid.append(new_area)
      
     def create_piece(self, piece: PieceType = random.choice(list(PieceType))) -> Piece:
@@ -127,14 +134,14 @@ class Game:
             self.__elapsed_time += delta_time
             return False
         
-    def set_dropdown_time(self) -> None:
-        self.__time = 1000 / self.__speed_level
+    def set_time(self) -> None:
+        self.__time = 1000 / self.__speed
 
     def level_up(self) -> None:
         if self.__lines_deleted > 10:
-            self.__speed_level += 1
+            self.__speed += 1
             self.__lines_deleted = 0
-            self.set_dropdown_time()
+            self.set_time()
         else:
             self.__lines_deleted += 1
 
@@ -251,6 +258,14 @@ class Game:
                         area_id = 0
                     self.spawn_piece_in_area(area_id)
             input.clear_keys()
+    def check_for_game_over(self) -> None:
+        for areas in self.__grid:
+                for columns in areas.get_blocks():
+                    for block in columns:
+                        if (block.get_position().get_y() == 0 and 
+                            block.get_color() != COLORS["black"] and 
+                            block.get_color() != COLORS["gray"]):
+                            self.__game_state = GameState.GAME_OVER
 
     def update(self, input: InputManager) -> None:
         """
@@ -260,12 +275,13 @@ class Game:
             input (InputManager): The input manager for the game.
         """
         if self.__game_state == GameState.DROPING:
+            self.check_for_game_over()
             if self.get_delta_time(self.__time):
                 self.__actual_piece.move_down()
             self.handle_input(input)
             for columns in self.__actual_area.get_blocks():
                 for block in columns:
-                    if block.get_color() != COLORS["black"] and self.__actual_piece.check_colition(block):
+                    if block.get_color() != COLORS["black"] and self.__actual_piece.check_colition(block): 
                         if block.get_color() == COLORS["gray"]:
                             pos_abs_x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
                             if pos_abs_x == 0:
@@ -291,10 +307,17 @@ class Game:
                                 self.__penalty_counter -= 1
                                 self.__game_state = GameState.DROPING
                                 return
-                    
-    def render_text_penalty(self, window) -> None:
-        font = pygame.font.Font(None, 100)  # Fuente predeterminada, tamaño 50
-        text = "DESTROY PENALTY"
+        elif self.__game_state == GameState.GAME_OVER:
+            #TODO: Logica para cambiar de pantallas y hacer lo que se tenga que hacer en 
+            #GameOver
+            pass
+
+    def render_text(self, window) -> None:
+        font = pygame.font.Font(None, self.__areas_amount * TEXT_SCREEN_SIZE)  # Fuente predeterminada, tamaño 50
+        if self.__game_state == GameState.DELETING_PENALTY:
+            text = "DESTROY PENALTY"
+        elif self.__game_state == GameState.GAME_OVER:
+            text = "GAME OVER"
         text_surface = font.render(text, True, COLORS["white"])
         text_rect = text_surface.get_rect()
         text_rect.center = (self.__width_gameplay_area // 2, self.__height_gameplay_area // 2)
@@ -306,6 +329,7 @@ class Game:
         if self.__render_text:
             window.get_screen().blit(text_surface,text_rect)
         
+
     def render(self, window: WindowsManager) -> None:
         """
         Render the game areas and the current piece.
@@ -316,6 +340,8 @@ class Game:
         for area in self.__grid:
             area.render(window)
         self.__actual_piece.render(window)
-        if self.__game_state == GameState.DELETING_PENALTY:
-            self.render_text_penalty(window)
+        if self.__game_state == GameState.DELETING_PENALTY or self.__game_state == GameState.GAME_OVER:
+            self.render_text(window)
+       
+            
        
