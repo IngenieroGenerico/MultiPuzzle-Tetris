@@ -30,6 +30,8 @@ class Game:
         self.__elapsed_time = 0
         self.__time = 1000 / self.__speed 
         self.__areas_amount = areas_amount
+        self.__total_lines = 0
+
         self.__next_piece = None
         self.__actual_piece = None
         self.__actual_area = None
@@ -137,7 +139,9 @@ class Game:
     def set_time(self) -> None:
         self.__time = 1000 / self.__speed
 
+    #TODO: Cambiar para subir de nivel.
     def level_up(self) -> None:
+        self.__total_lines += 1
         if self.__lines_deleted > 10:
             self.__speed += 1
             self.__lines_deleted = 0
@@ -186,6 +190,7 @@ class Game:
                 for columns in self.__actual_area.get_blocks():
                     if columns[i].get_color() != COLORS["gray"]:
                         columns[i].set_color(COLORS["black"])
+            
             return True
         else: return False
         
@@ -209,9 +214,7 @@ class Game:
                         break
                         
     def add_piece_to_area(self) -> None:
-
         count = 0
-
         for block in self.__actual_piece.get_blocks():
             x = block.get_position().get_x() - self.__actual_area.get_columns_amount() * self.__actual_area.get_id()
             y = block.get_position().get_y()
@@ -224,6 +227,7 @@ class Game:
                 break
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
+
         while self.delete_line_in_area():
             self.move_blocks_area_down()
             self.level_up()
@@ -258,6 +262,7 @@ class Game:
                         area_id = 0
                     self.spawn_piece_in_area(area_id)
             input.clear_keys()
+
     def check_for_game_over(self) -> None:
         for areas in self.__grid:
                 for columns in areas.get_blocks():
@@ -266,6 +271,9 @@ class Game:
                             block.get_color() != COLORS["black"] and 
                             block.get_color() != COLORS["gray"]):
                             self.__game_state = GameState.GAME_OVER
+
+    def get_total_lines(self) -> int:
+        return self.__total_lines
 
     def update(self, input: InputManager) -> None:
         """
@@ -340,8 +348,8 @@ class Game:
         for area in self.__grid:
             area.render(window)
         self.__actual_piece.render(window)
+
         if self.__game_state == GameState.DELETING_PENALTY or self.__game_state == GameState.GAME_OVER:
             self.render_text(window)
        
-            
-       
+
