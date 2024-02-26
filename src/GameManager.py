@@ -29,6 +29,6 @@ class GameManager:
 
     def render(self) -> None:
         self.__windows_manager.clear_screen()
-        self.__windows_manager.render_score_area(self.__game.get_total_lines())
+        self.__windows_manager.blit_screen(self.__game.get_total_lines())
         self.__game.render(self.__windows_manager)
         self.__windows_manager.update_display()
