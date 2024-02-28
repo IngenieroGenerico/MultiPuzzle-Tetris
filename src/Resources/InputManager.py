@@ -9,8 +9,13 @@ class InputManager:
         """
         self.__keys = set()
         self.__mouse_xy = (0,0)
+        self.__button_down = False
  
+    def get_button_down(self) -> None:
+        return self.__button_down
+    
     def set_mouse_position(self) -> None:
+        self.__button_down = True
         self.__mouse_xy = pygame.mouse.get_pos()
 
     def clear_mouse_position(self) -> None:
@@ -38,6 +43,8 @@ class InputManager:
                 self.__keys.discard(event.key)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.set_mouse_position()
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.__button_down = False
             
 
      

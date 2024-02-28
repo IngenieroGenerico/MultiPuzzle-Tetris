@@ -159,7 +159,7 @@ class Block:
         pass
     
     def render(self, window) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
-        pygame.draw.rect(window.get_screen(), self.__color, self.__rect)
+        pygame.draw.rect(window.get_gameplay_screen(), self.__color, self.__rect)
         line_width = 1
         if self.__color != COLORS["gray"]:
             line_color = COLORS["white"]
@@ -167,13 +167,13 @@ class Block:
             line_color = self.get_area_parent_color()
             line_width = 2
         if self.__color != COLORS["black"]:
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,line_width)
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,line_width)
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.bottomright,self.__rect.topright,line_width)
-            pygame.draw.line(window.get_screen(), line_color, self.__rect.topright,self.__rect.topleft,line_width)
+            pygame.draw.line(window.get_gameplay_screen(), line_color, self.__rect.topleft,self.__rect.bottomleft,line_width)
+            pygame.draw.line(window.get_gameplay_screen(), line_color, self.__rect.bottomleft,self.__rect.bottomright,line_width)
+            pygame.draw.line(window.get_gameplay_screen(), line_color, self.__rect.bottomright,self.__rect.topright,line_width)
+            pygame.draw.line(window.get_gameplay_screen(), line_color, self.__rect.topright,self.__rect.topleft,line_width)
         if self.__is_penalty:
-            pygame.draw.line(window.get_screen(), COLORS["white"], self.__rect.topleft, self.__rect.bottomright, 3)
-            pygame.draw.line(window.get_screen(), COLORS["white"], self.__rect.bottomleft,self.__rect.topright,3)
+            pygame.draw.line(window.get_gameplay_screen(), COLORS["white"], self.__rect.topleft, self.__rect.bottomright, 3)
+            pygame.draw.line(window.get_gameplay_screen(), COLORS["white"], self.__rect.bottomleft,self.__rect.topright,3)
 
     def check_colition(self, other_block) -> bool:
         """

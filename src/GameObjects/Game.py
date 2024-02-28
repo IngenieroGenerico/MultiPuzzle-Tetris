@@ -252,8 +252,6 @@ class Game:
                     self.__actual_piece.move_down()
                 elif key == pygame.K_d:
                     self.__actual_piece.move_right()
-                elif key == pygame.K_w:
-                    self.__actual_piece.move_up()
                 elif key == pygame.K_SPACE:
                     self.__actual_piece.rotate()
                 elif key == pygame.K_TAB:
@@ -335,7 +333,7 @@ class Game:
             else:
                 self.__render_text = True
         if self.__render_text:
-            window.get_screen().blit(text_surface,text_rect)
+            window.get_gameplay_screen().blit(text_surface, text_rect)
         
 
     def render(self, window: WindowsManager) -> None:

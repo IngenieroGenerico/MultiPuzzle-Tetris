@@ -11,12 +11,16 @@ class CSurface(pygame.Surface):
         """
         super().__init__((width, height))
 
-class CImage:
+class CImageManager:
     def __init__(self) -> None:
         """
         Initialize CImage to manage loaded images.
         """
         self.images = {}
+        self.load_img("src/Resources/Images/lobby.png",False)
+        self.load_img("src/Resources/Images/game_over.png",False)
+        self.load_img("src/Resources/Images/gameplay.png", False)
+        self.load_img("src/Resources/Images/credits.png",False)
 
     def load_img(self, image_path: str, transparent: bool = False) -> CSurface:
         """
@@ -68,18 +72,18 @@ class CImage:
             rotate_surface = pygame.transform.rotate(original_surface, angle_degrees)
             self.images[image_path]["surface"] = rotate_surface
 
-    def scale(self, image_name: str, scale: float) -> None:
+    def resize(self, image_name: str, width: float, height: float) -> None:
         """
-        Scale a loaded image.
+        Resize a loaded image.
 
         Args:
             image_name (str): The name of the image (without extension).
-            scale (float): The scaling factor.
+            width (float): Width.
+            height (float): Height.
         """
         image_path = "src/Resources/Images/{}.png".format(image_name)
         if image_path in self.images:
             original_surface = self.images[image_path]["surface"]
-            width, height = original_surface.get_size()
-            new_size = (int(width * scale), int(height * scale))
-            scale_surface = pygame.transform.scale(original_surface, new_size)
+            scale_surface = pygame.transform.scale(original_surface, (width, height))
             self.images[image_path]["surface"] = scale_surface
+
