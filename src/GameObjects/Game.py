@@ -1,5 +1,5 @@
 from .Area import Area, random
-from ..Resources import InputManager, WindowsManager
+from ..Resources import InputManager
 from .Pieces.ImportsData import *
 import copy, pygame
 from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE
@@ -336,7 +336,7 @@ class Game:
             window.get_gameplay_screen().blit(text_surface, text_rect)
         
 
-    def render(self, window: WindowsManager) -> None:
+    def render(self, window) -> None:
         """
         Render the game areas and the current piece.
 
