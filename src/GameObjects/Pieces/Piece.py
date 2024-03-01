@@ -2,7 +2,7 @@ from ..Block import Block
 from enum import Enum
 from data import BLOCK_SIZE
 
-class PieceType(Enum):
+class PIECE_TYPE(Enum):
     I = 1
     J = 2
     L = 3
@@ -11,13 +11,13 @@ class PieceType(Enum):
     T = 6
     Z = 7
 
-class Orientation(Enum):
+class ORIENTATION(Enum):
         VERTICAL = 1
         HORIZONTAL = 2
         VERTICAL_NEGATIVO = 3
         HORIZONTAL_NEGATIVO = 4
 
-class Direction(Enum):
+class DIRECTION(Enum):
     LEFT = 1
     RIGHT = 2
     DOWN = 3
@@ -37,7 +37,7 @@ class Piece:
         self.__type = None
         self._pivot = None
         self._color = color
-        self._orientation = Orientation.VERTICAL
+        self._orientation = ORIENTATION.VERTICAL
         self._blocks = []
     
     def create_rect(self) -> None:
@@ -48,7 +48,7 @@ class Piece:
             block.create_rect(block.get_position().get_x() * BLOCK_SIZE, 
                               block.get_position().get_y() * BLOCK_SIZE)
             
-    def set_type(self, piece_type: PieceType = None) -> None:
+    def set_type(self, piece_type: PIECE_TYPE = None) -> None:
         """
         Set the type of the piece.
 
@@ -57,7 +57,7 @@ class Piece:
         """
         self.__type = piece_type
     
-    def get_type(self) -> PieceType:
+    def get_type(self) -> PIECE_TYPE:
         """
         Get the type of the piece.
 
@@ -75,7 +75,7 @@ class Piece:
         """
         return self._color
     
-    def set_orientation(self, orientation: Orientation) -> None:
+    def set_orientation(self, orientation: ORIENTATION) -> None:
         """
         Set the orientation of the piece.
 
@@ -92,13 +92,13 @@ class Piece:
             direction (Direction): The direction to move the piece. 
         """
         if self._can_move:
-            if direction == Direction.LEFT:
+            if direction == DIRECTION.LEFT:
                 self.move_left()
-            elif direction == Direction.RIGHT:
+            elif direction == DIRECTION.RIGHT:
                 self.move_right()
-            elif direction == Direction.DOWN:
+            elif direction == DIRECTION.DOWN:
                 self.move_down()
-            elif direction == Direction.UP:
+            elif direction == DIRECTION.UP:
                 self.move_up()
 
     def move_up(self) -> None:

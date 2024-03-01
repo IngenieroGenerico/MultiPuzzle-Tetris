@@ -1,34 +1,28 @@
 from .Area import Area, random
-from ..Resources import InputManager
+from ..Resources import InputManager, Screen
 from .Pieces.ImportsData import *
 import copy, pygame
 from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE
 from enum import Enum
 
-class GameState(Enum):
+class STATE(Enum):
     IDLE = 1
     DROPING = 2
     DELETING_PENALTY = 3
     GAME_OVER = 4
 
 class Game:
+    WIDTH_DIVERGENCE = 150
+    HEIGHT_DIVERGENCE = 70
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22, speed: int = 1) -> None:
-        """
-        Initialize the Game.
-
-        Args:
-            areas_amount (int): Number of areas in the game. Defaults to 3.
-            columns (int): Number of columns in each area. Defaults to 12.
-            rows (int): Number of rows in each are. Defaults to 22.
-        """
         self.__clock = pygame.time.Clock()
-        self.__game_state = GameState.DROPING
+        self.__game_state = STATE.DROPING
         self.__speed = speed if speed >= 1 else 1
         self.__lines_deleted = 0 
         self.__penalty_counter = 0
         self.__render_text = False
         self.__elapsed_time = 0
-        self.__time = 1000 / self.__speed 
+        self.__time = 1000/speed 
         self.__areas_amount = areas_amount
         self.__total_lines = 0
 
@@ -38,30 +32,17 @@ class Game:
         self.__grid = []
         self.__height_gameplay_area = rows * BLOCK_SIZE
         self.__width_gameplay_area = areas_amount * columns * BLOCK_SIZE
+        self.__screen = Screen(self.__width_gameplay_area, self.__height_gameplay_area)
         self.create_level(areas_amount, columns, rows)
         
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
-        """
-        Create the initial game level.
-
-        Args:
-            areas_amount (int): Number of the areas in the game. Defaults to 3.
-            columns (int): Number of columns in each area. Defaults to 12.
-            rows (int): Number of rows in each area. Defaults to 22.
-        """
         self.__areas_amount = areas_amount
         self.create_areas(areas_amount, columns, rows)
-        self.__actual_piece = self.create_piece(random.choice(list(PieceType)))
-        self.__next_piece = self.create_piece(random.choice(list(PieceType)))
+        self.__actual_piece = self.create_piece(random.choice(list(PIECE_TYPE)))
+        self.__next_piece = self.create_piece(random.choice(list(PIECE_TYPE)))
         self.spawn_piece_in_area()
 
     def spawn_piece_in_area(self, id_area: int = None) -> None:
-        """
-        Spawn a new piece in the specified or random area.
-
-        Args:
-            id_area (int): ID of the area to spawn the piece if None, a random area is selected.
-        """
         if id_area is not None and 0 <= id_area < len(self.__grid):
             self.__actual_area = self.__grid[id_area]
         else:
@@ -69,14 +50,6 @@ class Game:
         self.__actual_piece.set_initial_position(self.__actual_area.get_center())
 
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
-        """
-        Create game areas.
-
-        Args:
-            amount (int): Number of areas to create. Defaults to 3.
-            columns (int): Number of columns in each area. Defaults to 12.
-            rows (int): Number of rows in each area. Defaults to 22.
-        """
         keys = []
         while len(keys) < amount:
             key = random.choice(list(COLORS.keys()))
@@ -87,30 +60,21 @@ class Game:
             new_area = Area(columns, rows, i,COLORS[keys[i]])
             self.__grid.append(new_area)
      
-    def create_piece(self, piece: PieceType = random.choice(list(PieceType))) -> Piece:
-        """
-        Create a new game piece.
-
-        Args:
-            piece (PieceType): Type of the piece to create. Defaults to random.choice(list(PieceType)).
-
-        Returns:
-            Piece: The created game pieced.
-        """
+    def create_piece(self, piece: PIECE_TYPE = random.choice(list(PIECE_TYPE))) -> Piece:
         temp_color = self.__grid[random.randint(0, self.__areas_amount - 1)].get_color()
-        if piece == PieceType.I:
+        if piece == PIECE_TYPE.I:
             return IForm(temp_color) 
-        elif piece == PieceType.J:
+        elif piece == PIECE_TYPE.J:
             return JForm(temp_color)
-        elif piece == PieceType.L:
+        elif piece == PIECE_TYPE.L:
             return LForm(temp_color)
-        elif piece == PieceType.O:
+        elif piece == PIECE_TYPE.O:
             return OForm(temp_color)
-        elif piece == PieceType.S:
+        elif piece == PIECE_TYPE.S:
             return SForm(temp_color)
-        elif piece == PieceType.T:
+        elif piece == PIECE_TYPE.T:
             return TForm(temp_color)
-        elif piece == PieceType.Z:
+        elif piece == PIECE_TYPE.Z:
             return ZForm(temp_color)
         else:
             return None
@@ -122,12 +86,6 @@ class Game:
         return self.__width_gameplay_area
     
     def get_delta_time(self, time_ms) -> bool:
-        """
-        Get whether the elapsed time exceeds a specified time interval.
-
-        Returns:
-            bool: True if the time has elapsed, False otherwise.
-        """
         if self.__elapsed_time >= time_ms:
             self.__elapsed_time = 0
             return True
@@ -195,9 +153,6 @@ class Game:
         else: return False
         
     def add_penalty_to_area(self) -> None:
-        """
-        Add penalty blocks to areas.
-        """
         count_penalty = 0
         for area in self.__grid:
             if area.get_id() != self.__actual_area.get_id():
@@ -232,18 +187,12 @@ class Game:
             self.move_blocks_area_down()
             self.level_up()
             if self.__penalty_counter > 0:
-                self.__game_state = GameState.DELETING_PENALTY
+                self.__game_state = STATE.DELETING_PENALTY
         self.__actual_piece = self.__next_piece
-        self.__next_piece = self.create_piece(random.choice(list(PieceType)))
+        self.__next_piece = self.create_piece(random.choice(list(PIECE_TYPE)))
         self.spawn_piece_in_area()
 
     def handle_input(self, input: InputManager):
-        """
-        Handle user input for moving, rotating, and changing areas.
-
-        Args:
-            input (InputManager): The input manager to handle user input.
-        """
         if len(input.get_keys()) != 0:
             for key in input.get_keys():
                 if key == pygame.K_a:
@@ -268,19 +217,13 @@ class Game:
                         if (block.get_position().get_y() == 0 and 
                             block.get_color() != COLORS["black"] and 
                             block.get_color() != COLORS["gray"]):
-                            self.__game_state = GameState.GAME_OVER
+                            self.__game_state = STATE.GAME_OVER
 
     def get_total_lines(self) -> int:
         return self.__total_lines
 
     def update(self, input: InputManager) -> None:
-        """
-        Update method for the Game class.
-
-        Args:
-            input (InputManager): The input manager for the game.
-        """
-        if self.__game_state == GameState.DROPING:
+        if self.__game_state == STATE.DROPING:
             self.check_for_game_over()
             if self.get_delta_time(self.__time):
                 self.__actual_piece.move_down()
@@ -302,27 +245,30 @@ class Game:
                             #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
                             self.__actual_piece.move_up() #HardCore
                             self.add_piece_to_area()
-        elif self.__game_state == GameState.DELETING_PENALTY:
+        elif self.__game_state == STATE.DELETING_PENALTY:
             for areas in self.__grid:
                 for columns in areas.get_blocks():
                     for block in columns:
-                        if block.get_penalty():
-                            if block.get_rect().collidepoint(input.get_mouse_x(),input.get_mouse_y()):
+                        if block.get_penalty() and input.get_button_down():
+                            x,y = pygame.mouse.get_pos()
+                            x -= Game.WIDTH_DIVERGENCE
+                            y -= Game.HEIGHT_DIVERGENCE
+                            if block.get_rect().collidepoint(x,y):
                                 block.set_penalty(False)
                                 block.set_color(COLORS["black"])
                                 self.__penalty_counter -= 1
-                                self.__game_state = GameState.DROPING
+                                self.__game_state = STATE.DROPING
                                 return
-        elif self.__game_state == GameState.GAME_OVER:
+        elif self.__game_state == STATE.GAME_OVER:
             #TODO: Logica para cambiar de pantallas y hacer lo que se tenga que hacer en 
             #GameOver
             pass
 
-    def render_text(self, window) -> None:
+    def render_text(self) -> None:
         font = pygame.font.Font(None, self.__areas_amount * TEXT_SCREEN_SIZE)  # Fuente predeterminada, tamaño 50
-        if self.__game_state == GameState.DELETING_PENALTY:
+        if self.__game_state == STATE.DELETING_PENALTY:
             text = "DESTROY PENALTY"
-        elif self.__game_state == GameState.GAME_OVER:
+        elif self.__game_state == STATE.GAME_OVER:
             text = "GAME OVER"
         text_surface = font.render(text, True, COLORS["white"])
         text_rect = text_surface.get_rect()
@@ -333,21 +279,15 @@ class Game:
             else:
                 self.__render_text = True
         if self.__render_text:
-            window.get_gameplay_screen().blit(text_surface, text_rect)
+            self.__screen.get_surface().blit(text_surface, text_rect)
         
 
     def render(self, window) -> None:
-        """
-        Render the game areas and the current piece.
-
-        Args:
-            window (WindowsManager): The windows mamager for rendering.
-        """
         for area in self.__grid:
-            area.render(window)
-        self.__actual_piece.render(window)
+            area.render(self.__screen.get_surface())
+        self.__actual_piece.render(self.__screen.get_surface())
 
-        if self.__game_state == GameState.DELETING_PENALTY or self.__game_state == GameState.GAME_OVER:
-            self.render_text(window)
-       
-
+        if self.__game_state == STATE.DELETING_PENALTY or self.__game_state == STATE.GAME_OVER:
+            self.render_text()
+        window.blit(self.__screen.get_surface(),(Game.WIDTH_DIVERGENCE,Game.HEIGHT_DIVERGENCE))
+ 

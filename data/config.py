@@ -1,6 +1,8 @@
 BLOCK_SIZE = 20
 MAX_SPEED = 10
 TEXT_SCREEN_SIZE = 33
+WIDTH_SCREEN = 1080
+HEIGHT_SCREEN =720
 COLORS = {
         "black":(0,0,0),
         "white":(255,255,255),
