@@ -158,7 +158,7 @@ class Block:
         """
         pass
     
-    def render(self, window) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar.
+    def render(self, window) -> None: #TODO: Este parametro necesita ser la ventana donde se va a renderiar. 
         pygame.draw.rect(window, self.__color, self.__rect)
         line_width = 1
         if self.__color != COLORS["gray"]:

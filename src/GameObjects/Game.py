@@ -335,7 +335,6 @@ class Game:
         if self.__render_text:
             window.get_gameplay_screen().blit(text_surface, text_rect)
         
-
     def render(self, window) -> None:
         """
         Render the game areas and the current piece.
@@ -349,5 +348,3 @@ class Game:
 
         if self.__game_state == GameState.DELETING_PENALTY or self.__game_state == GameState.GAME_OVER:
             self.render_text(window)
-       
-
