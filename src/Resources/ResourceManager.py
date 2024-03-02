@@ -12,15 +12,20 @@ class CSurface(pygame.Surface):
         super().__init__((width, height))
 
 class CImageManager:
+    NUM_BACKGROUNDS = 16
     def __init__(self) -> None:
         """
         Initialize CImage to manage loaded images.
         """
+        self.image_path = "src/Resources/Images/"
         self.images = {}
-        self.load_img("src/Resources/Images/menu.png",False)
-        self.load_img("src/Resources/Images/game_over.png",False)
-        self.load_img("src/Resources/Images/gameplay.png", False)
-        self.load_img("src/Resources/Images/credits.png",False)
+        self.load_img(self.image_path + "menu.png",False)
+        self.load_img(self.image_path + "game_over.png",False)
+        self.load_img(self.image_path + "gameplay.png", False)
+        self.load_img(self.image_path + "credits.png",False)
+        for i in range(1, CImageManager.NUM_BACKGROUNDS + 1):
+            self.load_img(self.image_path + "Backgrounds/" + i.__str__() + ".png", False)
+
 
     def load_img(self, image_path: str, transparent: bool = False) -> CSurface:
         """

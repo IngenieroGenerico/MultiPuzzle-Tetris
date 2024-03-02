@@ -7,20 +7,18 @@ class Button:
         self.__font = pygame.font.Font(None, 30)
         self.__text = text
         self.__is_hovered = False
-        self.__image = self.load_image("settings_back")
-        self.__image_hovered = self.load_image("settings")
         self.__limit_right_movement = x + 10
         self.__limit_left_movement = x
         
-    def load_image(self, name: str) -> pygame.Surface:
-        image = pygame.image.load("src/Resources/Images/{}.png".format(name))
+    def load_image(self, folder:str, name: str) -> pygame.Surface:
+        image = pygame.image.load("src/Resources/Images/{}/{}.png".format(folder,name))
         image = pygame.transform.scale(image, (self.__rect.width, self.__rect.height))
         image = image.convert_alpha()
         return image
     
-    def load_images(self, first_image: str, second_image: str) -> None:
-        self.__image = self.load_image(first_image)
-        self.__image_hovered = self.load_image(second_image)
+    def load_images(self,folder: str, name: str) -> None:
+        self.__image = self.load_image(folder, name)
+        self.__image_hovered = self.load_image(folder, name +"_back")
         
     def draw(self, screen):
         image_render = self.__image_hovered if self.__is_hovered else self.__image        
@@ -30,6 +28,9 @@ class Button:
             text_rect = text_surface.get_rect(center=self.__rect.center)
             screen.blit(text_surface, text_rect)
 
+    def change_text(self, new_text: str) -> None:
+        self.__text = new_text
+        
     def update(self, input) -> bool:
         if self.__rect.collidepoint(pygame.mouse.get_pos()):
             self.__is_hovered = True
