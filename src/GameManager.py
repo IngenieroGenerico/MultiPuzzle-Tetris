@@ -1,9 +1,7 @@
 import pygame, random, time
-from .Resources import InputManager
+from .Resources import InputManager, Button, ImageManager, AudioManager
 from .GameObjects import Game
 from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
-from .Resources.ResourceManager import CImageManager
-from .Resources import Button
 from enum import Enum
 
 class WINDOW(Enum):
@@ -19,7 +17,8 @@ class GameManager:
         pygame.init()
         self.create_menu()
         self.__input_manager = InputManager()
-        self.__img_manager = CImageManager()
+        self.__img_manager = ImageManager()
+        self.__audio_manager = AudioManager()
     
     def create_menu(self) -> None:
         self.__window = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
@@ -40,7 +39,7 @@ class GameManager:
 
     def create_game(self, areas_amount: int = 3,columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         self.__actual_window = WINDOW.GAME_PLAY
-        self.__background = random.randint(1,CImageManager.NUM_BACKGROUNDS) 
+        self.__background = random.randint(1,ImageManager.NUM_BACKGROUNDS) 
         self.__game = Game(areas_amount,columns,rows,speed)
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
@@ -112,11 +111,11 @@ class GameManager:
         if self.__easy.update(self.__input_manager):
             self.create_game(1)
         elif self.__normal.update(self.__input_manager):
-            self.create_game(3)
+            self.create_game(2)
         elif self.__hard.update(self.__input_manager):
-            self.create_game(5)
+            self.create_game(3)
         elif self.__master.update(self.__input_manager):
-            self.create_game(6)
+            self.create_game(5)
         elif self.__custom.update(self.__input_manager):
             pass
 

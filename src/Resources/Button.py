@@ -7,8 +7,11 @@ class Button:
         self.__font = pygame.font.Font(None, 30)
         self.__text = text
         self.__is_hovered = False
-        self.__limit_right_movement = x + 10
+        self.__limit_right_movement = x + 20
         self.__limit_left_movement = x
+        self.__sounds = {}
+        self.load_sound("click","src/Resources/Music/click_button.mp3")
+        self.load_sound("hovered", "src/Resources/Music/hovered_sound.mp3")
         
     def load_image(self, folder:str, name: str) -> pygame.Surface:
         image = pygame.image.load("src/Resources/Images/{}/{}.png".format(folder,name))
@@ -30,7 +33,17 @@ class Button:
 
     def change_text(self, new_text: str) -> None:
         self.__text = new_text
+    
+    def load_sound(self,name: str, path: str) -> None:
+        self.__sounds[name] = pygame.mixer.Sound(path)
         
+    def play_sound(self, name: str, time = -1) -> None:
+        self.__sounds[name].play(time)
+        pygame.time.set_timer(pygame.USEREVENT, time)
+    
+    def stop_sound(self, name: str)-> None:
+         self.__sounds[name].stop()
+         
     def update(self, input) -> bool:
         if self.__rect.collidepoint(pygame.mouse.get_pos()):
             self.__is_hovered = True
@@ -40,7 +53,10 @@ class Button:
             if self.__rect.left > self.__limit_left_movement:
                 self.__rect.update(self.__rect.left - 1, self.__rect.top, self.__rect.width, self.__rect.height)
             self.__is_hovered = False
+            
         if input.get_button_down() and self.__is_hovered:
-            print("click in button")
+            self.play_sound("click", 1000)
             return True
-        return False
+        else:
+            self.stop_sound("click")
+            return False
