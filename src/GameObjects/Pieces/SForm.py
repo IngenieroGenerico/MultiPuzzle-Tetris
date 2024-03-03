@@ -14,8 +14,8 @@ class SForm(Piece):
         self.set_type(PIECE_TYPE.S)
         self._blocks.append(Block(-1, -1, color))
         self._blocks.append(Block(-2, -1, color))
-        self._blocks.append(Block(-1, -2, color))
-        self._blocks.append(Block(-2, -2, color))
+        self._blocks.append(Block(-2, 0, color))
+        self._blocks.append(Block(-3, 0, color))
         self._pivot = self._blocks[0]
        
     def set_initial_position(self, area_center: int) -> None:

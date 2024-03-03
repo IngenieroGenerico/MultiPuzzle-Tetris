@@ -55,8 +55,6 @@ class Button:
             self.__is_hovered = False
             
         if input.get_button_down() and self.__is_hovered:
-            self.play_sound("click", 1000)
             return True
         else:
-            self.stop_sound("click")
             return False

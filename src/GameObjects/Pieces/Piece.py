@@ -175,3 +175,10 @@ class Piece:
         """
         return self._blocks
     
+    def get_pivot(self) -> Block:
+        return self._pivot
+    
+    def send_to(self, x, y) -> None:
+        for block in self._blocks:
+            block.create_rect(block.get_position().get_x() * BLOCK_SIZE + x, 
+                              block.get_position().get_y() * BLOCK_SIZE + y)

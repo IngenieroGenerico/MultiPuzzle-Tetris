@@ -53,15 +53,8 @@ class Game:
         else:
              self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
         self.__actual_piece.set_initial_position(self.__actual_area.get_center())
-        """self.__next_piece.set_initial_position(self.__width_gameplay_area + 
-                                               WIDTH_EXTRA_SIZE + 
-                                               self.__info_screen.get_width() //2 +
-                                                Game.CANVA_SIZE,
-                                                (self.__height_gameplay_area + 
-                                                HEIGHT_EXTRA_SIZE - 
-                                                Game.CANVA_SIZE * 2) // 2 )"""
-        
-
+        self.__next_piece.send_to(self.__info_screen.get_width()//2 + BLOCK_SIZE, self.__info_screen.get_height()//2)
+    
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         keys = []
         while len(keys) < amount:
@@ -335,13 +328,13 @@ class Game:
         self.__screen.get_surface().blit(self.__pause_screen.get_surface(), (pos_x, pos_y))
 
     def render_info_screen(self, window) -> None:
-        #self.__next_piece.render(self.__info_screen.get_surface())
         self.__info_screen.fill_screen(COLORS["black"])
         font = pygame.font.Font(None, 30)
         txt_score = font.render("SCORE : {}".format(self.__total_lines), True, COLORS["white"])
         txt_level = font.render("SPEED : {}".format(self.__speed), True, COLORS["white"])
         self.__info_screen.get_surface().blit(txt_score, (Game.MARGIN_SIZE,Game.MARGIN_SIZE))
         self.__info_screen.get_surface().blit(txt_level, (Game.MARGIN_SIZE,Game.MARGIN_SIZE * 2))
+        self.__next_piece.render(self.__info_screen.get_surface())
         window.blit(self.__info_screen.get_surface(),
                     (self.__width_gameplay_area + Game.WIDTH_DIVERGENCE + Game.MARGIN_SIZE,
                     Game.MARGIN_SIZE))
