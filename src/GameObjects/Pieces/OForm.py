@@ -11,7 +11,7 @@ class OForm(Piece):
         """
 
         super().__init__(color)
-        self.set_type(PieceType.O)
+        self.set_type(PIECE_TYPE.O)
         self._blocks.append(Block(-1, -1, color))
         self._blocks.append(Block(-1, -2, color))
         self._blocks.append(Block(-2, -2, color))
