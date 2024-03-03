@@ -33,7 +33,7 @@ class IForm(Piece):
             self._blocks[2].set_x(area_center - 1)
             self._blocks[3].set_x(area_center - 2)
         super().create_rect()
-        
+  
     def rotate(self) -> None:
         """
         Rotate the IForm piece.

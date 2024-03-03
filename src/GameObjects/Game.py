@@ -2,7 +2,7 @@ from .Area import Area, random
 from ..Resources import InputManager, Screen
 from .Pieces.ImportsData import *
 import copy, pygame
-from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE
+from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
 
 class STATE(Enum):
@@ -12,8 +12,9 @@ class STATE(Enum):
     GAME_OVER = 4
 
 class Game:
+    MARGIN_SIZE = 30
     WIDTH_DIVERGENCE = 100
-    HEIGHT_DIVERGENCE = 90
+    HEIGHT_DIVERGENCE = 150
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         self.__clock = pygame.time.Clock()
         self.__game_state = STATE.DROPING
@@ -33,6 +34,10 @@ class Game:
         self.__height_gameplay_area = rows * BLOCK_SIZE
         self.__width_gameplay_area = areas_amount * columns * BLOCK_SIZE
         self.__screen = Screen(self.__width_gameplay_area, self.__height_gameplay_area)
+        self.__info_screen = Screen(WIDTH_EXTRA_SIZE - Game.WIDTH_DIVERGENCE - Game.MARGIN_SIZE * 2, 
+                                    self.__height_gameplay_area + HEIGHT_EXTRA_SIZE - Game.MARGIN_SIZE * 2)
+        self.__pause_screen = Screen(self.__screen.get_width()* 0.8, 
+                                     self.__screen.get_height() * 0.8)
         self.create_level(areas_amount, columns, rows)
         
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -48,6 +53,14 @@ class Game:
         else:
              self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
         self.__actual_piece.set_initial_position(self.__actual_area.get_center())
+        """self.__next_piece.set_initial_position(self.__width_gameplay_area + 
+                                               WIDTH_EXTRA_SIZE + 
+                                               self.__info_screen.get_width() //2 +
+                                                Game.CANVA_SIZE,
+                                                (self.__height_gameplay_area + 
+                                                HEIGHT_EXTRA_SIZE - 
+                                                Game.CANVA_SIZE * 2) // 2 )"""
+        
 
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         keys = []
@@ -288,9 +301,8 @@ class Game:
         text_rect.center = (center_x // 2, center_y // 2)
         return text_surface, text_rect
 
-    def generate_pause_screen(self):
-        self.__pause_screen = Screen(self.__screen.get_width()* 0.8, 
-                                     self.__screen.get_height() * 0.8)
+    def render_pause_screen(self):
+        
         pos_x = (self.__screen.get_width() - self.__pause_screen.get_width()) // 2
         pos_y = (self.__screen.get_height() - self.__pause_screen.get_height()) // 2
 
@@ -322,8 +334,18 @@ class Game:
         self.__pause_screen.get_surface().blit(text_esc, text_esc_rect)
         self.__screen.get_surface().blit(self.__pause_screen.get_surface(), (pos_x, pos_y))
 
-
-
+    def render_info_screen(self, window) -> None:
+        #self.__next_piece.render(self.__info_screen.get_surface())
+        self.__info_screen.fill_screen(COLORS["black"])
+        font = pygame.font.Font(None, 30)
+        txt_score = font.render("SCORE : {}".format(self.__total_lines), True, COLORS["white"])
+        txt_level = font.render("SPEED : {}".format(self.__speed), True, COLORS["white"])
+        self.__info_screen.get_surface().blit(txt_score, (Game.MARGIN_SIZE,Game.MARGIN_SIZE))
+        self.__info_screen.get_surface().blit(txt_level, (Game.MARGIN_SIZE,Game.MARGIN_SIZE * 2))
+        window.blit(self.__info_screen.get_surface(),
+                    (self.__width_gameplay_area + Game.WIDTH_DIVERGENCE + Game.MARGIN_SIZE,
+                    Game.MARGIN_SIZE))
+        
     def render_text(self) -> None:
         if self.get_delta_time(500):
             if self.__can_render_text:
@@ -346,16 +368,16 @@ class Game:
                                                 self.__height_gameplay_area + 250)
                 self.__screen.get_surface().blit(text, text_rect)
                 self.__screen.get_surface().blit(text_esc, text_esc_rect)
-        if self.__game_state == STATE.PAUSE:
-            self.generate_pause_screen()
-            
 
     def render(self, window) -> None:
         for area in self.__grid:
             area.render(self.__screen.get_surface())
         self.__actual_piece.render(self.__screen.get_surface())
-
         if self.__game_state != STATE.DROPING:
             self.render_text()
+        if self.__game_state == STATE.PAUSE:
+            self.render_pause_screen()
+        self.render_info_screen(window)
         window.blit(self.__screen.get_surface(),(Game.WIDTH_DIVERGENCE,Game.HEIGHT_DIVERGENCE))
+        
  

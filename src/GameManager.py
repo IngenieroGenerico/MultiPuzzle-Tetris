@@ -1,7 +1,7 @@
 import pygame, random, time
 from .Resources import InputManager
 from .GameObjects import Game
-from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN
+from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from .Resources.ResourceManager import CImageManager
 from .Resources import Button
 from enum import Enum
@@ -42,7 +42,8 @@ class GameManager:
         self.__actual_window = WINDOW.GAME_PLAY
         self.__background = random.randint(1,CImageManager.NUM_BACKGROUNDS) 
         self.__game = Game(areas_amount,columns,rows,speed)
-        self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + 350, self.__game.get_height_gameplay() + 300))
+        self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
+                                                 self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
         
     def create_level_buttons(self):
         button_width = 250
