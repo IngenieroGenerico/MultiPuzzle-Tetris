@@ -5,4 +5,4 @@ from src.GameObjects.Pieces.OForm import OForm
 from src.GameObjects.Pieces.SForm import SForm
 from src.GameObjects.Pieces.TForm import TForm
 from src.GameObjects.Pieces.ZForm import ZForm
-from src.GameObjects.Pieces.Piece import PieceType, Piece
+from src.GameObjects.Pieces.Piece import PIECE_TYPE, Piece

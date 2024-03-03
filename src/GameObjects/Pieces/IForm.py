@@ -10,7 +10,7 @@ class IForm(Piece):
             color (tuple): The color of the piece.
         """
         super().__init__(color)
-        self.set_type(PieceType.I)
+        self.set_type(PIECE_TYPE.I)
         self._blocks.append(Block(-1, -1, color))
         self._blocks.append(Block(-1, -2, color))
         self._blocks.append(Block(-1, -3, color))
@@ -24,7 +24,7 @@ class IForm(Piece):
         Args:
             area_center (int): The center position of the area.
         """
-        if self._orientation == Orientation.VERTICAL:
+        if self._orientation == ORIENTATION.VERTICAL:
             for block in self._blocks:
                 block.set_x(area_center)
         else:
@@ -33,24 +33,24 @@ class IForm(Piece):
             self._blocks[2].set_x(area_center - 1)
             self._blocks[3].set_x(area_center - 2)
         super().create_rect()
-        
+  
     def rotate(self) -> None:
         """
         Rotate the IForm piece.
         """
         pos_x = self._pivot.get_position().get_x()
         pos_y = self._pivot.get_position().get_y()
-        if self._orientation == Orientation.VERTICAL:
+        if self._orientation == ORIENTATION.VERTICAL:
             self._blocks[0].set_position(pos_x - 1, pos_y)
             self._blocks[2].set_position(pos_x + 1, pos_y)
             self._blocks[3].set_position(pos_x + 2, pos_y)
-            self._orientation = Orientation.HORIZONTAL
+            self._orientation = ORIENTATION.HORIZONTAL
 
-        elif self._orientation == Orientation.HORIZONTAL:
+        elif self._orientation == ORIENTATION.HORIZONTAL:
             self._blocks[0].set_position(pos_x,pos_y + 1)
             self._blocks[2].set_position(pos_x,pos_y - 1)
             self._blocks[3].set_position(pos_x,pos_y - 2)
-            self._orientation = Orientation.VERTICAL
+            self._orientation = ORIENTATION.VERTICAL
         super().create_rect()
 
     def update(self) -> None:
