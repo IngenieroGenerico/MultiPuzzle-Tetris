@@ -17,7 +17,7 @@ class CImageManager:
         Initialize CImage to manage loaded images.
         """
         self.images = {}
-        self.load_img("src/Resources/Images/lobby.png",False)
+        self.load_img("src/Resources/Images/menu.png",False)
         self.load_img("src/Resources/Images/game_over.png",False)
         self.load_img("src/Resources/Images/gameplay.png", False)
         self.load_img("src/Resources/Images/credits.png",False)

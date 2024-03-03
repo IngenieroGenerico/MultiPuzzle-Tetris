@@ -27,8 +27,10 @@ class Score:
         else:
             scores[player_name] = score
 
+        print("Intentando escribir en el archivo JSON...")
         with open("data/score.json", "w") as file:
             json.dump(scores, file, indent=4)
+        print("Exito al escribir en el archivo JSON...")
 
     def load_score(self) -> None:
         if os.path.exists("data/score.json"):

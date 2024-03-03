@@ -8,24 +8,11 @@ class InputManager:
         - Initialize sets to track keys and mouse state.
         """
         self.__keys = set()
-        self.__mouse_xy = (0,0)
         self.__button_down = False
  
     def get_button_down(self) -> None:
         return self.__button_down
     
-    def set_mouse_position(self) -> None:
-        self.__button_down = True
-        self.__mouse_xy = pygame.mouse.get_pos()
-
-    def clear_mouse_position(self) -> None:
-        self.__mouse_xy = (0,0)
-
-    def get_mouse_x(self) -> int:
-        return self.__mouse_xy[0]
-    def get_mouse_y(self) -> int:
-        return self.__mouse_xy[1]
-
     def update(self) -> None:
         """
         Update the state of keys and mouse.
@@ -42,7 +29,7 @@ class InputManager:
             elif event.type == pygame.KEYUP:
                 self.__keys.discard(event.key)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.set_mouse_position()
+                self.__button_down = True
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.__button_down = False
             
