@@ -100,6 +100,9 @@ class Game:
             self.__elapsed_time += delta_time
             return False
         
+    def get_game_state(self):
+        return self.__game_state
+
     def set_time(self) -> None:
         self.__time = 1000 / self.__speed
 

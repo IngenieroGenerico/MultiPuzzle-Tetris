@@ -1,6 +1,6 @@
 import pygame, random, time
 from .Resources import InputManager, Button, ImageManager, AudioManager
-from .GameObjects import Game
+from .GameObjects.Game import Game, STATE
 from .Resources.Score import Score
 from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
@@ -17,6 +17,7 @@ class GameManager:
         random.seed(time.time())
         pygame.init()
         self.create_menu()
+        self.__player_name = None
         self.__input_manager = InputManager()
         self.__score_manager = None
         self.__img_manager = ImageManager()
@@ -40,12 +41,9 @@ class GameManager:
         self.__exit_bttn = Button(WIDTH_SCREEN - button_width, HEIGHT_SCREEN - button_height, button_width,button_height,"EXIT")
         self.__exit_bttn.load_images("Menu","exit")
 
-
-
-
     def create_game(self, areas_amount: int = 3,columns: int = 12, rows: int = 22, speed: int = 1) -> None:
-        #player_name = input("Ingresa tu nombre: ")
-        #self.__score_manager = Score(player_name)
+        self.__player_name = input("Ingresa tu nombre: ")
+        self.__score_manager = Score(self.__player_name)
         self.__actual_window = WINDOW.GAME_PLAY
         self.__background = random.randint(1,ImageManager.NUM_BACKGROUNDS) 
         self.__game = Game(areas_amount,columns,rows,speed)
@@ -86,16 +84,10 @@ class GameManager:
         self.__settings_bttn.draw(self.__window)
         self.__exit_bttn.draw(self.__window)
  
-
     def render_gameplay(self) -> None:
-        
         self.__img_manager.resize("Backgrounds/" + self.__background.__str__(), self.__window.get_width(), self.__window.get_height())
         self.__img_manager.draw(self.__window, "Backgrounds/" + self.__background.__str__())
         self.__game.render(self.__window)
-
-        font = pygame.font.Font(None, 40)
-        score_surface = font.render(f"Score: {self.__game.get_total_lines()}", True, COLORS["black"])
-        self.__window.blit(score_surface, (50, 22))
     
     def render(self) -> None:
         self.__window.fill(COLORS["white"])
@@ -106,7 +98,15 @@ class GameManager:
         pygame.display.flip()
     
     def update_gameplay(self) -> bool:
-        return self.__game.update(self.__input_manager)
+        if self.__game.update(self.__input_manager):
+            if self.__game.get_game_state() == STATE.GAME_OVER:
+                self.__score_manager.save_score(self.__player_name, self.__game.get_total_lines())
+                self.create_menu()
+                return False
+            score_lines_cleared = self.__game.get_total_lines()
+            self.__score_manager.save_score(self.__player_name, score_lines_cleared)
+            return True
+        return False
 
     def update_menu_buttons(self) -> None:
         if self.__play_bttn.update(self.__input_manager):

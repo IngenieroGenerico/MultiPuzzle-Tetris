@@ -18,19 +18,17 @@ class Score:
         """
         return self.__score
 
-    def save_score(self, player_name, score) -> None:
+    def save_score(self, player_name, new_score) -> None:
         scores = self.load_score()
 
         if player_name in scores:
-            if scores > scores[player_name]:
-                scores[player_name] = scores
+            if new_score > scores[player_name]:
+                scores[player_name] = new_score
         else:
-            scores[player_name] = score
+            scores[player_name] = new_score
 
-        print("Intentando escribir en el archivo JSON...")
         with open("data/score.json", "w") as file:
             json.dump(scores, file, indent=4)
-        print("Exito al escribir en el archivo JSON...")
 
     def load_score(self) -> None:
         if os.path.exists("data/score.json"):
