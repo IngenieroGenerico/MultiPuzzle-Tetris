@@ -2,25 +2,26 @@ from .Area import Area, random
 from ..Resources import InputManager, Screen
 from .Pieces.ImportsData import *
 import copy, pygame
-from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE
+from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
 
 class STATE(Enum):
-    IDLE = 1
+    PAUSE = 1
     DROPING = 2
     DELETING_PENALTY = 3
     GAME_OVER = 4
 
 class Game:
-    WIDTH_DIVERGENCE = 150
-    HEIGHT_DIVERGENCE = 70
+    MARGIN_SIZE = 30
+    WIDTH_DIVERGENCE = 100
+    HEIGHT_DIVERGENCE = 150
     def __init__(self, areas_amount: int = 3, columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         self.__clock = pygame.time.Clock()
         self.__game_state = STATE.DROPING
         self.__speed = speed if speed >= 1 else 1
         self.__lines_deleted = 0 
         self.__penalty_counter = 0
-        self.__render_text = False
+        self.__can_render_text = False
         self.__elapsed_time = 0
         self.__time = 1000/speed 
         self.__areas_amount = areas_amount
@@ -33,6 +34,10 @@ class Game:
         self.__height_gameplay_area = rows * BLOCK_SIZE
         self.__width_gameplay_area = areas_amount * columns * BLOCK_SIZE
         self.__screen = Screen(self.__width_gameplay_area, self.__height_gameplay_area)
+        self.__info_screen = Screen(WIDTH_EXTRA_SIZE - Game.WIDTH_DIVERGENCE - Game.MARGIN_SIZE * 2, 
+                                    self.__height_gameplay_area + HEIGHT_EXTRA_SIZE - Game.MARGIN_SIZE * 2)
+        self.__pause_screen = Screen(self.__screen.get_width()* 0.8, 
+                                     self.__screen.get_height() * 0.8)
         self.create_level(areas_amount, columns, rows)
         
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -48,7 +53,8 @@ class Game:
         else:
              self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
         self.__actual_piece.set_initial_position(self.__actual_area.get_center())
-
+        self.__next_piece.send_to(self.__info_screen.get_width()//2 + BLOCK_SIZE, self.__info_screen.get_height()//2)
+    
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         keys = []
         while len(keys) < amount:
@@ -210,6 +216,11 @@ class Game:
                     if area_id > self.__areas_amount - 1:
                         area_id = 0
                     self.spawn_piece_in_area(area_id)
+                elif key == pygame.K_RETURN:
+                    if self.__game_state == STATE.PAUSE:
+                        self.__game_state = STATE.DROPING
+                    else:
+                        self.__game_state = STATE.PAUSE
             input.clear_keys()
 
     def check_for_game_over(self) -> None:
@@ -224,7 +235,7 @@ class Game:
     def get_total_lines(self) -> int:
         return self.__total_lines
 
-    def update(self, input: InputManager) -> None:
+    def update(self, input: InputManager) -> bool:
         if self.__game_state == STATE.DROPING:
             self.check_for_game_over()
             if self.get_delta_time(self.__time):
@@ -247,6 +258,7 @@ class Game:
                             #TODO: Determinar si la colision se hizo lateralmente o si se hizo verticalmente
                             self.__actual_piece.move_up() #HardCore
                             self.add_piece_to_area()
+            return True
         elif self.__game_state == STATE.DELETING_PENALTY:
             for areas in self.__grid:
                 for columns in areas.get_blocks():
@@ -260,35 +272,105 @@ class Game:
                                 block.set_color(COLORS["black"])
                                 self.__penalty_counter -= 1
                                 self.__game_state = STATE.DROPING
-                                return
+                                return True
         elif self.__game_state == STATE.GAME_OVER:
-            #TODO: Logica para cambiar de pantallas y hacer lo que se tenga que hacer en 
-            #GameOver
-            pass
-
-    def render_text(self) -> None:
-        font = pygame.font.Font(None, self.__areas_amount * TEXT_SCREEN_SIZE)  # Fuente predeterminada, tamaño 50
-        if self.__game_state == STATE.DELETING_PENALTY:
-            text = "DESTROY PENALTY"
-        elif self.__game_state == STATE.GAME_OVER:
-            text = "GAME OVER"
+            if len(input.get_keys()) != 0:
+                for key in input.get_keys():
+                    if key == pygame.K_ESCAPE:
+                        return False
+        elif self.__game_state == STATE.PAUSE:
+            if len(input.get_keys()) != 0:
+                for key in input.get_keys():
+                    if key == pygame.K_ESCAPE:
+                        return False
+                    elif key == pygame.K_RETURN:
+                        self.__game_state = STATE.DROPING
+                        input.clear_keys()
+                        return True
+        return True
+            
+    def generate_text(self, text: str, center_x: int, center_y: int) -> tuple:
+        font = pygame.font.Font(None, self.__areas_amount * TEXT_SCREEN_SIZE)
         text_surface = font.render(text, True, COLORS["white"])
         text_rect = text_surface.get_rect()
-        text_rect.center = (self.__width_gameplay_area // 2, self.__height_gameplay_area // 2)
-        if self.get_delta_time(500):
-            if self.__render_text:
-                self.__render_text = False
-            else:
-                self.__render_text = True
-        if self.__render_text:
-            self.__screen.get_surface().blit(text_surface, text_rect)
+        text_rect.center = (center_x // 2, center_y // 2)
+        return text_surface, text_rect
+
+    def render_pause_screen(self):
+        pos_x = (self.__screen.get_width() - self.__pause_screen.get_width()) // 2
+        pos_y = (self.__screen.get_height() - self.__pause_screen.get_height()) // 2
+
+        text, text_rect = self.generate_text("PAUSE",
+                                                self.__pause_screen.get_width(),
+                                                self.__pause_screen.get_height())
         
+        font = pygame.font.Font(None, TEXT_SCREEN_SIZE)
+        text_continue = font.render("ENTER = CONTINUE", True, COLORS["white"])
+        text_continue_rect = text_continue.get_rect()
+        text_continue_rect.topleft = (0, 0)
+        
+        text_esc = font.render("ESC = EXIT", True, COLORS["white"])
+        text_esc_rect = text_esc.get_rect()
+        text_esc_rect.topleft = (0, text_continue_rect.height + 10)
+        line_width = 2
+        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
+                        (0,0),(0,self.__pause_screen.get_height()),line_width)
+        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
+                        (0,self.__pause_screen.get_height()-line_width),
+                        (self.__pause_screen.get_width(),self.__pause_screen.get_height() -line_width),line_width)
+        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
+                        (self.__pause_screen.get_width() - line_width,self.__pause_screen.get_height()),
+                        (self.__pause_screen.get_width() - line_width, 0),line_width)
+        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
+                        (self.__pause_screen.get_width(),0),(0,0),line_width)
+        self.__pause_screen.get_surface().blit(text, text_rect)
+        self.__pause_screen.get_surface().blit(text_continue, text_continue_rect)
+        self.__pause_screen.get_surface().blit(text_esc, text_esc_rect)
+        self.__screen.get_surface().blit(self.__pause_screen.get_surface(), (pos_x, pos_y))
+
+    def render_info_screen(self, window) -> None:
+        self.__info_screen.fill_screen(COLORS["black"])
+        font = pygame.font.Font(None, 30)
+        txt_score = font.render("SCORE : {}".format(self.__total_lines), True, COLORS["white"])
+        txt_level = font.render("SPEED : {}".format(self.__speed), True, COLORS["white"])
+        self.__info_screen.get_surface().blit(txt_score, (Game.MARGIN_SIZE,Game.MARGIN_SIZE))
+        self.__info_screen.get_surface().blit(txt_level, (Game.MARGIN_SIZE,Game.MARGIN_SIZE * 2))
+        self.__next_piece.render(self.__info_screen.get_surface())
+        window.blit(self.__info_screen.get_surface(),
+                    (self.__width_gameplay_area + Game.WIDTH_DIVERGENCE + Game.MARGIN_SIZE,
+                    Game.MARGIN_SIZE))
+        
+    def render_text(self) -> None:
+        if self.get_delta_time(500):
+            if self.__can_render_text:
+                self.__can_render_text = False
+            else:
+                self.__can_render_text = True
+
+        if self.__can_render_text:
+            if self.__game_state == STATE.DELETING_PENALTY:
+                text, text_rect = self.generate_text("DESTROY PENALTY",
+                                                self.__width_gameplay_area,
+                                                self.__height_gameplay_area)
+                self.__screen.get_surface().blit(text, text_rect)
+            elif self.__game_state == STATE.GAME_OVER:
+                text, text_rect = self.generate_text("GAME OVER",
+                                                self.__width_gameplay_area,
+                                                self.__height_gameplay_area)
+                text_esc,text_esc_rect = self.generate_text("ESC = EXIT",
+                                                self.__width_gameplay_area,
+                                                self.__height_gameplay_area + 250)
+                self.__screen.get_surface().blit(text, text_rect)
+                self.__screen.get_surface().blit(text_esc, text_esc_rect)
+
     def render(self, window) -> None:
         for area in self.__grid:
             
             area.render(self.__screen.get_surface())
         self.__actual_piece.render(self.__screen.get_surface())
-
-        if self.__game_state == STATE.DELETING_PENALTY or self.__game_state == STATE.GAME_OVER:
+        if self.__game_state != STATE.DROPING:
             self.render_text()
+        if self.__game_state == STATE.PAUSE:
+            self.render_pause_screen()
+        self.render_info_screen(window)
         window.blit(self.__screen.get_surface(),(Game.WIDTH_DIVERGENCE,Game.HEIGHT_DIVERGENCE))

@@ -10,7 +10,7 @@ class InputManager:
         self.__keys = set()
         self.__button_down = False
  
-    def get_button_down(self) -> None:
+    def get_button_down(self) -> bool:
         return self.__button_down
     
     def update(self) -> None:
