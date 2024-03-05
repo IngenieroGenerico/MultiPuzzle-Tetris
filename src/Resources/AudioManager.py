@@ -15,7 +15,8 @@ class AudioManager:
         self.sound_volume = 1.0 # Range: 0.0 to 1.0
         self.music_volume = 1.0 # Range: 0.0 to 1.0
         self.load_music("music", "src/Resources/Music/gameplay.mp3")
-        self.load_sound("move", "src/Resources/Music/click_button.mp3")
+        self.load_sound("hovered", "src/Resources/Music/hovered_sound.mp3")
+        self.load_sound("click", "src/Resources/Music/click_button.mp3")
 
     def load_sound(self, name: str, file_path: str) -> None:
         """
@@ -105,7 +106,7 @@ class AudioManager:
             name (str): The name of the sound to stop.
         """
         if name in self.sounds:
-            pygame.mixer.find_channel().stop()
+            self.sounds[name]["sound"].stop()
     
     def set_sound_volume(self, volume: float) -> None:
         """

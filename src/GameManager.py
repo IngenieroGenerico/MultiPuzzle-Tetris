@@ -42,7 +42,7 @@ class GameManager:
         self.__exit_bttn.load_images("Menu","exit")
 
     def create_game(self, areas_amount: int = 3,columns: int = 12, rows: int = 22, speed: int = 1) -> None:
-        self.__player_name = input("Ingresa tu nombre: ")
+        self.__player_name = input("Enter your Username: ")
         self.__score_manager = Score(self.__player_name)
         self.__actual_window = WINDOW.GAME_PLAY
         self.__background = random.randint(1,ImageManager.NUM_BACKGROUNDS) 
