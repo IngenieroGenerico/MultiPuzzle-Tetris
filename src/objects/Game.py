@@ -1,5 +1,6 @@
 from .Area import Area, random
-from ..Resources import InputManager, Screen
+from .. import InputManager
+from ..UI import Screen
 from .Pieces.ImportsData import *
 import copy, pygame
 from data import BLOCK_SIZE,COLORS, MAX_SPEED, TEXT_SCREEN_SIZE, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE

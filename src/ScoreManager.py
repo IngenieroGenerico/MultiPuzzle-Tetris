@@ -1,7 +1,7 @@
 import os
 import json
 
-class Score:
+class ScoreManager:
     def __init__(self, name: str = None, score: int = None) -> None:
         self.__name = name
         self.__score = score

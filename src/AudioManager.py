@@ -14,10 +14,10 @@ class AudioManager:
         self.musics = {}
         self.sound_volume = 1.0 # Range: 0.0 to 1.0
         self.music_volume = 1.0 # Range: 0.0 to 1.0+
-        self.load_music("menu_music", "src/Resources/Music/menu_music.mp3")
-        self.load_music("gameplay_music", "src/Resources/Music/gameplay_music.mp3")
-        self.load_sound("hovered_sound", "src/Resources/Music/hovered_sound.mp3")
-        self.load_sound("click_sound", "src/Resources/Music/click_sound.mp3")
+        self.load_music("menu", "resources/musics/menu.mp3")
+        self.load_music("gameplay", "resources/musics/gameplay.mp3")
+        self.load_sound("hovered", "resources/sounds/hovered.mp3")
+        self.load_sound("click", "resources/sounds/click.mp3")
 
     def load_sound(self, name: str, file_path: str) -> None:
         """

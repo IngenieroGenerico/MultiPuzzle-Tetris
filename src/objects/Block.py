@@ -1,5 +1,5 @@
 import pygame
-from ..Math import Vector2
+from ..math import Vector2
 from data import BLOCK_SIZE, COLORS
 
 class Block:

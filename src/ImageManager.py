@@ -17,12 +17,12 @@ class ImageManager:
         """
         Initialize CImage to manage loaded images.
         """
-        self.image_path = "src/Resources/Images/"
+        self.image_path = "resources/images/backgrounds/"
         self.images = {}
         self.load_img(self.image_path + "menu.png",False)
         
         for i in range(1, ImageManager.NUM_BACKGROUNDS + 1):
-            self.load_img(self.image_path + "Backgrounds/" + i.__str__() + ".png", False)
+            self.load_img(self.image_path + i.__str__() + ".png", False)
 
 
     def load_img(self, image_path: str, transparent: bool = False) -> CSurface:
@@ -56,7 +56,7 @@ class ImageManager:
             image_name (str): The name of the image (without extension).
             position (tuple): Position to draw the image. Defaults to (0, 0).
         """
-        image_path = "src/Resources/Images/{}.png".format(image_name)
+        image_path = "resources/images/{}.png".format(image_name)
         if image_path in self.images:
             image_surface = self.images[image_path]["surface"]
             surface.blit(image_surface, position)
@@ -69,7 +69,7 @@ class ImageManager:
             image_name (str): The name of the image (without extension).
             angle_degrees (float): The rotation angle in degree.
         """
-        image_path = "src/Resources/Images/{}.png".format(image_name)
+        image_path = "resources/images/{}.png".format(image_name)
         if image_path in self.images:
             original_surface = self.images[image_path]["surface"]
             rotate_surface = pygame.transform.rotate(original_surface, angle_degrees)
@@ -84,7 +84,7 @@ class ImageManager:
             width (float): Width.
             height (float): Height.
         """
-        image_path = "src/Resources/Images/{}.png".format(image_name)
+        image_path = "resources/images/{}.png".format(image_name)
         if image_path in self.images:
             original_surface = self.images[image_path]["surface"]
             scale_surface = pygame.transform.scale(original_surface, (width, height))
