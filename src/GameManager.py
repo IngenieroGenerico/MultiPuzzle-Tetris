@@ -16,18 +16,18 @@ class GameManager:
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()
-        self.create_menu()
-        self.__player_name = None
-        self.__input_manager = InputManager()
-        self.__score_manager = None
-        self.__img_manager = ImageManager()
         self.__music = AudioManager()
-        self.__music.play_music("menu_music")
+        self.__input_manager = InputManager()
+        self.create_menu()
+        self.__img_manager = ImageManager()
+        self.__player_name = None
+        self.__score_manager = None
     
 
     def create_menu(self) -> None:
         self.__window = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
         pygame.display.set_caption("Multipuzzle")
+        self.__music.play_music("menu_music")
         button_width = 350
         button_height = 60
         self.__actual_window =  WINDOW.MENU
@@ -50,7 +50,6 @@ class GameManager:
         self.__game = Game(areas_amount,columns,rows,speed)
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
-        self.__music.pause_music()
         self.__music.play_music("gameplay_music")
 
     def create_level_buttons(self):

@@ -50,9 +50,9 @@ class AudioManager:
             name (str): The name of the music track.
             file_path (str): The file path of the music track.
         """
+
         if name not in self.musics:
-            self.musics[name] = {"file_path": file_path}
-            pygame.mixer.music.load(file_path)
+            self.musics[name] = file_path
 
     def play_music(self, name: str, loops: int = -1) ->None:
         """
@@ -63,6 +63,7 @@ class AudioManager:
             loops (int): The number of time to play the track. -1 for infinite loop.
         """
         if name in self.musics:
+            pygame.mixer.music.load(self.musics[name])
             pygame.mixer.music.play(loops)
         else:
             print("No found track {}".format(name))
