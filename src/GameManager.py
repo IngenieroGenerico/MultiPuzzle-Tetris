@@ -21,7 +21,8 @@ class GameManager:
         self.__input_manager = InputManager()
         self.__score_manager = None
         self.__img_manager = ImageManager()
-        self.__audio_manager = AudioManager()
+        self.__music = AudioManager()
+        self.__music.play_music("menu_music")
     
 
     def create_menu(self) -> None:
@@ -49,6 +50,8 @@ class GameManager:
         self.__game = Game(areas_amount,columns,rows,speed)
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
+        self.__music.pause_music()
+        self.__music.play_music("gameplay_music")
 
     def create_level_buttons(self):
         button_width = 250

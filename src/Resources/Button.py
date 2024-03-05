@@ -37,7 +37,7 @@ class Button:
         if self.__rect.collidepoint(pygame.mouse.get_pos()):
             if not self.__is_hovered:
                 self.__is_hovered = True
-                self.__sounds.play_sound("hovered")
+                self.__sounds.play_sound("hovered_sound")
             if self.__rect.left < self.__limit_right_movement:
                 self.__rect.update(self.__rect.left + 1, self.__rect.top, self.__rect.width, self.__rect.height)
         else:
@@ -46,7 +46,7 @@ class Button:
             self.__is_hovered = False
             
         if input.get_button_down() and self.__is_hovered:
-            self.__sounds.play_sound("click")
+            self.__sounds.play_sound("click_sound")
             return True
         else:
             return False
