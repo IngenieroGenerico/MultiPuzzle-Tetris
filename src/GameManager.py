@@ -6,6 +6,7 @@ from .objects.Game import Game
 from .UI import Button
 from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
+import sys
 
 class WINDOW(Enum):
     MENU = 1
@@ -27,7 +28,7 @@ class GameManager:
     def create_menu(self) -> None:
         self.__window = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
         pygame.display.set_caption("Multipuzzle")
-        self.__music.play_music("menu")
+        #self.__music.play_music("menu")
         button_width = 350
         button_height = 60
         self.__actual_window =  WINDOW.MENU
@@ -36,6 +37,8 @@ class GameManager:
         self.__level_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"SELECT LEVEL","middle")
         self.__credits_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 400, button_width,button_height,"CREDITS", "below")
         self.__exit_bttn = Button(WIDTH_SCREEN - button_width, HEIGHT_SCREEN - button_height, button_width,button_height,"EXIT","exit")
+        self.__music_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"MUSIC","middle")
+        self.__efects_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 350, button_width,button_height,"EFECTS","middle")
 
     def create_game(self, areas_amount: int = 3,columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         self.__actual_window = WINDOW.GAME_PLAY
@@ -43,7 +46,7 @@ class GameManager:
         self.__game = Game(areas_amount,columns,rows,speed)
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
-        self.__music.play_music("gameplay")
+        #self.__music.play_music("gameplay")
 
     def create_level_buttons(self):
         button_width = 250
@@ -70,7 +73,8 @@ class GameManager:
         elif self.__actual_window == WINDOW.CREDITS:
             pass
         elif self.__actual_window == WINDOW.SETTINGS:
-            pass
+            self.__music_bttn.draw(self.__window)
+            self.__efects_bttn.draw(self.__window)
         self.__settings_bttn.draw(self.__window)
         self.__exit_bttn.draw(self.__window)
  
@@ -100,6 +104,8 @@ class GameManager:
         elif self.__credits_bttn.update(self.__input_manager):
             self.__exit_bttn.change_text("MENU")
             self.__actual_window = WINDOW.CREDITS
+        elif self.__settings_bttn.update(self.__input_manager):
+            self.__actual_window = WINDOW.SETTINGS
     
     def update_level_buttons(self) -> None:
         if self.__easy.update(self.__input_manager):
@@ -122,6 +128,9 @@ class GameManager:
             if self.__actual_window != WINDOW.MENU:
                 self.__actual_window = WINDOW.MENU
                 self.__exit_bttn.change_text("EXIT")
+            else:
+                pygame.quit()
+                sys.exit()
 
         if self.__actual_window == WINDOW.MENU:
             self.update_menu_buttons()
