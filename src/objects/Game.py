@@ -41,7 +41,7 @@ class Game:
         self.__info_screen = Screen(WIDTH_EXTRA_SIZE - Game.WIDTH_DIVERGENCE - Game.MARGIN_SIZE * 2, 
                                     self.__height_gameplay_area + HEIGHT_EXTRA_SIZE - Game.MARGIN_SIZE * 2)
         self.__help_screen = Screen(self.__screen.get_width()* 0.8, self.__screen.get_height() * 0.8)
-        self.__input_screen = Screen(self.__screen.get_width()* 0.8, self.__screen.get_height() * 0.3)
+        self.create_input_rect()
         self.create_level(areas_amount, columns, rows)
         
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -51,6 +51,17 @@ class Game:
         self.__next_piece = self.create_piece(random.choice(list(PIECE_TYPE)))
         self.spawn_piece_in_area()
 
+    def create_input_rect(self) -> None:
+        width = 300
+        height = 50
+        self.__input_rect = pygame.Rect(self.__screen.get_width() // 2 - width // 2,
+                           self.__screen.get_height() // 2 - height // 2, width, height)
+        
+        self.__input_img = pygame.image.load("resources/images/screens/input.png")
+        self.__input_img = pygame.transform.scale(self.__input_img, (self.__input_rect.width, self.__input_rect.height))
+        self.__input_img = self.__input_img.convert_alpha()
+
+        
     def spawn_piece_in_area(self, id_area: int = None) -> None:
         if id_area is not None and 0 <= id_area < len(self.__grid):
             self.__actual_area = self.__grid[id_area]
@@ -280,7 +291,7 @@ class Game:
                 for key in input.get_keys():
                     if key == pygame.K_ESCAPE:
                         return False
-                    elif key == pygame.K_s:
+                    elif key == pygame.K_r:
                         self.__game_state = STATE.SAVE_SCORE
                         return True
         elif self.__game_state == STATE.PAUSE:
@@ -299,11 +310,11 @@ class Game:
                         self.__score_manager.save_score(self.__score_manager.get_name(), self.__total_lines)
                         return False
                     else:
-                            if key == pygame.K_BACKSPACE:
-                                self.__score_manager.set_name(self.__score_manager.get_name()[:-1]) 
-                            else:
-                                if len(self.__score_manager.get_name()) < 10:
-                                    self.__score_manager.set_name(self.__score_manager.get_name() + 
+                        if key == pygame.K_BACKSPACE:
+                            self.__score_manager.set_name(self.__score_manager.get_name()[:-1]) 
+                        else:
+                            if len(self.__score_manager.get_name()) < 10:
+                                self.__score_manager.set_name(self.__score_manager.get_name() + 
                                                                 input.get_key_unicode())
                 
         return True
@@ -324,25 +335,14 @@ class Game:
                         (screen.get_width() - line_width, 0),line_width)
         pygame.draw.line(screen, COLORS["red"], (screen.get_width(),0),(0,0),line_width)
     
-    def render_input_score(self) -> None:
-        self.__input_screen.fill_screen(COLORS["black"])
-        pos_x = (self.__screen.get_width() - self.__input_screen.get_width()) // 2
-        pos_y = (self.__screen.get_height() - self.__input_screen.get_height()) // 2
-        
-    
+    def render_input_rect(self) -> None:
         font = pygame.font.Font(None, TEXT_SCREEN_SIZE)
-        self.__input_screen.fill_screen(COLORS["white"])
-        nick_name = font.render("NICK NAME :", True, COLORS["black"])
-        self.__input_screen.get_surface().blit(nick_name, (TEXT_SCREEN_SIZE, 
-                                                          self.__input_screen.get_height()//2))
-        
-        nick_name_input = font.render(self.__score_manager.get_name(), True, COLORS["black"])
-        self.__input_screen.get_surface().blit(nick_name_input, (TEXT_SCREEN_SIZE, 
-                                                                self.__input_screen.get_height()//2 + TEXT_SCREEN_SIZE))
-        
-        self.__screen.get_surface().blit(self.__input_screen.get_surface(), (pos_x, pos_y))
+        name = font.render(self.__score_manager.get_name(), True, COLORS["black"])
+        name_rect = name.get_rect(center=self.__input_rect.center)
+        self.__screen.get_surface().blit(self.__input_img, self.__input_rect)
+        self.__screen.get_surface().blit(name, name_rect)
         pygame.time.wait(100) 
-        
+    
     def render_help_screen(self, text: str, action_text: str) -> None:
         self.__help_screen.fill_screen(COLORS["black"])
         pos_x = (self.__screen.get_width() - self.__help_screen.get_width()) // 2
@@ -361,9 +361,12 @@ class Game:
         text_esc_rect = text_esc.get_rect()
         text_esc_rect.topleft = (0, text_continue_rect.height + 10)
 
-        self.render_canva_for_screen(self.__help_screen.get_surface())
-        
+        img = pygame.image.load("resources/images/screens/{}.png".format("pause" if self.__game_state == STATE.PAUSE else "pause_negative"))
+        img = pygame.transform.scale(img, (self.__help_screen.get_width(), self.__help_screen.get_height()))
+        img = img.convert_alpha()
+
         self.__help_screen.get_surface().blit(text, text_rect)
+        self.__help_screen.get_surface().blit(img, (0,0))
         self.__help_screen.get_surface().blit(text_continue, text_continue_rect)
         self.__help_screen.get_surface().blit(text_esc, text_esc_rect)
         self.__screen.get_surface().blit(self.__help_screen.get_surface(), (pos_x, pos_y))
@@ -404,8 +407,8 @@ class Game:
         elif self.__game_state == STATE.PAUSE:
             self.render_help_screen("PAUSE", "ENTER = CONTINUE")
         elif self.__game_state == STATE.GAME_OVER:
-            self.render_help_screen("GAME OVER", "S = SAVE SCORE")
+            self.render_help_screen("GAME OVER", "R = SAVE SCORE")
         elif self.__game_state == STATE.SAVE_SCORE:
-            self.render_input_score()
+            self.render_input_rect()
         self.render_info_screen(window)
         window.blit(self.__screen.get_surface(),(Game.WIDTH_DIVERGENCE,Game.HEIGHT_DIVERGENCE))

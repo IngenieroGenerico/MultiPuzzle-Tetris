@@ -119,8 +119,6 @@ class Block:
         self.__image = self.__image.convert_alpha()
 
     def render(self, screen) -> None:
-        
-        #screen.blit(self.__image, self.__rect)
         pygame.draw.rect(screen, self.__color, self.__rect)
 
         line_width = 1
