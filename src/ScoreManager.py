@@ -2,10 +2,16 @@ import os
 import json
 
 class ScoreManager:
-    def __init__(self, name: str = None, score: int = None) -> None:
+    def __init__(self, name: str = "", score: int = 0) -> None:
         self.__name = name
         self.__score = score
 
+    def get_name(self) -> str:
+        return self.__name
+    
+    def set_name(self, name: str) -> None:
+        self.__name = name
+        
     def get_info_player(self) -> None:
         return {"name": self.__name, "score": self.__score}
     

@@ -2,8 +2,7 @@ import pygame, random, time
 from .InputManager import InputManager
 from .AudioManager import AudioManager 
 from .ImageManager import ImageManager
-from .ScoreManager import ScoreManager
-from .objects.Game import Game, STATE
+from .objects.Game import Game
 from .UI import Button
 from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
@@ -23,7 +22,6 @@ class GameManager:
         self.__input_manager = InputManager()
         self.create_menu()
         self.__img_manager = ImageManager()
-        self.__score_manager = ScoreManager()
     
 
     def create_menu(self) -> None:
