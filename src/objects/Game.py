@@ -11,6 +11,7 @@ class STATE(Enum):
     DROPING = 2
     DELETING_PENALTY = 3
     GAME_OVER = 4
+    SAVE_SCORE = 5
 
 class Game:
     MARGIN_SIZE = 30
@@ -37,8 +38,7 @@ class Game:
         self.__screen = Screen(self.__width_gameplay_area, self.__height_gameplay_area)
         self.__info_screen = Screen(WIDTH_EXTRA_SIZE - Game.WIDTH_DIVERGENCE - Game.MARGIN_SIZE * 2, 
                                     self.__height_gameplay_area + HEIGHT_EXTRA_SIZE - Game.MARGIN_SIZE * 2)
-        self.__pause_screen = Screen(self.__screen.get_width()* 0.8, 
-                                     self.__screen.get_height() * 0.8)
+        self.__help_screen = Screen(self.__screen.get_width()* 0.8, self.__screen.get_height() * 0.8)
         self.create_level(areas_amount, columns, rows)
         
     def create_level(self, areas_amount: int = 3, columns: int = 12, rows: int = 22) -> None:
@@ -101,9 +101,6 @@ class Game:
             self.__elapsed_time += delta_time
             return False
         
-    def get_game_state(self):
-        return self.__game_state
-
     def set_time(self) -> None:
         self.__time = 1000 / self.__speed
 
@@ -236,9 +233,7 @@ class Game:
                             block.get_color() != COLORS["gray"]):
                             self.__game_state = STATE.GAME_OVER
 
-    def get_total_lines(self) -> int:
-        return self.__total_lines
-
+ 
     def update(self, input: InputManager) -> bool:
         if self.__game_state == STATE.DROPING:
             self.check_for_game_over()
@@ -282,6 +277,9 @@ class Game:
                 for key in input.get_keys():
                     if key == pygame.K_ESCAPE:
                         return False
+                    elif key == pygame.K_s:
+                        self.__game_state = STATE.SAVE_SCORE
+                        return True
         elif self.__game_state == STATE.PAUSE:
             if len(input.get_keys()) != 0:
                 for key in input.get_keys():
@@ -291,6 +289,12 @@ class Game:
                         self.__game_state = STATE.DROPING
                         input.clear_keys()
                         return True
+        elif self.__game_state == STATE.SAVE_SCORE:
+            if len(input.get_keys()) != 0:
+                for key in input.get_keys():
+                    if key == pygame.K_RETURN:
+                        #save score
+                        return False
         return True
             
     def generate_text(self, text: str, center_x: int, center_y: int) -> tuple:
@@ -300,37 +304,39 @@ class Game:
         text_rect.center = (center_x // 2, center_y // 2)
         return text_surface, text_rect
 
-    def render_pause_screen(self):
-        pos_x = (self.__screen.get_width() - self.__pause_screen.get_width()) // 2
-        pos_y = (self.__screen.get_height() - self.__pause_screen.get_height()) // 2
+    def render_canva_for_screen(self, screen) -> None:
+        line_width = 2
+        pygame.draw.line(screen, COLORS["red"], (0,0),(0,screen.get_height()),line_width)
+        pygame.draw.line(screen, COLORS["red"], (0,screen.get_height()-line_width),
+                        (screen.get_width(),screen.get_height() -line_width),line_width)
+        pygame.draw.line(screen, COLORS["red"], (screen.get_width() - line_width,screen.get_height()),
+                        (screen.get_width() - line_width, 0),line_width)
+        pygame.draw.line(screen, COLORS["red"], (screen.get_width(),0),(0,0),line_width)
+        
+    def render_help_screen(self, text: str, action_text: str) -> None:
+        self.__help_screen.fill_screen(COLORS["black"])
+        pos_x = (self.__screen.get_width() - self.__help_screen.get_width()) // 2
+        pos_y = (self.__screen.get_height() - self.__help_screen.get_height()) // 2
 
-        text, text_rect = self.generate_text("PAUSE",
-                                                self.__pause_screen.get_width(),
-                                                self.__pause_screen.get_height())
+        text, text_rect = self.generate_text(text,
+                                                self.__help_screen.get_width(),
+                                                self.__help_screen.get_height())
         
         font = pygame.font.Font(None, TEXT_SCREEN_SIZE)
-        text_continue = font.render("ENTER = CONTINUE", True, COLORS["white"])
+        text_continue = font.render(action_text, True, COLORS["white"])
         text_continue_rect = text_continue.get_rect()
         text_continue_rect.topleft = (0, 0)
         
         text_esc = font.render("ESC = EXIT", True, COLORS["white"])
         text_esc_rect = text_esc.get_rect()
         text_esc_rect.topleft = (0, text_continue_rect.height + 10)
-        line_width = 2
-        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
-                        (0,0),(0,self.__pause_screen.get_height()),line_width)
-        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
-                        (0,self.__pause_screen.get_height()-line_width),
-                        (self.__pause_screen.get_width(),self.__pause_screen.get_height() -line_width),line_width)
-        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
-                        (self.__pause_screen.get_width() - line_width,self.__pause_screen.get_height()),
-                        (self.__pause_screen.get_width() - line_width, 0),line_width)
-        pygame.draw.line(self.__pause_screen.get_surface(), COLORS["red"],
-                        (self.__pause_screen.get_width(),0),(0,0),line_width)
-        self.__pause_screen.get_surface().blit(text, text_rect)
-        self.__pause_screen.get_surface().blit(text_continue, text_continue_rect)
-        self.__pause_screen.get_surface().blit(text_esc, text_esc_rect)
-        self.__screen.get_surface().blit(self.__pause_screen.get_surface(), (pos_x, pos_y))
+
+        self.render_canva_for_screen(self.__help_screen.get_surface())
+        
+        self.__help_screen.get_surface().blit(text, text_rect)
+        self.__help_screen.get_surface().blit(text_continue, text_continue_rect)
+        self.__help_screen.get_surface().blit(text_esc, text_esc_rect)
+        self.__screen.get_surface().blit(self.__help_screen.get_surface(), (pos_x, pos_y))
 
     def render_info_screen(self, window) -> None:
         self.__info_screen.fill_screen(COLORS["black"])
@@ -344,7 +350,7 @@ class Game:
                     (self.__width_gameplay_area + Game.WIDTH_DIVERGENCE + Game.MARGIN_SIZE,
                     Game.MARGIN_SIZE))
         
-    def render_text(self) -> None:
+    def render_penalty(self) -> None:
         if self.get_delta_time(500):
             if self.__can_render_text:
                 self.__can_render_text = False
@@ -352,29 +358,22 @@ class Game:
                 self.__can_render_text = True
 
         if self.__can_render_text:
-            if self.__game_state == STATE.DELETING_PENALTY:
-                text, text_rect = self.generate_text("DESTROY PENALTY",
-                                                self.__width_gameplay_area,
-                                                self.__height_gameplay_area)
-                self.__screen.get_surface().blit(text, text_rect)
-            elif self.__game_state == STATE.GAME_OVER:
-                text, text_rect = self.generate_text("GAME OVER",
-                                                self.__width_gameplay_area,
-                                                self.__height_gameplay_area)
-                text_esc,text_esc_rect = self.generate_text("ESC = EXIT",
-                                                self.__width_gameplay_area,
-                                                self.__height_gameplay_area + 250)
-                self.__screen.get_surface().blit(text, text_rect)
-                self.__screen.get_surface().blit(text_esc, text_esc_rect)
+            text, text_rect = self.generate_text("DESTROY PENALTY",
+                                            self.__width_gameplay_area,
+                                            self.__height_gameplay_area)
+            self.__screen.get_surface().blit(text, text_rect)
+            
 
     def render(self, window) -> None:
         for area in self.__grid:
             
             area.render(self.__screen.get_surface())
         self.__actual_piece.render(self.__screen.get_surface())
-        if self.__game_state != STATE.DROPING:
-            self.render_text()
-        if self.__game_state == STATE.PAUSE:
-            self.render_pause_screen()
+        if self.__game_state == STATE.DELETING_PENALTY:
+            self.render_penalty()
+        elif self.__game_state == STATE.PAUSE:
+            self.render_help_screen("PAUSE", "ENTER = CONTINUE")
+        elif self.__game_state == STATE.GAME_OVER:
+            self.render_help_screen("GAME OVER", "S = SAVE SCORE")
         self.render_info_screen(window)
         window.blit(self.__screen.get_surface(),(Game.WIDTH_DIVERGENCE,Game.HEIGHT_DIVERGENCE))

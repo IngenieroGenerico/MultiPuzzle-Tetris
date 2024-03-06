@@ -17,12 +17,11 @@ class ImageManager:
         """
         Initialize CImage to manage loaded images.
         """
-        self.image_path = "resources/images/backgrounds/"
         self.images = {}
-        self.load_img(self.image_path + "menu.png",False)
+        self.load_img("resources/images/backgrounds/menu.png",False)
         
         for i in range(1, ImageManager.NUM_BACKGROUNDS + 1):
-            self.load_img(self.image_path + i.__str__() + ".png", False)
+            self.load_img("resources/images/backgrounds/{}.png".format(i), False)
 
 
     def load_img(self, image_path: str, transparent: bool = False) -> CSurface:

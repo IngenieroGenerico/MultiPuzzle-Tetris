@@ -3,7 +3,7 @@ from data import COLORS
 from ..AudioManager import AudioManager
 
 class Button:
-    def __init__(self, x: int, y: int, width: int, height: int, text: str = None):
+    def __init__(self, x: int, y: int, width: int, height: int, text: str = None, name: str = None):
         self.__rect = pygame.Rect(x, y, width, height)
         self.__font = pygame.font.Font(None, 30)
         self.__text = text
@@ -11,16 +11,18 @@ class Button:
         self.__limit_right_movement = x + 20
         self.__limit_left_movement = x
         self.__sounds = AudioManager()
+        if name != None:
+            self.load_images(name)
         
-    def load_image(self, folder:str, name: str) -> pygame.Surface:
-        image = pygame.image.load("resources/images/{}/{}.png".format(folder,name))
+    def load_image(self, name: str) -> pygame.Surface:
+        image = pygame.image.load("resources/images/buttons/{}.png".format(name))
         image = pygame.transform.scale(image, (self.__rect.width, self.__rect.height))
         image = image.convert_alpha()
         return image
     
-    def load_images(self,folder: str, name: str) -> None:
-        self.__image = self.load_image(folder, name)
-        self.__image_hovered = self.load_image(folder, name +"_negative")
+    def load_images(self, name: str) -> None:
+        self.__image = self.load_image(name)
+        self.__image_hovered = self.load_image(name +"_negative")
         
     def draw(self, screen):
         image_render = self.__image_hovered if self.__is_hovered else self.__image        
