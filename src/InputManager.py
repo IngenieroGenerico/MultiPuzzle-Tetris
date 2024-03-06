@@ -8,6 +8,7 @@ class InputManager:
         - Initialize sets to track keys and mouse state.
         """
         self.__keys = set()
+        self.__key_unicode = None
         self.__button_down = False
  
     def get_button_down(self) -> bool:
@@ -26,6 +27,7 @@ class InputManager:
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
                 self.__keys.add(event.key)
+                self.__key_unicode = event.unicode
             elif event.type == pygame.KEYUP:
                 self.__keys.discard(event.key)
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -40,6 +42,7 @@ class InputManager:
         Clear the set of pressed keys.
         """
         self.__keys.clear()
+        self.__key_unicode = None
 
     def get_keys(self) -> set:
         """
@@ -49,4 +52,7 @@ class InputManager:
             set: Set of pressed keys.
         """
         return self.__keys
+    
+    def get_key_unicode(self):
+        return self.__key_unicode
     

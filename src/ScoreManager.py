@@ -1,11 +1,17 @@
 import os
 import json
 
-class Score:
-    def __init__(self, name: str = None, score: int = None) -> None:
+class ScoreManager:
+    def __init__(self, name: str = "", score: int = 0) -> None:
         self.__name = name
         self.__score = score
 
+    def get_name(self) -> str:
+        return self.__name
+    
+    def set_name(self, name: str) -> None:
+        self.__name = name
+        
     def get_info_player(self) -> None:
         return {"name": self.__name, "score": self.__score}
     
@@ -18,14 +24,14 @@ class Score:
         """
         return self.__score
 
-    def save_score(self, player_name, score) -> None:
+    def save_score(self, player_name, new_score) -> None:
         scores = self.load_score()
 
         if player_name in scores:
-            if scores > scores[player_name]:
-                scores[player_name] = scores
+            if new_score > scores[player_name]:
+                scores[player_name] = new_score
         else:
-            scores[player_name] = score
+            scores[player_name] = new_score
 
         with open("data/score.json", "w") as file:
             json.dump(scores, file, indent=4)

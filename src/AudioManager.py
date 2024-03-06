@@ -13,9 +13,11 @@ class AudioManager:
         self.sounds = {}
         self.musics = {}
         self.sound_volume = 1.0 # Range: 0.0 to 1.0
-        self.music_volume = 1.0 # Range: 0.0 to 1.0
-        self.load_music("music", "src/Resources/Music/gameplay.mp3")
-        self.load_sound("move", "src/Resources/Music/click_button.mp3")
+        self.music_volume = 1.0 # Range: 0.0 to 1.0+
+        self.load_music("menu", "resources/musics/menu.mp3")
+        self.load_music("gameplay", "resources/musics/gameplay.mp3")
+        self.load_sound("hovered", "resources/sounds/hovered.mp3")
+        self.load_sound("click", "resources/sounds/click.mp3")
 
     def load_sound(self, name: str, file_path: str) -> None:
         """
@@ -48,9 +50,9 @@ class AudioManager:
             name (str): The name of the music track.
             file_path (str): The file path of the music track.
         """
+
         if name not in self.musics:
-            self.musics[name] = {"file_path": file_path}
-            pygame.mixer.music.load(file_path)
+            self.musics[name] = file_path
 
     def play_music(self, name: str, loops: int = -1) ->None:
         """
@@ -61,6 +63,7 @@ class AudioManager:
             loops (int): The number of time to play the track. -1 for infinite loop.
         """
         if name in self.musics:
+            pygame.mixer.music.load(self.musics[name])
             pygame.mixer.music.play(loops)
         else:
             print("No found track {}".format(name))
@@ -105,7 +108,7 @@ class AudioManager:
             name (str): The name of the sound to stop.
         """
         if name in self.sounds:
-            pygame.mixer.find_channel().stop()
+            self.sounds[name]["sound"].stop()
     
     def set_sound_volume(self, volume: float) -> None:
         """
