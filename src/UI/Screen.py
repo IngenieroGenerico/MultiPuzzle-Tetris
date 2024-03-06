@@ -7,6 +7,15 @@ class Screen:
         self.__height = height
         self.__surface = pygame.Surface((self.__width, self.__height))
         self.__buttons = []
+        self.__image = None
+    
+    def load_image(self, name: str) -> pygame.Surface:
+        self.__image = pygame.image.load("resources/images/screens/{}.png".format(name))
+        self.__image = self.__image.convert_alpha()
+        self.__image = pygame.transform.scale(self.__image, (self.__width, self.__height))
+        
+    def draw_image(self)-> None:
+        self.__surface.blit(self.__image, (0,0))
         
     def fill_screen(self, color: tuple = COLORS["white"]) -> None:
         self.__surface.fill(color)

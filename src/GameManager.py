@@ -1,6 +1,9 @@
 import pygame, random, time
-from .Resources import InputManager, Button, ImageManager, AudioManager
-from .GameObjects import Game
+from .InputManager import InputManager
+from .AudioManager import AudioManager 
+from .ImageManager import ImageManager
+from .objects.Game import Game
+from .UI import Button
 from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
 
@@ -15,27 +18,24 @@ class GameManager:
     def __init__(self) -> None:
         random.seed(time.time())
         pygame.init()
-        self.create_menu()
+        self.__music = AudioManager()
         self.__input_manager = InputManager()
+        self.create_menu()
         self.__img_manager = ImageManager()
-        self.__audio_manager = AudioManager()
     
+
     def create_menu(self) -> None:
         self.__window = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
         pygame.display.set_caption("Multipuzzle")
+        self.__music.play_music("menu")
         button_width = 350
         button_height = 60
         self.__actual_window =  WINDOW.MENU
-        self.__settings_bttn = Button(30,135,50,50)
-        self.__settings_bttn.load_images("Menu","settings")
-        self.__play_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 200, button_width,button_height,"START")
-        self.__play_bttn.load_images("Menu","button_up")
-        self.__level_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"SELECT LEVEL")
-        self.__level_bttn.load_images("Menu","button_middle")
-        self.__credits_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 400, button_width,button_height,"CREDITS")
-        self.__credits_bttn.load_images("Menu","button_down")
-        self.__exit_bttn = Button(WIDTH_SCREEN - button_width, HEIGHT_SCREEN - button_height, button_width,button_height,"EXIT")
-        self.__exit_bttn.load_images("Menu","exit")
+        self.__settings_bttn = Button(30,135,50,50,None,"settings")
+        self.__play_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 200, button_width,button_height,"START","above")
+        self.__level_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"SELECT LEVEL","middle")
+        self.__credits_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 400, button_width,button_height,"CREDITS", "below")
+        self.__exit_bttn = Button(WIDTH_SCREEN - button_width, HEIGHT_SCREEN - button_height, button_width,button_height,"EXIT","exit")
 
     def create_game(self, areas_amount: int = 3,columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         self.__actual_window = WINDOW.GAME_PLAY
@@ -43,24 +43,20 @@ class GameManager:
         self.__game = Game(areas_amount,columns,rows,speed)
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
-        
+        self.__music.play_music("gameplay")
+
     def create_level_buttons(self):
         button_width = 250
         button_height = 60
-        self.__easy = Button(100, 200, button_width, button_height,"EASY")
-        self.__easy.load_images("Level","select_level")
-        self.__normal = Button(150, 280, button_width,button_height,"NORMAL")
-        self.__normal.load_images("Level","select_level")
-        self.__hard = Button(200, 360, button_width,button_height,"HARD")
-        self.__hard.load_images("Level","select_level")
-        self.__master = Button(150, 440, button_width,button_height,"TETRIS MASTER")
-        self.__master.load_images("Level","select_level")
-        self.__custom = Button(100, 520, button_width,button_height,"CUSTOM")
-        self.__custom.load_images("Level","select_level")
+        self.__easy = Button(100, 200, button_width, button_height,"CLASSIC","level")
+        self.__normal = Button(150, 280, button_width,button_height,"NORMAL","level")
+        self.__hard = Button(200, 360, button_width,button_height,"HARD","level")
+        self.__master = Button(150, 440, button_width,button_height,"TETRIS MASTER","level")
+        self.__custom = Button(100, 520, button_width,button_height,"CUSTOM","level")
 
     def render_menu(self) -> None:
-        self.__img_manager.resize("menu", self.__window.get_width(), self.__window.get_height())
-        self.__img_manager.draw(self.__window, "menu")
+        self.__img_manager.resize("backgrounds/menu", self.__window.get_width(), self.__window.get_height())
+        self.__img_manager.draw(self.__window, "backgrounds/menu")
         if self.__actual_window == WINDOW.MENU:
             self.__play_bttn.draw(self.__window)
             self.__level_bttn.draw(self.__window)
@@ -78,11 +74,9 @@ class GameManager:
         self.__settings_bttn.draw(self.__window)
         self.__exit_bttn.draw(self.__window)
  
-
     def render_gameplay(self) -> None:
-        
-        self.__img_manager.resize("Backgrounds/" + self.__background.__str__(), self.__window.get_width(), self.__window.get_height())
-        self.__img_manager.draw(self.__window, "Backgrounds/" + self.__background.__str__())
+        self.__img_manager.resize("backgrounds/{}".format(self.__background), self.__window.get_width(), self.__window.get_height())
+        self.__img_manager.draw(self.__window, "backgrounds/{}".format(self.__background))
         self.__game.render(self.__window)
     
     def render(self) -> None:

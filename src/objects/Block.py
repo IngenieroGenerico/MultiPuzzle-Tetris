@@ -1,5 +1,5 @@
 import pygame
-from ..Math import Vector2
+from ..math import Vector2
 from data import BLOCK_SIZE, COLORS
 
 class Block:
@@ -119,9 +119,8 @@ class Block:
         self.__image = self.__image.convert_alpha()
 
     def render(self, screen) -> None:
-        
-        #screen.blit(self.__image, self.__rect)
         pygame.draw.rect(screen, self.__color, self.__rect)
+
         line_width = 1
         if self.__color != COLORS["gray"]:
             line_color = COLORS["white"]
