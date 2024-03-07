@@ -113,26 +113,26 @@ class AudioManager:
             self.sounds[name]["sound"].stop()
 
     def mute_music(self) -> None:
+        self.musics_muted = True
         self.music_volume = 0.0
         pygame.mixer.music.set_volume(self.music_volume)
-        self.musics_muted = True
     
     def unmute_music(self) -> None:
+        self.musics_muted = False
         self.music_volume = 1.0
         pygame.mixer.music.set_volume(self.music_volume)
-        self.musics_muted = False
 
     def mute_sounds(self) -> None:
+        self.sounds_muted = True
         self.sound_volume = 0.0
         for sound in self.sounds.values():
             sound["sound"].set_volume(self.sound_volume)
-        self.sounds_muted = True
     
     def unmute_sounds(self) -> None:
         self.sound_volume = 1.0
+        self.sounds_muted = False
         for sound in self.sounds.values():
             sound["sound"].set_volume(self.sound_volume)
-        self.sounds_muted = False
     
     def is_music_muted(self) -> bool:
         return self.musics_muted

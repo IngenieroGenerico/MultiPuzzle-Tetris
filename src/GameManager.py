@@ -1,4 +1,4 @@
-import pygame, random, time
+import pygame, random, time, sys
 from .InputManager import InputManager
 from .AudioManager import AudioManager 
 from .ImageManager import ImageManager
@@ -6,7 +6,6 @@ from .objects.Game import Game
 from .UI import Button
 from data import COLORS, WIDTH_SCREEN, HEIGHT_SCREEN, WIDTH_EXTRA_SIZE, HEIGHT_EXTRA_SIZE
 from enum import Enum
-import sys
 
 class WINDOW(Enum):
     MENU = 1
@@ -47,6 +46,7 @@ class GameManager:
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
         self.__music.play_music("gameplay")
+        self.__music.set_music_volume(0.0)
 
     def create_level_buttons(self):
         button_width = 250
@@ -125,12 +125,12 @@ class GameManager:
             self.__actual_window = WINDOW.SETTINGS
 
         elif self.__exit_bttn.update(self.__input_manager):
-            if self.__actual_window != WINDOW.MENU:
-                self.__actual_window = WINDOW.MENU
-                self.__exit_bttn.change_text("EXIT")
-            else:
+            if self.__actual_window == WINDOW.MENU:
                 pygame.quit()
                 sys.exit()
+            if self.__actual_window == WINDOW.SETTINGS:
+                self.__actual_window = WINDOW.MENU
+                self.__exit_bttn.change_text("EXITT")
 
         elif self.__music_bttn.update(self.__input_manager):
             if self.__music.is_music_muted():
