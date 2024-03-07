@@ -15,6 +15,7 @@ class STATE(Enum):
     SAVE_SCORE = 5
 
 class Game:
+    SECOND_IN_MILISECONDS = 1000
     MARGIN_SIZE = 30
     WIDTH_DIVERGENCE = 100
     HEIGHT_DIVERGENCE = 150
@@ -23,13 +24,15 @@ class Game:
         self.__score_manager = ScoreManager()
         self.__game_state = STATE.DROPING
         self.__speed = speed if speed >= 1 else 1
-        self.__lines_deleted = 0 
         self.__penalty_counter = 0
         self.__can_render_text = False
         self.__elapsed_time = 0
-        self.__time = 1000/speed 
+        self.__time = Game.SECOND_IN_MILISECONDS
         self.__areas_amount = areas_amount
-        self.__total_lines = 0
+        self.__lines_counter = 0
+        self.__combo_lines = 0
+        self.__total_lines_deleted = 0
+        self.__score = 0
 
         self.__next_piece = None
         self.__actual_piece = None
@@ -38,9 +41,8 @@ class Game:
         self.__height_gameplay_area = rows * BLOCK_SIZE
         self.__width_gameplay_area = areas_amount * columns * BLOCK_SIZE
         self.__screen = Screen(self.__width_gameplay_area, self.__height_gameplay_area)
-        self.__info_screen = Screen(WIDTH_EXTRA_SIZE - Game.WIDTH_DIVERGENCE - Game.MARGIN_SIZE * 2, 
-                                    self.__height_gameplay_area + HEIGHT_EXTRA_SIZE - Game.MARGIN_SIZE * 2)
-        self.__help_screen = Screen(self.__screen.get_width()* 0.8, self.__screen.get_height() * 0.8)
+        self.create_info_screen()
+        self.create_help_screen()
         self.create_input_rect()
         self.create_level(areas_amount, columns, rows)
         
@@ -61,15 +63,14 @@ class Game:
         self.__input_img = pygame.transform.scale(self.__input_img, (self.__input_rect.width, self.__input_rect.height))
         self.__input_img = self.__input_img.convert_alpha()
 
-        
-    def spawn_piece_in_area(self, id_area: int = None) -> None:
-        if id_area is not None and 0 <= id_area < len(self.__grid):
-            self.__actual_area = self.__grid[id_area]
-        else:
-             self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
-        self.__actual_piece.set_initial_position(self.__actual_area.get_center())
-        self.__next_piece.send_to(self.__info_screen.get_width()//2 + BLOCK_SIZE, self.__info_screen.get_height()//2)
-    
+    def create_info_screen(self)-> None:
+        self.__info_screen = Screen(WIDTH_EXTRA_SIZE - Game.WIDTH_DIVERGENCE - Game.MARGIN_SIZE * 2, 
+                                    self.__height_gameplay_area + HEIGHT_EXTRA_SIZE - Game.MARGIN_SIZE * 2)
+        self.__info_screen.load_image("canva")
+
+    def create_help_screen(self)-> None:
+        self.__help_screen = Screen(self.__screen.get_width()* 0.8, self.__screen.get_height() * 0.8)
+
     def create_areas(self, amount: int = 3, columns: int = 12, rows: int = 22) -> None:
         keys = []
         while len(keys) < amount:
@@ -100,6 +101,14 @@ class Game:
         else:
             return None
         
+    def spawn_piece_in_area(self, id_area: int = None) -> None:
+        if id_area is not None and 0 <= id_area < len(self.__grid):
+            self.__actual_area = self.__grid[id_area]
+        else:
+             self.__actual_area = self.__grid[random.randint(0, self.__areas_amount - 1)]
+        self.__actual_piece.set_initial_position(self.__actual_area.get_center())
+        self.__next_piece.send_to(self.__info_screen.get_width()//2 + BLOCK_SIZE, self.__info_screen.get_height()//2)
+
     def get_height_gameplay(self) -> int:
         return self.__height_gameplay_area
     
@@ -114,19 +123,46 @@ class Game:
             delta_time = self.__clock.tick(60)
             self.__elapsed_time += delta_time
             return False
-        
-    def set_time(self) -> None:
-        self.__time = 1000 / self.__speed
+    
+    def check_for_combo(self) -> None:
+        if self.__combo_lines > 0:
+            if self.__combo_lines == 1:
+                self.__score += 10
+            elif self.__combo_lines == 2:
+                self.__score += 50
+            elif self.__combo_lines == 3:
+                self.__score += 100
+            elif self.__combo_lines == 4:
+                self.__score += 200
+            elif self.__combo_lines == 5:
+                self.__score += 300
+            elif self.__combo_lines == 6:
+                self.__score += 500
+            else:
+                self.__score += 1000
 
-    #TODO: Cambiar para subir de nivel.
-    def level_up(self, lines_deleted) -> None:
-        self.__total_lines += lines_deleted
-        if self.__lines_deleted > 10:
-            self.__speed += 1
-            self.__lines_deleted = 0
-            self.set_time()
-        else:
-            self.__lines_deleted += 1
+        self.__lines_counter += self.__combo_lines
+        self.__total_lines_deleted += self.__combo_lines
+        self.__combo_lines = 0
+
+    def check_for_speed(self) -> None:
+        if self.__lines_counter > 10:
+            if self.__speed < MAX_SPEED:
+                self.__speed += 1
+            self.__lines_counter = 0
+
+    def check_for_penalty(self) -> None:
+        if self.__penalty_counter > 0:
+                self.__game_state = STATE.DELETING_PENALTY
+    
+    def check_for_game_over(self) -> None:
+        for areas in self.__grid:
+                for columns in areas.get_blocks():
+                    for block in columns:
+                        if (block.get_position().get_y() == 0 and 
+                            block.get_color() != COLORS["black"] and 
+                            block.get_color() != COLORS["gray"]):
+                            self.__game_state = STATE.GAME_OVER
 
     def move_blocks_area_down(self) -> None:
         next_column = False
@@ -165,6 +201,7 @@ class Game:
         final = can_delete - dont_delete
         final_list = list(final)
         if len(final_list) != 0:
+            self.add_combo_lines(len(final_list))
             for i in final_list:
                 for columns in self.__actual_area.get_blocks():
                     if columns[i].get_color() != COLORS["gray"]:
@@ -172,7 +209,10 @@ class Game:
             
             return True
         else: return False
-        
+
+    def add_combo_lines(self, lines: int) -> None:
+        self.__combo_lines += lines
+
     def add_penalty_to_area(self) -> None:
         count_penalty = 0
         for area in self.__grid:
@@ -203,14 +243,10 @@ class Game:
                 break
         if self.__actual_piece.get_color() != self.__actual_area.get_color():
             self.add_penalty_to_area()
-
-        lines_deleted = 0
         while self.delete_line_in_area():
             self.move_blocks_area_down()
-            lines_deleted += 1
-            self.level_up(lines_deleted)
-            if self.__penalty_counter > 0:
-                self.__game_state = STATE.DELETING_PENALTY
+            self.check_for_penalty()
+        self.check_for_combo()
         self.__actual_piece = self.__next_piece
         self.__next_piece = self.create_piece(random.choice(list(PIECE_TYPE)))
         self.spawn_piece_in_area()
@@ -238,20 +274,11 @@ class Game:
                         self.__game_state = STATE.PAUSE
             input.clear_keys()
 
-    def check_for_game_over(self) -> None:
-        for areas in self.__grid:
-                for columns in areas.get_blocks():
-                    for block in columns:
-                        if (block.get_position().get_y() == 0 and 
-                            block.get_color() != COLORS["black"] and 
-                            block.get_color() != COLORS["gray"]):
-                            self.__game_state = STATE.GAME_OVER
-
- 
     def update(self, input: InputManager) -> bool:
         if self.__game_state == STATE.DROPING:
             self.check_for_game_over()
-            if self.get_delta_time(self.__time):
+            self.check_for_speed()
+            if self.get_delta_time(self.__time - self.__speed * 100):
                 self.__actual_piece.move_down()
             self.handle_input(input)
             for columns in self.__actual_area.get_blocks():
@@ -307,7 +334,7 @@ class Game:
             if len(input.get_keys()) != 0:
                 for key in input.get_keys():
                     if key == pygame.K_RETURN:
-                        self.__score_manager.save_score(self.__score_manager.get_name(), self.__total_lines)
+                        self.__score_manager.save_score(self.__score_manager.get_name(), self.__score)
                         return False
                     else:
                         if key == pygame.K_BACKSPACE:
@@ -326,15 +353,6 @@ class Game:
         text_rect.center = (center_x // 2, center_y // 2)
         return text_surface, text_rect
 
-    def render_canva_for_screen(self, screen) -> None:
-        line_width = 2
-        pygame.draw.line(screen, COLORS["red"], (0,0),(0,screen.get_height()),line_width)
-        pygame.draw.line(screen, COLORS["red"], (0,screen.get_height()-line_width),
-                        (screen.get_width(),screen.get_height() -line_width),line_width)
-        pygame.draw.line(screen, COLORS["red"], (screen.get_width() - line_width,screen.get_height()),
-                        (screen.get_width() - line_width, 0),line_width)
-        pygame.draw.line(screen, COLORS["red"], (screen.get_width(),0),(0,0),line_width)
-    
     def render_input_rect(self) -> None:
         font = pygame.font.Font(None, TEXT_SCREEN_SIZE)
         name = font.render(self.__score_manager.get_name(), True, COLORS["black"])
@@ -374,10 +392,13 @@ class Game:
     def render_info_screen(self, window) -> None:
         self.__info_screen.fill_screen(COLORS["black"])
         font = pygame.font.Font(None, 30)
-        txt_score = font.render("SCORE : {}".format(self.__total_lines), True, COLORS["white"])
+        txt_score = font.render("SCORE : {}".format(self.__score), True, COLORS["white"])
         txt_level = font.render("SPEED : {}".format(self.__speed), True, COLORS["white"])
+        txt_lines = font.render("LINES : {}".format(self.__total_lines_deleted), True, COLORS["white"])
         self.__info_screen.get_surface().blit(txt_score, (Game.MARGIN_SIZE,Game.MARGIN_SIZE))
         self.__info_screen.get_surface().blit(txt_level, (Game.MARGIN_SIZE,Game.MARGIN_SIZE * 2))
+        self.__info_screen.get_surface().blit(txt_lines, (Game.MARGIN_SIZE,Game.MARGIN_SIZE * 3))
+        self.__info_screen.draw_image()
         self.__next_piece.render(self.__info_screen.get_surface())
         window.blit(self.__info_screen.get_surface(),
                     (self.__width_gameplay_area + Game.WIDTH_DIVERGENCE + Game.MARGIN_SIZE,
@@ -389,14 +410,12 @@ class Game:
                 self.__can_render_text = False
             else:
                 self.__can_render_text = True
-
         if self.__can_render_text:
             text, text_rect = self.generate_text("DESTROY PENALTY",
                                             self.__width_gameplay_area,
                                             self.__height_gameplay_area)
             self.__screen.get_surface().blit(text, text_rect)
             
-
     def render(self, window) -> None:
         for area in self.__grid:
             
