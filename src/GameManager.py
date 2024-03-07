@@ -28,7 +28,7 @@ class GameManager:
     def create_menu(self) -> None:
         self.__window = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
         pygame.display.set_caption("Multipuzzle")
-        #self.__music.play_music("menu")
+        self.__music.play_music("menu")
         button_width = 350
         button_height = 60
         self.__actual_window =  WINDOW.MENU
@@ -37,8 +37,8 @@ class GameManager:
         self.__level_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"SELECT LEVEL","middle")
         self.__credits_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 400, button_width,button_height,"CREDITS", "below")
         self.__exit_bttn = Button(WIDTH_SCREEN - button_width, HEIGHT_SCREEN - button_height, button_width,button_height,"EXIT","exit")
-        self.__music_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"MUSIC","middle")
-        self.__efects_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 350, button_width,button_height,"EFECTS","middle")
+        self.__music_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 300, button_width,button_height,"MUTE MUSIC","middle")
+        self.__sounds_bttn = Button(WIDTH_SCREEN // 2 - button_width//2, 350, button_width,button_height,"MUTE SOUNDS","middle")
 
     def create_game(self, areas_amount: int = 3,columns: int = 12, rows: int = 22, speed: int = 1) -> None:
         self.__actual_window = WINDOW.GAME_PLAY
@@ -46,7 +46,7 @@ class GameManager:
         self.__game = Game(areas_amount,columns,rows,speed)
         self.__window = pygame.display.set_mode((self.__game.get_width_gameplay() + WIDTH_EXTRA_SIZE, 
                                                  self.__game.get_height_gameplay() + HEIGHT_EXTRA_SIZE))
-        #self.__music.play_music("gameplay")
+        self.__music.play_music("gameplay")
 
     def create_level_buttons(self):
         button_width = 250
@@ -74,7 +74,7 @@ class GameManager:
             pass
         elif self.__actual_window == WINDOW.SETTINGS:
             self.__music_bttn.draw(self.__window)
-            self.__efects_bttn.draw(self.__window)
+            self.__sounds_bttn.draw(self.__window)
         self.__settings_bttn.draw(self.__window)
         self.__exit_bttn.draw(self.__window)
  
@@ -131,6 +131,21 @@ class GameManager:
             else:
                 pygame.quit()
                 sys.exit()
+        elif self.__music_bttn.update(self.__input_manager):
+            if self.__music.mute_music():
+                self.__music_bttn.change_text("MUTE MUSIC")
+                self.__music.unmute_music()
+            else:
+                self.__music.mute_music()
+                self.__music_bttn.change_text("UNMUTE MUSIC")
+        elif self.__sounds_bttn.update(self.__input_manager):
+            if self.__music.mute_sounds():
+                self.__sounds_bttn.change_text("MUTE SOUNDS")
+                self.__music.unmute_sounds()
+            else:
+                self.__music.mute_sounds()
+                self.__sounds_bttn.change_text("UNMUTE SOUNDS")
+
 
         if self.__actual_window == WINDOW.MENU:
             self.update_menu_buttons()

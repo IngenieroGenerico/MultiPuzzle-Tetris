@@ -109,7 +109,25 @@ class AudioManager:
         """
         if name in self.sounds:
             self.sounds[name]["sound"].stop()
+
+    def mute_music(self) -> None:
+        self.music_volume = 0.0
+        pygame.mixer.music.set_volume(self.music_volume)
     
+    def unmute_music(self) -> None:
+        self.music_volume = 1.0
+        pygame.mixer.music.set_volume(self.music_volume)
+
+    def mute_sounds(self) -> None:
+        self.sound_volume = 0.0
+        for sound in self.sounds.values():
+            sound["sound"].set_volume(self.sound_volume) 
+    
+    def unmute_sounds(self) -> None:
+        self.sound_volume = 1.0
+        for sound in self.sounds.values():
+            sound["sound"].set_volume(self.sound_volume)
+
     def set_sound_volume(self, volume: float) -> None:
         """
         Set the volume for the sound effects.
