@@ -131,21 +131,21 @@ class GameManager:
             else:
                 pygame.quit()
                 sys.exit()
+
         elif self.__music_bttn.update(self.__input_manager):
-            if self.__music.mute_music():
-                self.__music_bttn.change_text("MUTE MUSIC")
+            if self.__music.is_music_muted():
                 self.__music.unmute_music()
+                self.__music_bttn.change_text("MUTE MUSIC")
             else:
                 self.__music.mute_music()
                 self.__music_bttn.change_text("UNMUTE MUSIC")
         elif self.__sounds_bttn.update(self.__input_manager):
-            if self.__music.mute_sounds():
-                self.__sounds_bttn.change_text("MUTE SOUNDS")
+            if self.__music.is_sounds_muted():
                 self.__music.unmute_sounds()
+                self.__sounds_bttn.change_text("MUTE SOUNDS")
             else:
                 self.__music.mute_sounds()
                 self.__sounds_bttn.change_text("UNMUTE SOUNDS")
-
 
         if self.__actual_window == WINDOW.MENU:
             self.update_menu_buttons()

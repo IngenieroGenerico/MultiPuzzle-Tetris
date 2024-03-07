@@ -12,8 +12,10 @@ class AudioManager:
         pygame.mixer.init()
         self.sounds = {}
         self.musics = {}
+        self.musics_muted = False
+        self.sounds_muted = False
         self.sound_volume = 1.0 # Range: 0.0 to 1.0
-        self.music_volume = 1.0 # Range: 0.0 to 1.0+
+        self.music_volume = 1.0 # Range: 0.0 to 1.0
         self.load_music("menu", "resources/musics/menu.mp3")
         self.load_music("gameplay", "resources/musics/gameplay.mp3")
         self.load_sound("hovered", "resources/sounds/hovered.mp3")
@@ -113,20 +115,30 @@ class AudioManager:
     def mute_music(self) -> None:
         self.music_volume = 0.0
         pygame.mixer.music.set_volume(self.music_volume)
+        self.musics_muted = True
     
     def unmute_music(self) -> None:
         self.music_volume = 1.0
         pygame.mixer.music.set_volume(self.music_volume)
+        self.musics_muted = False
 
     def mute_sounds(self) -> None:
         self.sound_volume = 0.0
         for sound in self.sounds.values():
-            sound["sound"].set_volume(self.sound_volume) 
+            sound["sound"].set_volume(self.sound_volume)
+        self.sounds_muted = True
     
     def unmute_sounds(self) -> None:
         self.sound_volume = 1.0
         for sound in self.sounds.values():
             sound["sound"].set_volume(self.sound_volume)
+        self.sounds_muted = False
+    
+    def is_music_muted(self) -> bool:
+        return self.musics_muted
+    
+    def is_sounds_muted(self) -> bool:
+        return self.sounds_muted
 
     def set_sound_volume(self, volume: float) -> None:
         """
