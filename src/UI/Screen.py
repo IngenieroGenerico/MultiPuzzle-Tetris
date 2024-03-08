@@ -11,8 +11,8 @@ class Screen:
     
     def load_image(self, name: str) -> pygame.Surface:
         self.__image = pygame.image.load("resources/images/screens/{}.png".format(name))
-        self.__image = self.__image.convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (self.__width, self.__height))
+        self.__image = self.__image.convert_alpha()
         
     def draw_image(self)-> None:
         self.__surface.blit(self.__image, (0,0))

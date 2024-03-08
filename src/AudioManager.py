@@ -10,10 +10,12 @@ class AudioManager:
         - Load default music sound files.
         """
         pygame.mixer.init()
-        self.sounds = {}
-        self.musics = {}
-        self.sound_volume = 1.0 # Range: 0.0 to 1.0
-        self.music_volume = 1.0 # Range: 0.0 to 1.0+
+        self.__sounds = {}
+        self.__musics = {}
+        self.__musics_muted = False
+        self.__sounds_muted = False
+        self.__sound_volume = 1.0 # Range: 0.0 to 1.0
+        self.__music_volume = 1.0 # Range: 0.0 to 1.0
         self.load_music("menu", "resources/musics/menu.mp3")
         self.load_music("gameplay", "resources/musics/gameplay.mp3")
         self.load_sound("hovered", "resources/sounds/hovered.mp3")
@@ -27,8 +29,8 @@ class AudioManager:
             name (str): The name of the sound.
             file_path (str): The file path of the sound.
         """
-        if name not in self.sounds:
-            self.sounds[name] = {"file_path": file_path, "sound": pygame.mixer.Sound(file_path)}
+        if name not in self.__sounds:
+            self.__sounds[name] = pygame.mixer.Sound(file_path)
 
     def play_sound(self, name: str) -> None:
         """
@@ -37,8 +39,8 @@ class AudioManager:
         Args:
             name (str): The name of the sound.
         """
-        if name in self.sounds:
-            self.sounds[name]["sound"].play()
+        if name in self.__sounds:
+            self.__sounds[name].play()
         else:
             print("No found sound {}".format(name))
     
@@ -51,8 +53,8 @@ class AudioManager:
             file_path (str): The file path of the music track.
         """
 
-        if name not in self.musics:
-            self.musics[name] = file_path
+        if name not in self.__musics:
+            self.__musics[name] = file_path
 
     def play_music(self, name: str, loops: int = -1) ->None:
         """
@@ -62,8 +64,8 @@ class AudioManager:
             name (str): The name of the music track.
             loops (int): The number of time to play the track. -1 for infinite loop.
         """
-        if name in self.musics:
-            pygame.mixer.music.load(self.musics[name])
+        if name in self.__musics:
+            pygame.mixer.music.load(self.__musics[name])
             pygame.mixer.music.play(loops)
         else:
             print("No found track {}".format(name))
@@ -75,7 +77,7 @@ class AudioManager:
         Args:
             name (str): The name of the sound to pause.
         """
-        if name in self.sounds:
+        if name in self.__sounds:
             pygame.mixer.find_channel().pause()
     
     def pause_music(self) -> None:
@@ -91,7 +93,7 @@ class AudioManager:
         Args:
             name (str): The name of the sound to unpause.
         """
-        if name in self.sounds:
+        if name in self.__sounds:
             pygame.mixer.find_channel().unpause()
     
     def unpause_music(self) -> None:
@@ -107,9 +109,37 @@ class AudioManager:
         Args:
             name (str): The name of the sound to stop.
         """
-        if name in self.sounds:
-            self.sounds[name]["sound"].stop()
+        if name in self.__sounds:
+            self.__sounds[name].stop()
+
+    def mute_music(self) -> None:
+        self.__musics_muted = True
+        self.__music_volume = 0.0
+        pygame.mixer.music.set_volume(self.__music_volume)
     
+    def unmute_music(self) -> None:
+        self.__musics_muted = False
+        self.__music_volume = 1.0
+        pygame.mixer.music.set_volume(self.__music_volume)
+
+    def mute_sounds(self) -> None:
+        self.__sounds_muted = True
+        self.__sound_volume = 0.0
+        for sound in self.__sounds.values():
+            sound.set_volume(self.__sound_volume)
+    
+    def unmute_sounds(self) -> None:
+        self.__sound_volume = 1.0
+        self.__sounds_muted = False
+        for sound in self.__sounds.values():
+            sound.set_volume(self.__sound_volume)
+    
+    def is_music_muted(self) -> bool:
+        return self.__musics_muted
+    
+    def is_sounds_muted(self) -> bool:
+        return self.__sounds_muted
+
     def set_sound_volume(self, volume: float) -> None:
         """
         Set the volume for the sound effects.
@@ -117,8 +147,8 @@ class AudioManager:
         Args:
             volume (float): The volume level (0.0 to 1.0)
         """
-        self.sound_volume = max(0.0, min(1.0, volume))
-        num_channels = int(pygame.mixer.get_num_channels() * self.sound_volume)
+        self.__sound_volume = max(0.0, min(1.0, volume))
+        num_channels = int(pygame.mixer.get_num_channels() * self.__sound_volume)
         pygame.mixer.set_num_channels(num_channels)
     
     def set_music_volume(self, volume: float) -> None:
@@ -128,6 +158,6 @@ class AudioManager:
         Args:
             volume (float): The volume level (0.0 to 1.0)
         """
-        self.music_volume = max(0.0, min(1.0, volume))
-        pygame.mixer.music.set_volume(self.music_volume)
+        self.__music_volume = max(0.0, min(1.0, volume))
+        pygame.mixer.music.set_volume(self.__music_volume)
         

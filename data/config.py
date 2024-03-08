@@ -1,5 +1,5 @@
 BLOCK_SIZE = 20
-MAX_SPEED = 10
+MAX_SPEED = 9
 TEXT_SCREEN_SIZE = 33
 WIDTH_SCREEN = 1080
 HEIGHT_SCREEN =720
@@ -20,4 +20,8 @@ COLORS = {
         "green":(0,128,0),
         "purple":(128,0,255),
         "orange":(255,128,0),
+}
+CREDITS = {
+    "lead": "Carlos Miguel Iñiguez Chavez",
+    "collab": "Diego Arellano Larios"
 }
