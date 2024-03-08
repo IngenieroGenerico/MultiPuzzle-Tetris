@@ -34,7 +34,10 @@ class Button:
 
     def change_text(self, new_text: str) -> None:
         self.__text = new_text
-         
+    
+    def get_text(self) -> str:
+        return self.__text
+    
     def update(self, input) -> bool:
         if self.__rect.collidepoint(pygame.mouse.get_pos()):
             if not self.__is_hovered:
