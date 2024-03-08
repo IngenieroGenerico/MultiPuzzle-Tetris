@@ -21,3 +21,7 @@ COLORS = {
         "purple":(128,0,255),
         "orange":(255,128,0),
 }
+CREDITS = {
+    "lead": "Carlos Miguel Iñiguez Chavez",
+    "collab": "Diego Arellano Larios"
+}

@@ -5,15 +5,27 @@ from ..AudioManager import AudioManager
 class Button:
     def __init__(self, x: int, y: int, width: int, height: int, text: str = None, name: str = None):
         self.__rect = pygame.Rect(x, y, width, height)
+        self.__width = width
+        self.__height = height
         self.__font = pygame.font.Font(None, 30)
         self.__text = text
         self.__is_hovered = False
         self.__limit_right_movement = x + 20
         self.__limit_left_movement = x
         self.__sounds = AudioManager()
+        self.set_animation(True)
         if name != None:
             self.load_images(name)
-        
+    
+    def get_width(self) -> int:
+        return self.__width
+    
+    def get_height(self) -> int:
+        return self.__height
+    
+    def set_animation(self, animated: bool) -> None:
+        self.__is_animated = animated
+
     def load_image(self, name: str) -> pygame.Surface:
         image = pygame.image.load("resources/images/buttons/{}.png".format(name))
         image = pygame.transform.scale(image, (self.__rect.width, self.__rect.height))
@@ -28,9 +40,13 @@ class Button:
         image_render = self.__image_hovered if self.__is_hovered else self.__image        
         screen.blit(image_render, self.__rect)
         if self.__text != None:
+            text_back_surface = self.__font.render(self.__text, True, COLORS["white"] if self.__is_hovered else COLORS["black"])
+            text_back_rect = text_back_surface.get_rect(center = (self.__rect.centerx - 3, self.__rect.centery + 3))
+            screen.blit(text_back_surface, text_back_rect)
             text_surface = self.__font.render(self.__text, True, COLORS["black"] if self.__is_hovered else COLORS["white"])
             text_rect = text_surface.get_rect(center=self.__rect.center)
             screen.blit(text_surface, text_rect)
+            
 
     def change_text(self, new_text: str) -> None:
         self.__text = new_text
@@ -43,11 +59,13 @@ class Button:
             if not self.__is_hovered:
                 self.__is_hovered = True
                 self.__sounds.play_sound("hovered")
-            if self.__rect.left < self.__limit_right_movement:
-                self.__rect.update(self.__rect.left + 1, self.__rect.top, self.__rect.width, self.__rect.height)
+            if self.__is_animated:
+                if self.__rect.left < self.__limit_right_movement:
+                    self.__rect.update(self.__rect.left + 1, self.__rect.top, self.__rect.width, self.__rect.height)
         else:
-            if self.__rect.left > self.__limit_left_movement:
-                self.__rect.update(self.__rect.left - 1, self.__rect.top, self.__rect.width, self.__rect.height)
+            if self.__is_animated:
+                if self.__rect.left > self.__limit_left_movement:
+                    self.__rect.update(self.__rect.left - 1, self.__rect.top, self.__rect.width, self.__rect.height)
             self.__is_hovered = False
             
         if input.get_button_down() and self.__is_hovered:
